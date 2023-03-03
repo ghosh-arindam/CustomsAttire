@@ -20,6 +20,13 @@ const getSuppliers = (Suppliers) => ({
   payload: Suppliers,
 });
 
+const deletedSupplier = () => ({
+  type: types.DELETE_SUPPLIERS,
+});
+const addSupplier = (Suppliersdata) => ({
+  type: types.ADD_SUPPLIERS,
+  payload: Suppliersdata,
+});
 const getpurchaseOrders = (PurchaseOrders) => ({
   type: types.GET_PURCHASEORDERS,
   payload: PurchaseOrders,
@@ -29,9 +36,9 @@ export const loadCustomers = () => {
   return function (dispatch) {
     //console.log(`${process.env.REACT_APP_API}/customer`);
     axios
-      .get(`${process.env.REACT_APP_API}/customer`)
+      .get(`${process.env.REACT_APP_BASE_API_URL}/customer`)
       .then((resp) => {
-        console.log("resp", resp);
+        //console.log("resp", resp);
         dispatch(getcustomers(resp.data));
       })
       .catch((error) => console.log(error));
@@ -41,9 +48,9 @@ export const loadCustomers = () => {
 export const deleteCustomer = (id) => {
   return function (dispatch) {
     axios
-      .delete(`${process.env.REACT_APP_API}/customer/${id}`)
+      .delete(`${process.env.REACT_APP_BASE_API_URL}/customer/${id}`)
       .then((resp) => {
-        console.log("resp", resp);
+        //console.log("resp", resp);
         dispatch(deletedcustomers());
         dispatch(getcustomers());
       })
@@ -53,10 +60,10 @@ export const deleteCustomer = (id) => {
 
 export const addCustomers = (customer) => {
   return function (dispatch) {
-    console.log(`${process.env.REACT_APP_API}/customer`);
-    console.log(customer);
+    // console.log(`${process.env.REACT_APP_BASE_API_URL}/customer`);
+    // console.log(customer);
     axios
-      .post(`${process.env.REACT_APP_API}/customer`, customer)
+      .post(`${process.env.REACT_APP_BASE_API_URL}/customer`, customer)
       .then((resp) => {
         console.log("resp", resp);
         dispatch(addCustomer());
@@ -65,12 +72,12 @@ export const addCustomers = (customer) => {
       .catch((error) => console.log(error));
   };
 };
-
+// SUPPLIERS API CALLS
 export const loadSuppliers = () => {
   return function (dispatch) {
-    //console.log(`${process.env.REACT_APP_API}/customer`);
+    console.log(`${process.env.REACT_APP_API}/vendor`);
     axios
-      .get(`${process.env.REACT_APP_API}/vendor`)
+      .get(`${process.env.REACT_APP_BASE_API_URL}/vendor`)
       .then((resp) => {
         console.log("resp", resp);
         dispatch(getSuppliers(resp.data));
@@ -79,9 +86,37 @@ export const loadSuppliers = () => {
   };
 };
 
+export const deleteSupplier = (id) => {
+  return function (dispatch) {
+    axios
+      .delete(`${process.env.REACT_APP_BASE_API_URL}/vendor/${id}`)
+      .then((resp) => {
+        console.log("resp", resp);
+        dispatch(deletedSupplier());
+        dispatch(getSuppliers());
+      })
+      .catch((error) => console.log(error));
+  };
+};
+
+export const addSuppliers = (supplier) => {
+  return function (dispatch) {
+    console.log(`${process.env.REACT_APP_BASE_API_URL}/vendor`);
+    console.log(supplier);
+    axios
+      .post(`${process.env.REACT_APP_BASE_API_URL}/vendor`, supplier)
+      .then((resp) => {
+        console.log("resp", resp);
+        dispatch(addSupplier());
+        dispatch(getSuppliers());
+      })
+      .catch((error) => console.log(error));
+  };
+};
+
 export const loadPurchaseOrders = () => {
   return function (dispatch) {
-    console.log(`${process.env.REACT_APP_API}/purchaseorders`);
+    console.log(`${process.env.REACT_APP_BASE_API_URL}/purchaseorders`);
     axios
       .get(`${process.env.REACT_APP_API}/purchaseorders`)
       .then((resp) => {
