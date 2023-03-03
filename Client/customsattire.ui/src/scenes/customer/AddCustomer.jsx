@@ -20,7 +20,10 @@ const AddCustomer = () => {
 
   return (
     <Box m="20px">
-      <Header title="CREATE USER" subtitle="Create a New User Profile" />
+      <Header
+        title="CREATE CUSTOMER"
+        subtitle="Create a New Customer Profile"
+      />
 
       <Formik
         onSubmit={handleFormSubmit}
@@ -91,10 +94,10 @@ const AddCustomer = () => {
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.emailId}
-                name="email"
+                name="emailId"
                 error={!!touched.emailId && !!errors.emailId}
                 helperText={touched.emailId && errors.emailId}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ gridColumn: "span 2" }}
               />
               <TextField
                 fullWidth
@@ -107,7 +110,7 @@ const AddCustomer = () => {
                 name="phoneNo"
                 error={!!touched.phoneNo && !!errors.phoneNo}
                 helperText={touched.phoneNo && errors.phoneNo}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ gridColumn: "span 2" }}
               />
               <TextField
                 id="date"
@@ -193,7 +196,7 @@ const AddCustomer = () => {
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
-                Create New User
+                Create New Customer
               </Button>
             </Box>
           </form>
