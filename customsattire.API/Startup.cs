@@ -3,7 +3,6 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
-using CustomsAttire.API.Extensions;
 
 namespace CustomsAttire.API
 {
@@ -33,7 +32,6 @@ namespace CustomsAttire.API
             );
 
             // services.AddControllers();
-            services.AddJWTTokenServices(Configuration);
             // Register the Swagger generator
             //services.AddSwaggerGen(c =>
             //{
@@ -44,29 +42,7 @@ namespace CustomsAttire.API
             //    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             //    c.IncludeXmlComments(xmlPath);
             //});
-            services.AddSwaggerGen(options =>
-            {
-                options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-                {
-                    Name = "Authorization",
-                    Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
-                    Scheme = "Bearer",
-                    BearerFormat = "JWT",
-                    In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-                    Description = "JWT Authorization header using the Bearer scheme."
-                });
-                options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement {
-                    {
-                        new Microsoft.OpenApi.Models.OpenApiSecurityScheme {
-                                Reference = new Microsoft.OpenApi.Models.OpenApiReference {
-                                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-                                        Id = "Bearer"
-                                }
-                            },
-                            new string[] {}
-                    }
-                });
-            });
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

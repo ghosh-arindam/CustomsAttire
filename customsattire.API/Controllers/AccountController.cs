@@ -1,11 +1,16 @@
-﻿using CustomsAttire.API.Models;
-using CustomsAttire.Core.Data.Entities;
+﻿using CustomsAttire.Core.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 //using UserLogin = CustomsAttire.Core.Data.Entities.UserLogin;
 using CustomsAttire.Core.Data;
+using Microsoft.AspNetCore.Identity;
+using CustomsAttire.API.Auth;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace CustomsAttire.API.Controllers
 {
@@ -13,67 +18,120 @@ namespace CustomsAttire.API.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly JwtSettings jwtSettings;
         private readonly CustomsAttireContext _context;
-        public AccountController(JwtSettings jwtSettings, CustomsAttireContext dataContext)
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IConfiguration _configuration;
+
+        public AccountController(CustomsAttireContext dataContext, UserManager<IdentityUser> userManager,
+            RoleManager<IdentityRole> roleManager,
+            IConfiguration configuration)
         {
-            this.jwtSettings = jwtSettings;
             _context = dataContext;
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _configuration = configuration;
         }
-        private IEnumerable<Users> logins = new List<Users>() {
-            new Users() {
-                        UserId = Guid.NewGuid(),
-                        Email = "danish.afroze@gmail.com",
-                        UserName = "Admin",
-                        Password = "Admin",
-                },
-                new Users() {
-                        UserId = Guid.NewGuid(),
-                        Email = "storemanager@gmail.com",
-                        UserName = "User1",
-                        Password = "Admin",
+       
+        [HttpPost]
+        [Route("login")]
+        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        {
+            var user = await _userManager.FindByNameAsync(model.Username);
+            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+            {
+                var userRoles = await _userManager.GetRolesAsync(user);
+
+                var authClaims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                };
+
+                foreach (var userRole in userRoles)
+                {
+                    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
                 }
-        };
+
+                var token = GetToken(authClaims);
+
+                return Ok(new
+                {
+                    token = new JwtSecurityTokenHandler().WriteToken(token),
+                    expiration = token.ValidTo
+                });
+            }
+            return Unauthorized();
+        }
 
         [HttpPost]
-        public IActionResult GetToken(Models.UserLogin userLogins)
+        [Route("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
-            try
+            var userExists = await _userManager.FindByNameAsync(model.Username);
+            if (userExists != null)
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
+
+            IdentityUser user = new()
             {
-                var Token = new UserTokens();
-                var Valid = _context.Users.Any(x => x.EmailAddress.Equals(userLogins.EmailAddress));
-                if (Valid)
-                {
-                    var userlist = _context.Users.Where(x => x.EmailAddress.ToLower().Equals(userLogins.EmailAddress.ToLower())).DefaultIfEmpty().ToList();
-                    var userloginsList = _context.UserLogins.Where(x => x.EmailAddress.ToLower().Equals(userLogins.EmailAddress.ToLower())).DefaultIfEmpty().ToList();
-                    Token = JwtHelpers.JwtHelpers.GenTokenkey(new UserTokens()
-                    {
-                        EmailId = userlist.Select(x => new { x.EmailAddress }).Select(x => x.EmailAddress).First(),
-                        GuidId = Guid.NewGuid(),
-                        UserName = userloginsList.Select(x => new { x.UserId }).Select(x => x.UserId).First(),
-                        Id = userloginsList.Select(x => new { x.Id }).Select(x => x.Id).First(),
-                    }, jwtSettings);
-                }
-                else
-                {
-                    return BadRequest("wrong password");
-                }
-                return Ok(Token);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+                Email = model.Email,
+                SecurityStamp = Guid.NewGuid().ToString(),
+                UserName = model.Username
+            };
+            var result = await _userManager.CreateAsync(user, model.Password);
+            if (!result.Succeeded)
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
+
+            return Ok(new Response { Status = "Success", Message = "User created successfully!" });
         }
-        /// <summary>
-        /// Get List of UserAccounts
-        /// </summary>
-        /// <returns>List Of UserAccounts</returns>
-        [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult GetList()
+
+        [HttpPost]
+        [Route("register-admin")]
+        public async Task<IActionResult> RegisterAdmin([FromBody] RegisterModel model)
         {
-            return Ok(logins);
+            var userExists = await _userManager.FindByNameAsync(model.Username);
+            if (userExists != null)
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
+
+            IdentityUser user = new()
+            {
+                Email = model.Email,
+                SecurityStamp = Guid.NewGuid().ToString(),
+                UserName = model.Username
+            };
+            var result = await _userManager.CreateAsync(user, model.Password);
+            if (!result.Succeeded)
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
+
+            if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
+                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
+            if (!await _roleManager.RoleExistsAsync(UserRoles.User))
+                await _roleManager.CreateAsync(new IdentityRole(UserRoles.User));
+
+            if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
+            {
+                await _userManager.AddToRoleAsync(user, UserRoles.Admin);
+            }
+            if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
+            {
+                await _userManager.AddToRoleAsync(user, UserRoles.User);
+            }
+            return Ok(new Response { Status = "Success", Message = "User created successfully!" });
+        }
+
+        private JwtSecurityToken GetToken(List<Claim> authClaims)
+        {
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["JWT:ValidIssuer"],
+                audience: _configuration["JWT:ValidAudience"],
+                expires: DateTime.Now.AddHours(3),
+                claims: authClaims,
+                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+                );
+
+            return token;
         }
     }
 }
