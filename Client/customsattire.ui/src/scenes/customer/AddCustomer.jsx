@@ -119,13 +119,6 @@ const AddCustomer = () => {
                 label="Birthday"
                 type="date"
                 value={values.dob}
-                defaultValue={
-                  new Date().getFullYear() +
-                  "-" +
-                  ("0" + new Date().getMonth() + 1).slice(-2) +
-                  "-" +
-                  ("0" + new Date().getDate()).slice(-2)
-                }
                 sx={{ gridColumn: "span 1" }}
                 InputLabelProps={{
                   shrink: true,
@@ -153,13 +146,6 @@ const AddCustomer = () => {
                 variant="filled"
                 label="Anniversary"
                 type="date"
-                defaultValue={
-                  new Date().getFullYear() +
-                  "-" +
-                  ("0" + new Date().getMonth() + 1).slice(-2) +
-                  "-" +
-                  ("0" + new Date().getDate()).slice(-2)
-                }
                 sx={{ gridColumn: "span 1" }}
                 InputLabelProps={{
                   shrink: true,

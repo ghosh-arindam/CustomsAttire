@@ -14,7 +14,7 @@ const Customer = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [pageSize, setPageSize] = useState(5);
-  const [rowId, setrowId] = useState();
+  const [rowId, setrowId] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { customers } = useSelector((state) => state.data);
@@ -84,7 +84,7 @@ const Customer = () => {
         headerAlign: "left",
         align: "left",
         editable: true,
-        renderCell: (params) => moment(params.row.dob).format("yyyy-mm-dd"),
+        renderCell: (params) => moment(params.row.dob).format("DD-MM-yyyy"),
       },
       {
         field: "gender",
@@ -114,7 +114,7 @@ const Customer = () => {
         align: "left",
         editable: true,
         renderCell: (params) =>
-          moment(params.row.anniversaryDate).format("yyyy-mm-dd"),
+          moment(params.row.anniversaryDate).format("DD-MM-yyyy"),
       },
       {
         field: "actions",
@@ -172,9 +172,9 @@ const Customer = () => {
       >
         <DataGrid
           checkboxSelection
-          rows={rowDataCustomer}
+          rows={rowDataCustomer ?? []}
           columns={columns}
-          getRowId={(row) => row.id}
+          getRowId={(rows) => rows.id}
           rowsPerPageOptions={[5, 10, 25]}
           pageSize={pageSize}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
