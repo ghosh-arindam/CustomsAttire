@@ -4,6 +4,16 @@ project:
 database:
   provider: SqlServer
   connectionString: Data Source=(local);Initial Catalog=CustomsAttire;Integrated Security=True;MultipleActiveResultSets=True
+  tables:
+   - Customer
+   - Employee
+   - POSReport
+   - PurchaseOrders
+   - Vendor
+   - Bill_Header_Items
+   - Bill_StatusCode
+   - SalesOrder_Items
+   - StitchingInvoice
   schemas:
     - HumanResources
     - Person
@@ -11,7 +21,10 @@ database:
     - Purchasing
     - Sales
   exclude:
-    - exact: 'dbo.SchemaVersions'
+    - exact: dbo.SchemaVersions
+    - exact : dbo.__EFMigrationsHistory
+    - regex: dbo\.SchemaVersions$
+    - regex: dbo\.__EFMigrationsHistory$
 data:
   context:
     name: '{Database.Name}Context'
