@@ -1,5 +1,7 @@
 import { Box, Button, useTheme } from "@mui/material";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid, gridClasses, GridToolbar } from "@mui/x-data-grid";
+import AddIcon from "@mui/icons-material/Add";
+import { grey } from "@mui/material/colors";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import React, { useState, useEffect, useMemo } from "react";
@@ -7,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loadCustomers } from "../../redux/action";
 import CustomerActions from "./CustomerActions";
-import AddIcon from "@mui/icons-material/Add";
 import moment from "moment/moment";
 
 const Customer = () => {
@@ -182,6 +183,12 @@ const Customer = () => {
             top: params.isFirstVisible ? 0 : 5,
             bottom: params.isLastVisible ? 0 : 5,
           })}
+          sx={{
+            [`& .${gridClasses.row}`]: {
+              bgcolor: (theme) =>
+                theme.palette.mode === "light" ? grey[200] : grey[900],
+            },
+          }}
           components={{ Toolbar: GridToolbar }}
           onCellEditCommit={(params) => setrowId(params.id)}
         />

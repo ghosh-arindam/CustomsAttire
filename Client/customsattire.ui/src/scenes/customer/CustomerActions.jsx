@@ -3,7 +3,7 @@ import { Box, CircularProgress, Fab } from "@mui/material";
 import { green, blue } from "@mui/material/colors";
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { deleteCustomer } from "../../redux/action";
+import { deleteCustomer, updateCustomers } from "../../redux/action";
 
 const CustomerActions = ({ params, rowId, setrowId }) => {
   const [loading, setLoading] = useState(false);
@@ -11,11 +11,20 @@ const CustomerActions = ({ params, rowId, setrowId }) => {
   const dispatch = useDispatch();
 
   const handleSubmit = async () => {
+    setLoading(true);
+    const { id } = params.row;
+    console.log("handleSubmit:" + params.row);
+    const result = await dispatch(updateCustomers(params.row, id));
+    if (result) {
+      setSuccess(true);
+      setrowId(null);
+    }
     setLoading(false);
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (e, id) => {
     if (window.confirm("Are you sure to delete the Customer?")) {
+      e.stopPropagation();
       dispatch(deleteCustomer(id));
     }
   };
@@ -78,7 +87,7 @@ const CustomerActions = ({ params, rowId, setrowId }) => {
           bgcolor: blue[500],
           "&:hover": { bgcolor: green[700] },
         }}
-        onClick={() => handleDelete(params.id)}
+        onClick={(e) => handleDelete(e, params.id)}
       >
         <Delete />
       </Fab>
