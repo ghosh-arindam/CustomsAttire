@@ -5,9 +5,10 @@ import { grey } from "@mui/material/colors";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import React, { useState, useEffect, useMemo } from "react";
-//import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loadSuppliers } from "../../redux/action";
+import SupplierAction from "./SupplierActions";
 //import moment from "moment/moment";
 
 const SupplierLocal = () => {
@@ -15,7 +16,7 @@ const SupplierLocal = () => {
   const colors = tokens(theme.palette.mode);
   const [pageSize, setPageSize] = useState(5);
   const [rowId, setrowId] = useState([]);
-
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { suppliers } = useSelector((state) => state.data);
 
@@ -97,14 +98,14 @@ const SupplierLocal = () => {
         flex: 1,
         editable: true,
       },
-      // {
-      //   field: "actions",
-      //   headerName: "Actions",
-      //   type: "actions",
-      //   // renderCell: (params) => (
-      //   //   <CustomerActions {...{ params, rowId, setrowId }} />
-      //   // ),
-      // },
+      {
+        field: "actions",
+        headerName: "Actions",
+        type: "actions",
+        renderCell: (params) => (
+          <SupplierAction {...{ params, rowId, setrowId }} />
+        ),
+      },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [rowId]
@@ -116,7 +117,7 @@ const SupplierLocal = () => {
         variant="outlined"
         color="primary"
         startIcon={<AddIcon />}
-        //onClick={() => navigate("/AddCustomer")}
+        onClick={() => navigate("/AddVendor")}
       >
         Add Vendor
       </Button>

@@ -13,6 +13,7 @@ import FAQ from "./scenes/faq";
 import Customer from "./scenes/customer";
 import Loginpage from "./scenes/loginpage";
 import AddCustomer from "./scenes/customer/AddCustomer";
+import AddVendor from "./scenes/supplierlocal/AddSupplier.jsx";
 import Invoices from "./scenes/invoices";
 //import PurchaseOrders from "./scenes/purchaseorders";
 import { CssBaseline, ThemeProvider } from "@mui/material";
@@ -40,6 +41,7 @@ function App() {
               <Route path="/customer" element={<Customer />} />
               <Route path="/addCustomer" element={<AddCustomer />} />
               <Route path="/vendor" element={<Vendor />} />
+              <Route path="/addvendor" element={<AddVendor />} />
               <Route path="/form" element={<Form />} />
               <Route path="/bar" element={<Bar />} />
               <Route path="/pie" element={<Pie />} />

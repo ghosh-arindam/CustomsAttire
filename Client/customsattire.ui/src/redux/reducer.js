@@ -2,6 +2,8 @@ import * as type from "./actionType";
 const initialState = {
   customers: [],
   customer: {},
+  suppliers: [],
+  supplier: {},
   loading: false,
 };
 
@@ -29,6 +31,17 @@ const Reducer = (state = initialState, action) => {
         suppliers: action.payload,
         loading: false,
       };
+    case type.ADD_SUPPLIERS:
+      return {
+        ...state,
+        loading: false,
+      };
+    case type.DELETE_SUPPLIERS:
+      return {
+        ...state,
+        loading: false,
+      };
+
     default:
       return state;
   }
