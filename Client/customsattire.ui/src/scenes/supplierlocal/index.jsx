@@ -96,6 +96,7 @@ const SupplierLocal = () => {
         field: "preferredVendorStatus",
         headerName: "Preferred Vendor",
         flex: 1,
+        type: "boolean",
         editable: true,
       },
       {
