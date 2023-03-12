@@ -13,8 +13,10 @@ import FAQ from "./scenes/faq";
 import Customer from "./scenes/customer";
 import Loginpage from "./scenes/loginpage";
 import AddCustomer from "./scenes/customer/AddCustomer";
-import AddVendor from "./scenes/supplierlocal/AddSupplier.jsx";
 import Invoices from "./scenes/invoices";
+import AddVendor from "./scenes/supplierlocal/AddSupplier";
+import AddPurchase from "./scenes/purchaseorders/AddPurchase";
+import Purchase from "./scenes/purchaseorders";
 //import PurchaseOrders from "./scenes/purchaseorders";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
@@ -48,6 +50,8 @@ function App() {
               <Route path="/line" element={<Line />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/posreport" element={<Invoices />} />
+              <Route path="/purchaseorders" element={<Purchase />} />
+              <Route path="/addPurchase" element={<AddPurchase />} />
               {/* <Route path="/purchaseorders" element={<PurchaseOrders />} /> */}
             </Routes>
           </main>
