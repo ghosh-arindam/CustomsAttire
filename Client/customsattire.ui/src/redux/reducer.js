@@ -41,7 +41,17 @@ const Reducer = (state = initialState, action) => {
         ...state,
         loading: false,
       };
-
+    case type.GET_PRODUCT:
+      return {
+        ...state,
+        Products: action.payload,
+        loading: false,
+      };
+    case type.ADD_PRODUCT:
+      return {
+        ...state,
+        loading: false,
+      };
     default:
       return state;
   }
