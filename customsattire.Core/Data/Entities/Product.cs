@@ -4,15 +4,15 @@ using System.Collections.Generic;
 namespace CustomsAttire.Core.Data.Entities
 {
     /// <summary>
-    /// Entity class representing data for table 'PurchaseOrders'.
+    /// Entity class representing data for table 'Product'.
     /// </summary>
-    public partial class PurchaseOrders
+    public partial class Product
         : Definitions.IHaveIdentifier
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PurchaseOrders"/> class.
+        /// Initializes a new instance of the <see cref="Product"/> class.
         /// </summary>
-        public PurchaseOrders()
+        public Product()
         {
             #region Generated Constructor
             #endregion
@@ -36,60 +36,12 @@ namespace CustomsAttire.Core.Data.Entities
         public string FabricCode { get; set; }
 
         /// <summary>
-        /// Gets or sets the property value representing column 'quantityPurchased'.
+        /// Gets or sets the property value representing column 'Description'.
         /// </summary>
         /// <value>
-        /// The property value representing column 'quantityPurchased'.
+        /// The property value representing column 'Description'.
         /// </value>
-        public long QuantityPurchased { get; set; }
-
-        /// <summary>
-        /// Gets or sets the property value representing column 'costPrice'.
-        /// </summary>
-        /// <value>
-        /// The property value representing column 'costPrice'.
-        /// </value>
-        public decimal CostPrice { get; set; }
-
-        /// <summary>
-        /// Gets or sets the property value representing column 'totalCostPrice'.
-        /// </summary>
-        /// <value>
-        /// The property value representing column 'totalCostPrice'.
-        /// </value>
-        public decimal TotalCostPrice { get; set; }
-
-        /// <summary>
-        /// Gets or sets the property value representing column 'paymentmode'.
-        /// </summary>
-        /// <value>
-        /// The property value representing column 'paymentmode'.
-        /// </value>
-        public string Paymentmode { get; set; }
-
-        /// <summary>
-        /// Gets or sets the property value representing column 'paymentdone'.
-        /// </summary>
-        /// <value>
-        /// The property value representing column 'paymentdone'.
-        /// </value>
-        public decimal? Paymentdone { get; set; }
-
-        /// <summary>
-        /// Gets or sets the property value representing column 'duepayment'.
-        /// </summary>
-        /// <value>
-        /// The property value representing column 'duepayment'.
-        /// </value>
-        public decimal Duepayment { get; set; }
-
-        /// <summary>
-        /// Gets or sets the property value representing column 'purchasedate'.
-        /// </summary>
-        /// <value>
-        /// The property value representing column 'purchasedate'.
-        /// </value>
-        public DateTime? Purchasedate { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
         /// Gets or sets the property value representing column 'CreatedDate'.

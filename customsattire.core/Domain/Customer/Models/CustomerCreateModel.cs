@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace CustomsAttire.Core.Domain.Models
 {
@@ -89,7 +88,6 @@ namespace CustomsAttire.Core.Domain.Models
         /// <value>
         /// The property value for 'AnniversaryDate'.
         /// </value>
-        [JsonIgnore]
         public DateTime? AnniversaryDate { get; set; }
 
         #endregion

@@ -17,7 +17,6 @@ namespace CustomsAttire.Core.Domain.Validation
         {
             #region Generated Constructor
             RuleFor(p => p.FabricCode).NotEmpty();
-            RuleFor(p => p.Units).MaximumLength(50);
             RuleFor(p => p.Paymentmode).MaximumLength(50);
             #endregion
         }

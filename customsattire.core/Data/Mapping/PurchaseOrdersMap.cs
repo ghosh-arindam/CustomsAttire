@@ -40,11 +40,6 @@ namespace CustomsAttire.Core.Data.Mapping
                 .HasColumnType("bigint")
                 .HasDefaultValueSql("((1))");
 
-            builder.Property(t => t.Units)
-                .HasColumnName("units")
-                .HasColumnType("nvarchar(50)")
-                .HasMaxLength(50);
-
             builder.Property(t => t.CostPrice)
                 .IsRequired()
                 .HasColumnName("costPrice")
@@ -119,8 +114,6 @@ namespace CustomsAttire.Core.Data.Mapping
             public const string FabricCode = "fabricCode";
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.PurchaseOrders.QuantityPurchased" /></summary>
             public const string QuantityPurchased = "quantityPurchased";
-            /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.PurchaseOrders.Units" /></summary>
-            public const string Units = "units";
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.PurchaseOrders.CostPrice" /></summary>
             public const string CostPrice = "costPrice";
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.PurchaseOrders.TotalCostPrice" /></summary>

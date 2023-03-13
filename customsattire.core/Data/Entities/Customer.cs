@@ -138,7 +138,6 @@ namespace CustomsAttire.Core.Data.Entities
         /// <value>
         /// The property value representing column 'ModifiedDate'.
         /// </value>
-        [JsonIgnore]
         public DateTimeOffset ModifiedDate { get; set; }
 
         #endregion

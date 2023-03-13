@@ -25,9 +25,9 @@ builder.Services.Scan(x => x.FromAssembliesOf(typeof(CustomsAttireContext))
                     .AsImplementedInterfaces()
             );
 // For Identity
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+.AddDefaultTokenProviders()
+.AddEntityFrameworkStores<ApplicationDbContext>();
 
 // Adding Authentication
 builder.Services.AddAuthentication(options =>

@@ -27,14 +27,6 @@ namespace CustomsAttire.Core.Domain.Models
         public long QuantityPurchased { get; set; }
 
         /// <summary>
-        /// Gets or sets the property value for 'Units'.
-        /// </summary>
-        /// <value>
-        /// The property value for 'Units'.
-        /// </value>
-        public string Units { get; set; }
-
-        /// <summary>
         /// Gets or sets the property value for 'CostPrice'.
         /// </summary>
         /// <value>

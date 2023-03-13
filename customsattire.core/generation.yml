@@ -5,6 +5,7 @@ database:
   provider: SqlServer
   connectionString: Data Source=(local);Initial Catalog=CustomsAttire;Integrated Security=True;MultipleActiveResultSets=True
   tables:
+   - Product
    - Customer
    - Employee
    - POSReport

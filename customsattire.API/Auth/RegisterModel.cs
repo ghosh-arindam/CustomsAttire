@@ -13,5 +13,15 @@ namespace CustomsAttire.API.Auth
 
         [Required(ErrorMessage = "Password is required")]
         public string? Password { get; set; }
+
+
+        [Required(ErrorMessage = "PhoneNo is required")]
+        public string? Phonenumber { get; set; }
+
+        [Required(ErrorMessage = "First Name is required")]
+        public string? Firstname { get; set; }
+
+        [Required(ErrorMessage = "Last Name is required")]
+        public string? Lastname { get; set; }
     }
 }

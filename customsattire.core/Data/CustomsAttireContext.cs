@@ -60,6 +60,14 @@ namespace CustomsAttire.Core.Data
         public virtual DbSet<CustomsAttire.Core.Data.Entities.POSReport> POSReports { get; set; }
 
         /// <summary>
+        /// Gets or sets the <see cref="T:Microsoft.EntityFrameworkCore.DbSet`1" /> that can be used to query and save instances of <see cref="CustomsAttire.Core.Data.Entities.Product"/>.
+        /// </summary>
+        /// <value>
+        /// The <see cref="T:Microsoft.EntityFrameworkCore.DbSet`1" /> that can be used to query and save instances of <see cref="CustomsAttire.Core.Data.Entities.Product"/>.
+        /// </value>
+        public virtual DbSet<CustomsAttire.Core.Data.Entities.Product> Products { get; set; }
+
+        /// <summary>
         /// Gets or sets the <see cref="T:Microsoft.EntityFrameworkCore.DbSet`1" /> that can be used to query and save instances of <see cref="CustomsAttire.Core.Data.Entities.PurchaseOrders"/>.
         /// </summary>
         /// <value>
@@ -84,30 +92,6 @@ namespace CustomsAttire.Core.Data
         public virtual DbSet<CustomsAttire.Core.Data.Entities.StitchingInvoice> StitchingInvoices { get; set; }
 
         /// <summary>
-        /// Gets or sets the <see cref="T:Microsoft.EntityFrameworkCore.DbSet`1" /> that can be used to query and save instances of <see cref="CustomsAttire.Core.Data.Entities.UserLogin"/>.
-        /// </summary>
-        /// <value>
-        /// The <see cref="T:Microsoft.EntityFrameworkCore.DbSet`1" /> that can be used to query and save instances of <see cref="CustomsAttire.Core.Data.Entities.UserLogin"/>.
-        /// </value>
-        public virtual DbSet<CustomsAttire.Core.Data.Entities.UserLogin> UserLogins { get; set; }
-
-        /// <summary>
-        /// Gets or sets the <see cref="T:Microsoft.EntityFrameworkCore.DbSet`1" /> that can be used to query and save instances of <see cref="CustomsAttire.Core.Data.Entities.UserRole"/>.
-        /// </summary>
-        /// <value>
-        /// The <see cref="T:Microsoft.EntityFrameworkCore.DbSet`1" /> that can be used to query and save instances of <see cref="CustomsAttire.Core.Data.Entities.UserRole"/>.
-        /// </value>
-        public virtual DbSet<CustomsAttire.Core.Data.Entities.UserRole> UserRoles { get; set; }
-
-        /// <summary>
-        /// Gets or sets the <see cref="T:Microsoft.EntityFrameworkCore.DbSet`1" /> that can be used to query and save instances of <see cref="CustomsAttire.Core.Data.Entities.User"/>.
-        /// </summary>
-        /// <value>
-        /// The <see cref="T:Microsoft.EntityFrameworkCore.DbSet`1" /> that can be used to query and save instances of <see cref="CustomsAttire.Core.Data.Entities.User"/>.
-        /// </value>
-        public virtual DbSet<CustomsAttire.Core.Data.Entities.User> Users { get; set; }
-
-        /// <summary>
         /// Gets or sets the <see cref="T:Microsoft.EntityFrameworkCore.DbSet`1" /> that can be used to query and save instances of <see cref="CustomsAttire.Core.Data.Entities.Vendor"/>.
         /// </summary>
         /// <value>
@@ -129,12 +113,10 @@ namespace CustomsAttire.Core.Data
             modelBuilder.ApplyConfiguration(new CustomsAttire.Core.Data.Mapping.CustomerMap());
             modelBuilder.ApplyConfiguration(new CustomsAttire.Core.Data.Mapping.EmployeeMap());
             modelBuilder.ApplyConfiguration(new CustomsAttire.Core.Data.Mapping.POSReportMap());
+            modelBuilder.ApplyConfiguration(new CustomsAttire.Core.Data.Mapping.ProductMap());
             modelBuilder.ApplyConfiguration(new CustomsAttire.Core.Data.Mapping.PurchaseOrdersMap());
             modelBuilder.ApplyConfiguration(new CustomsAttire.Core.Data.Mapping.SalesOrderItemsMap());
             modelBuilder.ApplyConfiguration(new CustomsAttire.Core.Data.Mapping.StitchingInvoiceMap());
-            modelBuilder.ApplyConfiguration(new CustomsAttire.Core.Data.Mapping.UserLoginMap());
-            modelBuilder.ApplyConfiguration(new CustomsAttire.Core.Data.Mapping.UserMap());
-            modelBuilder.ApplyConfiguration(new CustomsAttire.Core.Data.Mapping.UserRoleMap());
             modelBuilder.ApplyConfiguration(new CustomsAttire.Core.Data.Mapping.VendorMap());
             #endregion
         }
