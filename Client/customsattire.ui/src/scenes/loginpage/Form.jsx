@@ -15,14 +15,26 @@ import { useDispatch } from "react-redux";
 import { setLogin } from "../../state";
 // import Dropzone from "react-dropzone";
 // import FlexBetween from "components/FlexBetween";
+const phoneRegExp =
+  /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
 
 const registerSchema = yup.object().shape({
   firstname: yup.string().required("required"),
   lastname: yup.string().required("required"),
+  username: yup.string().required("required"),
   email: yup.string().email("invalid email").required("required"),
-  password: yup.string().required("required"),
-  location: yup.string().required("required"),
-  occupation: yup.string().required("required"),
+  password: yup
+    .string()
+    .required("required")
+    .min(8, "Must be 8 characters or more")
+    .matches(/[a-z]+/, "One lowercase character")
+    .matches(/[A-Z]+/, "One uppercase character")
+    .matches(/[@$!%*#?&]+/, "One special character")
+    .matches(/\d+/, "One number"),
+  phonenumber: yup
+    .string()
+    .matches(phoneRegExp, "Phone number is not valid")
+    .required("required"),
 });
 
 const loginSchema = yup.object().shape({
