@@ -7,42 +7,40 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+// import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setLogin } from "state";
-import Dropzone from "react-dropzone";
-import FlexBetween from "components/FlexBetween";
+import { setLogin } from "../../state";
+// import Dropzone from "react-dropzone";
+// import FlexBetween from "components/FlexBetween";
 
 const registerSchema = yup.object().shape({
-  firstName: yup.string().required("required"),
-  lastName: yup.string().required("required"),
+  firstname: yup.string().required("required"),
+  lastname: yup.string().required("required"),
   email: yup.string().email("invalid email").required("required"),
   password: yup.string().required("required"),
   location: yup.string().required("required"),
   occupation: yup.string().required("required"),
-  picture: yup.string().required("required"),
 });
 
 const loginSchema = yup.object().shape({
-  email: yup.string().email("invalid email").required("required"),
+  username: yup.string().required("required"),
   password: yup.string().required("required"),
 });
 
 const initialValuesRegister = {
-  firstName: "",
-  lastName: "",
+  firstname: "",
+  lastname: "",
   email: "",
+  username: "",
   password: "",
-  location: "",
-  occupation: "",
-  picture: "",
+  phonenumber: "",
 };
 
 const initialValuesLogin = {
-  email: "",
+  username: "",
   password: "",
 };
 
@@ -61,10 +59,11 @@ const Form = () => {
     for (let value in values) {
       formData.append(value, values[value]);
     }
-    formData.append("picturePath", values.picture.name);
+    // formData.append("picturePath", values.picture.name);
 
     const savedUserResponse = await fetch(
-      "http://localhost:3001/auth/register",
+      // "http://localhost:3001/auth/register",
+      `${process.env.REACT_APP_BASE_API_URL}/Account/Register/register`,
       {
         method: "POST",
         body: formData,
@@ -79,11 +78,14 @@ const Form = () => {
   };
 
   const login = async (values, onSubmitProps) => {
-    const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values),
-    });
+    const loggedInResponse = await fetch(
+      `${process.env.REACT_APP_BASE_API_URL}/Account/Login/login`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      }
+    );
     const loggedIn = await loggedInResponse.json();
     onSubmitProps.resetForm();
     if (loggedIn) {
@@ -93,7 +95,7 @@ const Form = () => {
           token: loggedIn.token,
         })
       );
-      navigate("/home");
+      navigate("/dashboard");
     }
   };
 
@@ -133,90 +135,57 @@ const Form = () => {
                   label="First Name"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.firstName}
-                  name="firstName"
+                  value={values.firstname}
+                  name="firstname"
                   error={
-                    Boolean(touched.firstName) && Boolean(errors.firstName)
+                    Boolean(touched.firstname) && Boolean(errors.firstname)
                   }
-                  helperText={touched.firstName && errors.firstName}
+                  helperText={touched.firstname && errors.firstname}
                   sx={{ gridColumn: "span 2" }}
                 />
                 <TextField
                   label="Last Name"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.lastName}
-                  name="lastName"
-                  error={Boolean(touched.lastName) && Boolean(errors.lastName)}
-                  helperText={touched.lastName && errors.lastName}
+                  value={values.lastname}
+                  name="lastname"
+                  error={Boolean(touched.lastname) && Boolean(errors.lastname)}
+                  helperText={touched.lastname && errors.lastname}
                   sx={{ gridColumn: "span 2" }}
                 />
                 <TextField
-                  label="Location"
+                  label="Email"
                   onBlur={handleBlur}
                   onChange={handleChange}
                   value={values.location}
-                  name="location"
-                  error={Boolean(touched.location) && Boolean(errors.location)}
-                  helperText={touched.location && errors.location}
+                  name="email"
+                  error={Boolean(touched.email) && Boolean(errors.email)}
+                  helperText={touched.email && errors.email}
                   sx={{ gridColumn: "span 4" }}
                 />
                 <TextField
-                  label="Occupation"
+                  label="Contact Number"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.occupation}
-                  name="occupation"
+                  value={values.phonenumber}
+                  name="phonenumber"
                   error={
-                    Boolean(touched.occupation) && Boolean(errors.occupation)
+                    Boolean(touched.phonenumber) && Boolean(errors.phonenumber)
                   }
-                  helperText={touched.occupation && errors.occupation}
+                  helperText={touched.phonenumber && errors.phonenumber}
                   sx={{ gridColumn: "span 4" }}
                 />
-                <Box
-                  gridColumn="span 4"
-                  border={`1px solid ${palette.neutral.medium}`}
-                  borderRadius="5px"
-                  p="1rem"
-                >
-                  <Dropzone
-                    acceptedFiles=".jpg,.jpeg,.png"
-                    multiple={false}
-                    onDrop={(acceptedFiles) =>
-                      setFieldValue("picture", acceptedFiles[0])
-                    }
-                  >
-                    {({ getRootProps, getInputProps }) => (
-                      <Box
-                        {...getRootProps()}
-                        border={`2px dashed ${palette.primary.main}`}
-                        p="1rem"
-                        sx={{ "&:hover": { cursor: "pointer" } }}
-                      >
-                        <input {...getInputProps()} />
-                        {!values.picture ? (
-                          <p>Add Picture Here</p>
-                        ) : (
-                          <FlexBetween>
-                            <Typography>{values.picture.name}</Typography>
-                            <EditOutlinedIcon />
-                          </FlexBetween>
-                        )}
-                      </Box>
-                    )}
-                  </Dropzone>
-                </Box>
               </>
             )}
 
             <TextField
-              label="Email"
+              label="User Name"
               onBlur={handleBlur}
               onChange={handleChange}
-              value={values.email}
-              name="email"
-              error={Boolean(touched.email) && Boolean(errors.email)}
-              helperText={touched.email && errors.email}
+              value={values.username}
+              name="username"
+              error={Boolean(touched.username) && Boolean(errors.username)}
+              helperText={touched.username && errors.username}
               sx={{ gridColumn: "span 4" }}
             />
             <TextField
@@ -233,13 +202,14 @@ const Form = () => {
           </Box>
 
           {/* BUTTONS */}
-          <Box>
+          <Box sx={{ mt: 1 }}>
             <Button
-              fullWidth
               type="submit"
+              fullWidth
+              variant="contained"
               sx={{
-                m: "2rem 0",
-                p: "1rem",
+                mt: 3,
+                mb: 2,
                 backgroundColor: palette.primary.main,
                 color: palette.background.alt,
                 "&:hover": { color: palette.primary.main },
