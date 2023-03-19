@@ -4,6 +4,10 @@ const initialState = {
   customer: {},
   suppliers: [],
   supplier: {},
+  purchaseorders: [],
+  purchaseorder: {},
+  salesorders: [],
+  salesorder: {},
   loading: false,
 };
 
@@ -48,6 +52,38 @@ const Reducer = (state = initialState, action) => {
         loading: false,
       };
     case type.ADD_PRODUCT:
+      return {
+        ...state,
+        loading: false,
+      };
+    case type.ADD_PURCHASEORDERS:
+      return {
+        ...state,
+        loading: false,
+      };
+    case type.GET_PURCHASEORDERS:
+      return {
+        ...state,
+        purchaseorders: action.payload,
+        loading: false,
+      };
+    case type.DELETE_PURCHASEORDER:
+      return {
+        ...state,
+        loading: false,
+      };
+    case type.ADD_SALESORDERS:
+      return {
+        ...state,
+        loading: false,
+      };
+    case type.GET_SALESORDERS:
+      return {
+        ...state,
+        salesorders: action.payload,
+        loading: false,
+      };
+    case type.DELETE_SALESORDER:
       return {
         ...state,
         loading: false,

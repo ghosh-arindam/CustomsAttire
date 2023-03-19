@@ -51,7 +51,17 @@ const getProduct = (Product) => ({
   type: types.GET_PRODUCT,
   payload: Product,
 });
-
+const getsalesOrders = (SalesOrders) => ({
+  type: types.GET_SALESORDERS,
+  payload: SalesOrders,
+});
+const addsalesOrders = (SalesOrders) => ({
+  type: types.ADD_SALESORDERS,
+  payload: SalesOrders,
+});
+const deletedsalesOrders = () => ({
+  type: types.DELETE_SALESORDER,
+});
 export const loadCustomers = () => {
   return function (dispatch) {
     //console.log(`${process.env.REACT_APP_API}/customer`);
@@ -192,14 +202,14 @@ export const deletePurchaseOrders = (id) => {
 export const addPurchaseOrders = (purchaseOrder) => {
   return function (dispatch) {
     // console.log(`${process.env.REACT_APP_BASE_API_URL}/PurchaseOrders`);
-    // console.log("addSuppliers--->" + supplier);
+    console.log("addPurchaseOrders--->" + purchaseOrder);
     axios
       .post(
         `${process.env.REACT_APP_BASE_API_URL}/PurchaseOrders`,
         purchaseOrder
       )
       .then((resp) => {
-        // console.log("resp", resp);
+        console.log("resp", resp);
         dispatch(addpurchaseOrders());
         dispatch(getpurchaseOrders(resp.data));
       })
@@ -246,6 +256,62 @@ export const loadProduct = () => {
       .then((resp) => {
         //console.log("resp", resp);
         dispatch(getProduct(resp.data));
+      })
+      .catch((error) => console.log(error));
+  };
+};
+export const loadSalesOrders = () => {
+  return function (dispatch) {
+    // console.log(`${process.env.REACT_APP_BASE_API_URL}/Product`);
+    axios
+      .get(`${process.env.REACT_APP_BASE_API_URL}/SalesOrderItems`)
+      .then((resp) => {
+        //console.log("resp", resp);
+        dispatch(getsalesOrders(resp.data));
+      })
+      .catch((error) => console.log(error));
+  };
+};
+export const addSalesOrders = (salesOrder) => {
+  return function (dispatch) {
+    // console.log(`${process.env.REACT_APP_BASE_API_URL}/PurchaseOrders`);
+    console.log("addSalesOrders--->" + salesOrder);
+    axios
+      .post(`${process.env.REACT_APP_BASE_API_URL}/SalesOrderItems`, salesOrder)
+      .then((resp) => {
+        console.log("resp", resp);
+        dispatch(addsalesOrders());
+        dispatch(getsalesOrders(resp.data));
+      })
+      .catch((error) => console.log(error));
+  };
+};
+export const updateSalesOrders = (salesOrder, id) => {
+  return function (dispatch) {
+    // console.log(`${process.env.REACT_APP_BASE_API_URL}/PurchaseOrders`);
+    // console.log("updateCustomers --->" + customer.row);
+    //console.log("updatePurchaseOrders" + id);
+    axios
+      .put(
+        `${process.env.REACT_APP_BASE_API_URL}/SalesOrderItems/${id}`,
+        salesOrder
+      )
+      .then((resp) => {
+        console.log("resp", resp);
+        dispatch(updateSalesOrders());
+        dispatch(getsalesOrders());
+      })
+      .catch((error) => console.log(error));
+  };
+};
+export const deleteSalesOrders = (id) => {
+  return function (dispatch) {
+    axios
+      .delete(`${process.env.REACT_APP_BASE_API_URL}/SalesOrderItems/${id}`)
+      .then((resp) => {
+        //console.log("resp", resp);
+        dispatch(deletedsalesOrders());
+        dispatch(getsalesOrders());
       })
       .catch((error) => console.log(error));
   };
