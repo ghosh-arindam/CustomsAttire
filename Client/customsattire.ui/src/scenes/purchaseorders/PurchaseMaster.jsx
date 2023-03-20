@@ -1,11 +1,13 @@
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, TextField, Grid, MenuItem } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addProduct } from "./../../redux/action";
+import { useState, useEffect } from "react";
+import { loadSuppliers } from "./../../redux/action";
 
 const PurchaseMaster = () => {
   const isNonMobile = useMediaQuery("(min-width: 600px)");
@@ -13,22 +15,37 @@ const PurchaseMaster = () => {
   // const colors = tokens(theme.palette.mode);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  //const [selectedVendor, setSelectedVendor] = useState("");
+
+  const { suppliers } = useSelector((state) => state.data);
+
+  useEffect(() => {
+    dispatch(loadSuppliers());
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // const handleVendorChange = (event) => {
+  //   setSelectedVendor(event.target.value);
+  // };
 
   const handleFormSubmit = (values) => {
-    dispatch(addProduct(values));
-    navigate("/purchaseOrders");
+    console.log(values);
+    // dispatch(addProduct(values));
+    //navigate("/purchaseOrders");
   };
 
   const fabricSchema = yup.object().shape({
     fabricCode: yup.string().required("required"),
     description: yup.string().required("required"),
+    vendorName: yup.string().required("required"),
   });
   const initialValues = {
     fabricCode: "",
     description: "",
+    vendorName: "",
   };
   return (
-    <Box m="20px">
+    <Grid sx={{ flexGrow: 1 }} mx={4}>
       <Header title="CREATE FABRIC" subtitle="Create a New Fabric" />
       <Formik
         onSubmit={handleFormSubmit}
@@ -52,6 +69,48 @@ const PurchaseMaster = () => {
                 "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
               }}
             >
+              <Box
+                sx={{
+                  mx: "auto",
+                  p: 1,
+                  mt: 1,
+                  "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+                }}
+              >
+                <TextField
+                  id="outlined-select"
+                  select
+                  label="Select Vendor"
+                  variant="outlined"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.vendorName || ""}
+                  defaultValue={"--SELECT A  VENDOR--"}
+                  name="vendorName"
+                  error={!!touched.vendorName && !!errors.vendorName}
+                  helperText={touched.vendorName && errors.vendorName}
+                  sx={{
+                    align: "right",
+                    minWidth: 270,
+                    maxWidth: 470,
+                    pt: 1,
+                    "& .MuiNativeSelect-select": { pt: "8.5px" },
+                  }}
+                >
+                  {suppliers?.map((d, index) => (
+                    <MenuItem
+                      key={index}
+                      // value={JSON.stringify({
+                      //   id: d.id,
+                      //   name: d.vendorname,
+                      // })}
+                      value={d.vendorName}
+                    >
+                      {d.vendorName}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Box>
               <TextField
                 fullWidth
                 variant="outlined"
@@ -72,7 +131,7 @@ const PurchaseMaster = () => {
                 label="Fabric Description"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.address2}
+                value={values.description}
                 name="description"
                 error={!!touched.description && !!errors.description}
                 helperText={touched.description && errors.description}
@@ -88,7 +147,7 @@ const PurchaseMaster = () => {
           </form>
         )}
       </Formik>
-    </Box>
+    </Grid>
   );
 };
 
