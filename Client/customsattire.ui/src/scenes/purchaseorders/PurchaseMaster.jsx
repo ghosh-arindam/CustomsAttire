@@ -5,9 +5,8 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addProduct } from "./../../redux/action";
-import { useState, useEffect } from "react";
-import { loadSuppliers } from "./../../redux/action";
+import { addProduct, loadSuppliers } from "./../../redux/action";
+import { useEffect } from "react";
 
 const PurchaseMaster = () => {
   const isNonMobile = useMediaQuery("(min-width: 600px)");
@@ -15,7 +14,6 @@ const PurchaseMaster = () => {
   // const colors = tokens(theme.palette.mode);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  //const [selectedVendor, setSelectedVendor] = useState("");
 
   const { suppliers } = useSelector((state) => state.data);
 
@@ -24,14 +22,10 @@ const PurchaseMaster = () => {
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // const handleVendorChange = (event) => {
-  //   setSelectedVendor(event.target.value);
-  // };
-
   const handleFormSubmit = (values) => {
-    console.log(values);
-    // dispatch(addProduct(values));
-    //navigate("/purchaseOrders");
+    //console.log(values);
+    dispatch(addProduct(values));
+    navigate("/purchaseOrders");
   };
 
   const fabricSchema = yup.object().shape({
@@ -69,48 +63,35 @@ const PurchaseMaster = () => {
                 "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
               }}
             >
-              <Box
+              <TextField
+                id="outlined-select"
+                select
+                label="Select Vendor"
+                variant="outlined"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.vendorName || ""}
+                defaultValue={"--SELECT A  VENDOR--"}
+                name="vendorName"
+                error={!!touched.vendorName && !!errors.vendorName}
+                helperText={touched.vendorName && errors.vendorName}
                 sx={{
+                  align: "left",
+                  minWidth: 970,
+                  maxWidth: 1270,
                   mx: "auto",
-                  p: 1,
-                  mt: 1,
-                  "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+                  // p: 1,
+                  pt: 1,
+                  "& .MuiNativeSelect-select": { pt: "8.5px" },
                 }}
               >
-                <TextField
-                  id="outlined-select"
-                  select
-                  label="Select Vendor"
-                  variant="outlined"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.vendorName || ""}
-                  defaultValue={"--SELECT A  VENDOR--"}
-                  name="vendorName"
-                  error={!!touched.vendorName && !!errors.vendorName}
-                  helperText={touched.vendorName && errors.vendorName}
-                  sx={{
-                    align: "right",
-                    minWidth: 270,
-                    maxWidth: 470,
-                    pt: 1,
-                    "& .MuiNativeSelect-select": { pt: "8.5px" },
-                  }}
-                >
-                  {suppliers?.map((d, index) => (
-                    <MenuItem
-                      key={index}
-                      // value={JSON.stringify({
-                      //   id: d.id,
-                      //   name: d.vendorname,
-                      // })}
-                      value={d.vendorName}
-                    >
-                      {d.vendorName}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Box>
+                {suppliers?.map((d, index) => (
+                  <MenuItem key={index} value={d.vendorName}>
+                    {d.vendorName}
+                  </MenuItem>
+                ))}
+              </TextField>
+
               <TextField
                 fullWidth
                 variant="outlined"
