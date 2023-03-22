@@ -28,6 +28,14 @@ namespace CustomsAttire.Core.Data.Entities
         public Guid Id { get; set; }
 
         /// <summary>
+        /// Gets or sets the property value representing column 'VendorName'.
+        /// </summary>
+        /// <value>
+        /// The property value representing column 'VendorName'.
+        /// </value>
+        public string VendorName { get; set; }
+
+        /// <summary>
         /// Gets or sets the property value representing column 'fabricCode'.
         /// </summary>
         /// <value>

@@ -36,12 +36,28 @@ namespace CustomsAttire.Core.Data.Entities
         public string BillHeaderId { get; set; }
 
         /// <summary>
+        /// Gets or sets the property value representing column 'CustomerName'.
+        /// </summary>
+        /// <value>
+        /// The property value representing column 'CustomerName'.
+        /// </value>
+        public string CustomerName { get; set; }
+
+        /// <summary>
         /// Gets or sets the property value representing column 'FabricCodeId'.
         /// </summary>
         /// <value>
         /// The property value representing column 'FabricCodeId'.
         /// </value>
         public string FabricCodeId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the property value representing column 'FabricDesc'.
+        /// </summary>
+        /// <value>
+        /// The property value representing column 'FabricDesc'.
+        /// </value>
+        public string FabricDesc { get; set; }
 
         /// <summary>
         /// Gets or sets the property value representing column 'ClothType'.

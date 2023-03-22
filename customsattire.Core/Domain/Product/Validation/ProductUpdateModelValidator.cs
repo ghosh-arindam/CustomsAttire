@@ -16,6 +16,7 @@ namespace CustomsAttire.Core.Domain.Validation
         public ProductUpdateModelValidator()
         {
             #region Generated Constructor
+            RuleFor(p => p.VendorName).MaximumLength(50);
             RuleFor(p => p.FabricCode).MaximumLength(250);
             #endregion
         }

@@ -19,12 +19,28 @@ namespace CustomsAttire.Core.Domain.Models
         public string BillHeaderId { get; set; }
 
         /// <summary>
+        /// Gets or sets the property value for 'CustomerName'.
+        /// </summary>
+        /// <value>
+        /// The property value for 'CustomerName'.
+        /// </value>
+        public string CustomerName { get; set; }
+
+        /// <summary>
         /// Gets or sets the property value for 'FabricCodeId'.
         /// </summary>
         /// <value>
         /// The property value for 'FabricCodeId'.
         /// </value>
         public string FabricCodeId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the property value for 'FabricDesc'.
+        /// </summary>
+        /// <value>
+        /// The property value for 'FabricDesc'.
+        /// </value>
+        public string FabricDesc { get; set; }
 
         /// <summary>
         /// Gets or sets the property value for 'ClothType'.

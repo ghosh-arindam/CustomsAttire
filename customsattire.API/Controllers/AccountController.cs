@@ -34,13 +34,13 @@ namespace CustomsAttire.API.Controllers
             _roleManager = roleManager;
             _configuration = configuration;
         }
-       
+
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
             var user = await _userManager.FindByNameAsync(model.Username);
-            if (user != null )
+            if (user != null)
             {
                 if (await _userManager.CheckPasswordAsync(user, model.Password))
                 {
@@ -75,29 +75,41 @@ namespace CustomsAttire.API.Controllers
         [Route("register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
-            var userExists = await _userManager.FindByNameAsync(model.Username);
-            if (userExists != null)
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
-
-            ApplicationUser user = new()
+            try
             {
-                Email = model.Email,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = model.Username,
-                FirstName = model.Firstname,
-                LastName = model.Lastname,
-                PhoneNumber = model.Phonenumber
-            };
-            var result = await _userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded)
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user creadentials and try again." });
-            //if (!await _roleManager.RoleExistsAsync(UserRoles.User))
-            //    await _roleManager.CreateAsync(new IdentityRole(UserRoles.User));
-            //if (await _roleManager.RoleExistsAsync(UserRoles.User))
-            //{
-            //    await _userManager.AddToRoleAsync(user, UserRoles.User);
-            //}
-            return Ok(new Response { Status = "Success", Message = "User created successfully!" });
+                var userExists = await _userManager.FindByNameAsync(model.Username);
+                if (userExists != null)
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
+
+                ApplicationUser user = new()
+                {
+                    Email = model.Email,
+                    SecurityStamp = Guid.NewGuid().ToString(),
+                    UserName = model.Username,
+                    FirstName = model.Firstname,
+                    LastName = model.Lastname,
+                    PhoneNumber = model.Phonenumber,
+                    EmailConfirmed = true,
+                    TwoFactorEnabled = false,
+                    LockoutEnabled = false,
+                };
+                var result = await _userManager.CreateAsync(user, model.Password);
+                if (!result.Succeeded)
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user creadentials and try again." });
+                //if (!await _roleManager.RoleExistsAsync(UserRoles.User))
+                //    await _roleManager.CreateAsync(new IdentityRole(UserRoles.User));
+                //if (await _roleManager.RoleExistsAsync(UserRoles.User))
+                //{
+                //    await _userManager.AddToRoleAsync(user, UserRoles.User);
+                //}
+                return Ok(new Response { Status = "Success", Message = "User created successfully!" });
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
         }
 
         [HttpPost]
@@ -115,7 +127,10 @@ namespace CustomsAttire.API.Controllers
                 UserName = model.Username,
                 FirstName = model.Firstname,
                 LastName = model.Lastname,
-                PhoneNumber= model.Phonenumber
+                PhoneNumber = model.Phonenumber,
+                EmailConfirmed = true,
+                TwoFactorEnabled = false,
+                LockoutEnabled = false,
             };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
@@ -151,5 +166,23 @@ namespace CustomsAttire.API.Controllers
 
             return token;
         }
+
+        /// <summary>
+        /// Get List of UserAccounts   
+        /// </summary>
+        /// <returns>List Of UserAccounts</returns>
+        [HttpGet]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult GetList()
+        {
+            var list = _userManager.Users.FirstOrDefault();
+            if (list != null)
+            {
+                var result = _userManager.GetUserNameAsync(list);
+                return Ok(result);
+            }
+            return BadRequest();
+        }
+      
     }
 }

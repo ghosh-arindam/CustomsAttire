@@ -11,6 +11,14 @@ namespace CustomsAttire.Core.Domain.Models
     {
         #region Generated Properties
         /// <summary>
+        /// Gets or sets the property value for 'VendorName'.
+        /// </summary>
+        /// <value>
+        /// The property value for 'VendorName'.
+        /// </value>
+        public string VendorName { get; set; }
+
+        /// <summary>
         /// Gets or sets the property value for 'FabricCode'.
         /// </summary>
         /// <value>

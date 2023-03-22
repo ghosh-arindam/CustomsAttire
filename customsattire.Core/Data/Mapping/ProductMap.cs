@@ -29,6 +29,11 @@ namespace CustomsAttire.Core.Data.Mapping
                 .HasColumnName("Id")
                 .HasColumnType("uniqueidentifier");
 
+            builder.Property(t => t.VendorName)
+                .HasColumnName("VendorName")
+                .HasColumnType("nvarchar(50)")
+                .HasMaxLength(50);
+
             builder.Property(t => t.FabricCode)
                 .HasColumnName("fabricCode")
                 .HasColumnType("nvarchar(250)")
@@ -75,6 +80,8 @@ namespace CustomsAttire.Core.Data.Mapping
         {
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.Product.Id" /></summary>
             public const string Id = "Id";
+            /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.Product.VendorName" /></summary>
+            public const string VendorName = "VendorName";
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.Product.FabricCode" /></summary>
             public const string FabricCode = "fabricCode";
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.Product.Description" /></summary>

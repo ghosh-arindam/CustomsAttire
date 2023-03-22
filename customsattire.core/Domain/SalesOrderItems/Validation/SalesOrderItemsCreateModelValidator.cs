@@ -18,6 +18,7 @@ namespace CustomsAttire.Core.Domain.Validation
             #region Generated Constructor
             RuleFor(p => p.BillHeaderId).NotEmpty();
             RuleFor(p => p.BillHeaderId).MaximumLength(255);
+            RuleFor(p => p.CustomerName).MaximumLength(50);
             RuleFor(p => p.FabricCodeId).NotEmpty();
             RuleFor(p => p.FabricCodeId).MaximumLength(50);
             RuleFor(p => p.ClothType).NotEmpty();
