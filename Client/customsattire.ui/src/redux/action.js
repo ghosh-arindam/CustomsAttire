@@ -1,9 +1,9 @@
 import axios from "axios";
 import * as types from "./actionType";
 
-const getcustomers = (Customers) => ({
+const getcustomers = (Customersdata) => ({
   type: types.GET_CUSTOMERS,
-  payload: Customers,
+  payload: Customersdata,
 });
 
 const deletedcustomer = () => ({
@@ -64,9 +64,9 @@ const deletedsalesOrders = () => ({
 });
 export const loadCustomers = () => {
   return function (dispatch) {
-    //console.log(`${process.env.REACT_APP_API}/customer`);
+    //console.log(`${process.env.REACT_APP_BASE_API_URL}/Customer`);
     axios
-      .get(`${process.env.REACT_APP_BASE_API_URL}/customer`)
+      .get(`${process.env.REACT_APP_BASE_API_URL}/Customer`)
       .then((resp) => {
         //console.log("resp", resp);
         dispatch(getcustomers(resp.data));
