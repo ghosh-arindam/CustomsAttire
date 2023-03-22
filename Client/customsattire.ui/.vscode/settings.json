@@ -1,0 +1,4 @@
+{
+  "appService.defaultWebAppToDeploy": "/subscriptions/3af01430-f23f-4f9a-ad56-eee42a47adfd/resourceGroups/CustomsAttire_group/providers/Microsoft.Web/sites/CustomsAttire",
+  "appService.deploySubpath": "."
+}
