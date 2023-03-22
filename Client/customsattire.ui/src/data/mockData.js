@@ -2083,3 +2083,34 @@ export const mockSupplierData = [
     modifieddate: "2019-10-06T17:08:54Z",
   },
 ];
+export const mockDataProduct = [
+  {
+    vendorname: "Jon Snow",
+    fabricCode: "F001",
+    description: "Fabric Cloth",
+    id: "a567272e-1f82-4f24-a35e-08db21d442f8",
+    createdDate: "2023-03-11T01:59:34.2512741+00:00",
+    createdBy: "Dummy",
+    modifiedDate: "2023-03-11T01:59:34.2513741+00:00",
+    modifiedBy: "Dummy",
+  },
+  {
+    vendorname: "Cersei Lannister",
+    fabricCode: "F002",
+    description: "Fabric Cloth for Blazer",
+    id: "aed5044f-fb01-4ca2-a35f-08db21d442f8",
+    createdDate: "2023-03-12T10:41:21.3890478+00:00",
+    createdBy: "Dummy",
+    modifiedDate: "2023-03-12T10:41:21.3890492+00:00",
+    modifiedBy: "Dummy",
+  },
+  {
+    fabricCode: "F004",
+    description: "Shirt Cloth",
+    id: "94c6444d-30ed-41c8-12a4-08db24ae31ce",
+    createdDate: "2023-03-14T17:04:37.9214462+00:00",
+    createdBy: "Dummy",
+    modifiedDate: "2023-03-14T17:04:37.9217823+00:00",
+    modifiedBy: "Dummy",
+  },
+];
