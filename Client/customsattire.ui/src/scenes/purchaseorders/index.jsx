@@ -1,5 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Box, Button, TextField, MenuItem, Grid, Select } from "@mui/material";
+import {
+  Box,
+  Button,
+  TextField,
+  MenuItem,
+  Grid,
+  Select,
+  Stack,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 // import { tokens } from "../../theme";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
@@ -12,12 +22,14 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import AddIcon from "@mui/icons-material/Add";
 import Save from "@mui/icons-material/Save";
+import Cancel from "@mui/icons-material/Cancel";
 import { useDispatch, useSelector } from "react-redux";
 import { loadSuppliers } from "./../../redux/action";
-import { addPurchaseOrders } from "./../../redux/action";
+//import { addPurchaseOrders } from "./../../redux/action";
 import { loadProduct } from "./../../redux/action";
 //import ProductDropDownComponent from "../../components/ProductDropDown";
 import { useNavigate } from "react-router-dom";
+//import { mockDataProduct } from "../../data/mockData";
 //import { Formik } from "formik";
 
 const PurchaseOrders = () => {
@@ -26,9 +38,11 @@ const PurchaseOrders = () => {
   const isNonMobile = useMediaQuery("(min-width: 600px)");
   const navigate = useNavigate();
   const [selectedVendor, setSelectedVendor] = useState("");
+  //const [selectedFabricCode, setSelectedFabricCode] = useState("");
   const [total, setTotal] = useState(0);
   const [grandTotal, setGrandTotal] = useState(0);
   const [fabricDescription, setfabricDescription] = useState();
+  //const [tableData, setTableData] = useState([]);
   const [due, setDue] = useState(0);
   const [inputAdvance, setInputAdvance] = useState(0);
   const [inputDue, setInputDue] = useState(0);
@@ -39,18 +53,14 @@ const PurchaseOrders = () => {
   //const [fabricDesc, setFabricDesc] = useState("");
   const dispatch = useDispatch();
   const [rows, setRows] = useState([]);
-
-  const { suppliers } = useSelector((state) => state.data);
   const { Products } = useSelector((state) => state.data);
-
-  //const  = useSelector((state) => state.data);
   const tableRef = useRef(null);
 
   useEffect(() => {
-    dispatch(loadSuppliers());
+    //dispatch(loadSuppliers());
     dispatch(loadProduct());
     //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedVendor]);
+  }, []);
 
   const handleAdvChange = (e) => {
     const due = grandTotal - e.target.value;
@@ -58,7 +68,7 @@ const PurchaseOrders = () => {
     setInputDue(due);
   };
 
-  console.log(Products);
+  // console.log(Products);
   const calculateTotal = (rowId) => {
     const qty = document.getElementById(`qty${rowId}`).value;
     const price = parseFloat(document.getElementById(`price${rowId}`).value);
@@ -78,7 +88,7 @@ const PurchaseOrders = () => {
     setDue(newDue.toFixed(2));
     setInputDue(newDue.toFixed(2));
   };
-  // console.log(suppliers);
+  //console.log(suppliers);
   //console.log(Products);
 
   // const handleSelectFabricChange = (index, event) => {
@@ -94,16 +104,62 @@ const PurchaseOrders = () => {
   //   setfabricDesc(event.target.value);
   //   setFabricState(event.target.value);
   // };
-  const handleVendorChange = (event) => {
-    setSelectedVendor(event.target.value);
-    //setSelectedFabric("");
-    //setFabricDesc("");
-  };
-  // const handleFabricChange = (event) => {
-  //   setSelectedFabric(event.target.value);
+  //const handleVendorChange = (event) => {
+  // const vendorName = event.target.value;
+  // console.log(vendorName);
+  // setSelectedVendor(event.target.value);
+  //setSelectedFabric("");
+  //setFabricDesc("");
+  // Filter the data to include only the selected vendor
+  // const filteredData = Products.filter(
+  //   (item) => item.vendorname === vendorName
+  // );
+  // console.log(filteredData);
+  // // Create an object that maps each fabric code to its description
+  // const fabricDescriptions = {};
+  // mockDataTeam.forEach((item) => {
+  //   fabricDescriptions[item.fabricCode] = item.description;
+  // });
+
+  // // Map over the filtered data to include the fabric descriptions
+  // const mappedData = filteredData.map((item) => {
+  //   const fabricDescription = fabricDescriptions[item.fabricCode];
+  //   return { ...item, fabricDescription };
+  // });
   // };
+
+  const handleFabricChange = (event) => {
+    console.log(event.target.value);
+  };
+
+  const handleVendorChange = (e) => {
+    const vendorName = e.target.value;
+    // console.log(vendorName);
+    setSelectedVendor(vendorName);
+
+    // Filter the data to include only the selected vendor
+    // const filteredData = mockDataTeam.filter(
+    //   (item) => item.vendorname === vendorName
+    // );
+    // console.log(filteredData);
+    // // Create an object that maps each fabric code to its description
+    // const fabricDescriptions = {};
+    // mockDataTeam.forEach((item) => {
+    //   fabricDescriptions[item.fabricCode] = item.description;
+    // });
+
+    // // Map over the filtered data to include the fabric descriptions
+    // const mappedData = filteredData.map((item) => {
+    //   const fabricDescription = fabricDescriptions[item.fabricCode];
+    //   console.log(fabricDescription);
+    //   return { ...item, fabricDescription };
+    // });
+
+    // setRows([...rows, mappedData]);
+  };
+
   const handleSubmit = (values) => {
-    dispatch(addPurchaseOrders(values));
+    //dispatch(addPurchaseOrders(values));
     console.log(values);
     navigate("/dashboard");
   };
@@ -146,7 +202,7 @@ const PurchaseOrders = () => {
           </Box>
           <Box sx={{ width: 1 / 4 }}></Box>
           <Box sx={{ mx: "auto", p: 1, mt: 1 }}>
-            <TextField
+            {/* <TextField
               id="outlined-select"
               select
               label="Select Vendor"
@@ -154,7 +210,7 @@ const PurchaseOrders = () => {
               onChange={handleVendorChange}
               value={selectedVendor || ""}
               defaultValue={"--SELECT A  VENDOR--"}
-              name="supplierId"
+              name="vendorname"
               //error={!!touched.supplierId && !!errors.supplierId}
               //helperText={touched.supplierId && errors.supplierId}
               sx={{
@@ -167,7 +223,7 @@ const PurchaseOrders = () => {
             >
               {suppliers?.map((d, index) => (
                 <MenuItem
-                  key={d.id}
+                  key={index}
                   value={JSON.stringify({
                     id: d.id,
                     name: d.vendorname,
@@ -176,10 +232,35 @@ const PurchaseOrders = () => {
                   {d.vendorName}
                 </MenuItem>
               ))}
-            </TextField>
+            </TextField> */}
+
+            <FormControl>
+              <InputLabel id="vendorSelect-label">vendor</InputLabel>
+              <Select
+                labelId="vendorSelect-label"
+                id="vendorSelect"
+                value={selectedVendor}
+                sx={{
+                  align: "right",
+                  minWidth: 270,
+                  maxWidth: 470,
+                  pt: 1,
+                  "& .MuiNativeSelect-select": { pt: "8.5px" },
+                }}
+                onChange={handleVendorChange}
+              >
+                <MenuItem value="">Select a vendor</MenuItem>
+                {Array.from(
+                  new Set(Products?.map((item) => item.vendorName))
+                ).map((vendorName) => (
+                  <MenuItem key={vendorName} value={vendorName}>
+                    {vendorName}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Box>
         </Box>
-
         <Box my={4}>
           <TableContainer component={Paper}>
             <Table
@@ -232,7 +313,7 @@ const PurchaseOrders = () => {
                       ))}
                       :<div></div>
                     </TextField> */}
-                      <Select
+                      {/* <Select
                         value={row.fabricCode}
                         onChange={(e, index) => {
                           row = e.target.value;
@@ -248,6 +329,18 @@ const PurchaseOrders = () => {
                         {Products.map((fabric, index) => (
                           <MenuItem key={fabric.id} value={fabric.description}>
                             {fabric.fabricCode}
+                          </MenuItem>
+                        ))}
+                      </Select> */}
+                      <Select
+                        defaultValue={row.fabricCode}
+                        onChange={handleFabricChange}
+                      >
+                        {Array.from(
+                          new Set(Products.map((data) => data.fabricCode))
+                        ).map((fabricCode) => (
+                          <MenuItem key={fabricCode} value={fabricCode}>
+                            {fabricCode}
                           </MenuItem>
                         ))}
                       </Select>
@@ -280,7 +373,6 @@ const PurchaseOrders = () => {
                     </TableCell>
                   </TableRow>
                 ))}
-
                 <TableRow>
                   <TableCell rowSpan={4} />
                   <TableCell colSpan={3}>Grand Total</TableCell>
@@ -309,23 +401,29 @@ const PurchaseOrders = () => {
             </Table>
           </TableContainer>
           <Box sx={{ width: 1 / 4 }} my={4}></Box>
-          <Box
+          {/* <Box
+            sx={{ width: 1 / 4 }}
+            mx={1}
+            display="auto"
+            justifyContent="end"
+            mt="20px"
+          > */}
+          <Stack
+            direction="row"
+            spacing={2}
             sx={{ width: 1 / 2 }}
-            mx={4}
+            mx={1}
             display="flex"
             justifyContent="end"
             mt="20px"
           >
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              startIcon={<Save />}
-              size="medium"
-            >
+            <Button variant="contained" startIcon={<Save />}>
               Save
             </Button>
-          </Box>
+            <Button variant="contained" endIcon={<Cancel />}>
+              Cancel
+            </Button>
+          </Stack>
         </Box>
       </form>
     </Grid>
