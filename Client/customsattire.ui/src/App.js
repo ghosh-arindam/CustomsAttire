@@ -17,6 +17,7 @@ import Invoices from "./scenes/invoices";
 import AddVendor from "./scenes/supplierlocal/AddSupplier";
 import PurchaseOrders from "./scenes/purchaseorders";
 import PurchaseMaster from "./scenes/purchaseorders/PurchaseMaster";
+import AddSalesOrders from "./scenes/salesorders/index";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
 
@@ -52,6 +53,7 @@ function App() {
               {/* <Route path="/purchaseorders" element={<Purchase />} /> */}
               <Route path="/addfabric" element={<PurchaseMaster />} />
               <Route path="/purchaseorders" element={<PurchaseOrders />} />
+              <Route path="/addsales" element={<AddSalesOrders />} />
             </Routes>
           </main>
         </div>
