@@ -421,7 +421,11 @@ const SalesOrder = () => {
           </TableContainer>
           <Box>
             <TableRow>
-              <TableCell rowSpan={2} sx={{ width: 1 / 2 }} />
+              <TableCell
+                rowSpan={2}
+                style={{ borderBottom: "none" }}
+                sx={{ width: 1 / 2, "& td": { border: 0 } }}
+              />
               <TableCell sx={{ width: 1 / 4 }} colSpan={4}>
                 Total
               </TableCell>
@@ -450,7 +454,11 @@ const SalesOrder = () => {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell rowSpan={2} sx={{ width: 1 / 2 }} />
+              <TableCell
+                rowSpan={2}
+                style={{ borderBottom: "none" }}
+                sx={{ width: 1 / 2, "& td": { border: 0 } }}
+              />
               <TableCell sx={{ width: 1 / 4 }} colSpan={4}>
                 Total Due
               </TableCell>
