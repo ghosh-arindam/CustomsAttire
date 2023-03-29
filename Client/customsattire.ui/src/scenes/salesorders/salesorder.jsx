@@ -1,13 +1,5 @@
-import React, { useState, useEffect } from "react";
-import {
-  Box,
-  Button,
-  TextField,
-  MenuItem,
-  Grid,
-  Select,
-  Stack,
-} from "@mui/material";
+import React, { useState, useEffect, useCallback } from "react";
+import { Box, Button, TextField, MenuItem, Grid, Stack } from "@mui/material";
 // import { tokens } from "../../theme";
 import { v4 as uuidv4 } from "uuid";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -26,12 +18,13 @@ import Cancel from "@mui/icons-material/Cancel";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loadCustomers } from "./../../redux/action";
+import ProductDropDown from "../../components/ProductDropDown";
 
 const SalesOrder = () => {
   const isNonMobile = useMediaQuery("(min-width: 600px)");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [Customer, setCustomer] = useState("");
+  const [customerName, setcustomerName] = useState("");
   const [total, setTotal] = useState(0);
   // const [grandTotalA, setGrandTotalA] = useState(0);
   // const [grandTotalB, setGrandTotalB] = useState(0);
@@ -107,9 +100,10 @@ const SalesOrder = () => {
       grandTotalAB.toFixed(2);
   };
 
-  const handleFabricChange = (event) => {
-    console.log(event.target.value);
-  };
+  const handleSelectFabricChange = useCallback((newValue) => {
+    console.log("parentComponet" + newValue);
+    setfabricDescription(newValue);
+  }, []);
 
   const handleSubmit = (values) => {
     //dispatch(addPurchaseOrders(values));
@@ -120,7 +114,7 @@ const SalesOrder = () => {
   const handleCustomerChange = (e) => {
     const customer = e.target.value;
     // console.log(vendorName);
-    setCustomer(customer);
+    setcustomerName(customer);
 
     const setfabricDescription = (event) => {
       console.log(event.target.value);
@@ -134,8 +128,8 @@ const SalesOrder = () => {
 
     // update the corresponding state property
     switch (name) {
-      case "selectedVendor":
-        setCustomer(value);
+      case "selectedCustomer":
+        setcustomerName(value);
         break;
       case "rows":
         setRows(value);
@@ -211,7 +205,7 @@ const SalesOrder = () => {
                 label="Customer"
                 variant="outlined"
                 onChange={handleCustomerChange}
-                value={Customer || ""}
+                value={customerName || ""}
                 defaultValue={"--SELECT A  CUSTOMER--"}
                 name="customerName"
                 //error={!!touched.supplierId && !!errors.supplierId}
@@ -245,7 +239,10 @@ const SalesOrder = () => {
             gridTemplateColumns="repeat(3, minmax(0, 1fr))"
             sx={{ mx: "right", p: 1, mt: 1 }}
           >
-            <Box align="right">OrderId:{uuidv4()}</Box>
+            <Box align="right" name="billHeaderId" value="billHeaderId">
+              OrderId:
+              {uuidv4()}
+            </Box>
             <Button
               variant="contained"
               color="primary"
@@ -311,12 +308,13 @@ const SalesOrder = () => {
                   <TableRow key={row.id}>
                     <TableCell colSpan={1}>{index + 1}</TableCell>
                     <TableCell colSpan={1}>
-                      <Select
-                        defaultValue={row.fabricCode}
-                        onChange={handleFabricChange}
-                      ></Select>
+                      <ProductDropDown
+                        id={`fabricCode${row.id}`}
+                        value={fabricDescription}
+                        onChange={handleSelectFabricChange}
+                      />
                     </TableCell>
-                    <TableCell align="right" colSpan={1}>
+                    <TableCell align="right" colSpan={1} name="fabricDesc">
                       {fabricDescription}
                     </TableCell>
                     <TableCell align="right" colSpan={1}>
@@ -326,7 +324,7 @@ const SalesOrder = () => {
                             label="Quantity"
                             type="number"
                             id={`qty${row.id}`}
-                            name="quantityPurchased"
+                            name="qty"
                             onChange={() => calculateTotal(row.id)}
                           />
                         </Grid>
@@ -339,7 +337,7 @@ const SalesOrder = () => {
                             label="Price"
                             type="number"
                             id={`price${row.id}`}
-                            name="costPrice"
+                            name="pricePerMeter"
                             onChange={() => calculateTotal(row.id)}
                           />
                         </Grid>
@@ -357,6 +355,7 @@ const SalesOrder = () => {
                           <TextField
                             label="Discount (A)"
                             type="number"
+                            name="fabricDiscount"
                             id={`discountA${row.id}`}
                             onChange={(e) => grandTotalA(e, row.id)}
                           />
@@ -382,7 +381,7 @@ const SalesOrder = () => {
                       <Grid container alignItems="center" justify="flex-end">
                         <Grid item>
                           <TextField
-                            label="DiscountB"
+                            label="Discount(B)"
                             type="number"
                             id={`discountB${row.id}`}
                             onChange={() => grandTotalB(row.id)}
@@ -419,70 +418,71 @@ const SalesOrder = () => {
                 </TableRow> */}
               </TableBody>
             </Table>
-          </TableContainer>
-          <Box>
-            <TableRow>
-              <TableCell
-                rowSpan={2}
-                style={{ borderBottom: "none" }}
-                sx={{ width: 1 / 2, "& td": { border: 0 } }}
-              />
-              <TableCell sx={{ width: 1 / 4 }} colSpan={4}>
-                Total
-              </TableCell>
-              <TableCell align="right" colSpan={2}>
-                {grandTotal}
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell sx={{ width: 1 / 4 }} colSpan={4}>
-                Advance
-              </TableCell>
-              <TableCell colSpan={4}>
-                <TextField
-                  label="Advance"
-                  value={inputAdvance}
-                  name="paymentdone"
-                  onChange={handleAdvChange}
-                  sx={{
-                    align: "right",
-                    minWidth: 270,
-                    maxWidth: 470,
-                    pt: 1,
-                    // "& .MuiNativeSelect-select": { pt: "8.5px" },
-                  }}
-                ></TextField>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell
-                rowSpan={2}
-                style={{ borderBottom: "none" }}
-                sx={{ width: 1 / 2, "& td": { border: 0 } }}
-              />
-              <TableCell sx={{ width: 1 / 4 }} colSpan={4}>
-                Total Due
-              </TableCell>
-              <TableCell align="right" colSpan={3}>
-                {inputDue}
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell sx={{ width: 1 / 4 }} colSpan={4}>
-                Delivery Date
-              </TableCell>
-              <TableCell colSpan={3} align="right">
-                <TextField
-                  label="Calendar"
-                  type="date"
-                  defaultValue={new Date()}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
+
+            <Box>
+              <TableRow>
+                <TableCell
+                  rowSpan={2}
+                  style={{ borderBottom: "none" }}
+                  sx={{ width: 1 / 2, "& td": { border: 0 } }}
                 />
-              </TableCell>
-            </TableRow>
-          </Box>
+                <TableCell sx={{ width: 1 / 4 }} colSpan={4}>
+                  Total
+                </TableCell>
+                <TableCell align="right" colSpan={2}>
+                  {grandTotal}
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell sx={{ width: 1 / 4 }} colSpan={4}>
+                  Advance
+                </TableCell>
+                <TableCell colSpan={4}>
+                  <TextField
+                    label="Advance"
+                    value={inputAdvance}
+                    name="paymentdone"
+                    onChange={handleAdvChange}
+                    sx={{
+                      align: "right",
+                      minWidth: 270,
+                      maxWidth: 470,
+                      pt: 1,
+                      // "& .MuiNativeSelect-select": { pt: "8.5px" },
+                    }}
+                  ></TextField>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell
+                  rowSpan={2}
+                  style={{ borderBottom: "none" }}
+                  sx={{ width: 1 / 2, "& td": { border: 0 } }}
+                />
+                <TableCell sx={{ width: 1 / 4 }} colSpan={4}>
+                  Total Due
+                </TableCell>
+                <TableCell align="right" colSpan={3}>
+                  {inputDue}
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell sx={{ width: 1 / 4 }} colSpan={4}>
+                  Delivery Date
+                </TableCell>
+                <TableCell colSpan={3} align="right">
+                  <TextField
+                    label="Calendar"
+                    type="date"
+                    defaultValue={new Date()}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                </TableCell>
+              </TableRow>
+            </Box>
+          </TableContainer>
           <Box sx={{ width: 1 / 4 }} my={4}></Box>
           <Stack
             direction="row"
