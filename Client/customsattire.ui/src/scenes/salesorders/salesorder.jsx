@@ -9,6 +9,7 @@ import {
   Stack,
 } from "@mui/material";
 // import { tokens } from "../../theme";
+import { v4 as uuidv4 } from "uuid";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
 import Table from "@mui/material/Table";
@@ -244,7 +245,7 @@ const SalesOrder = () => {
             gridTemplateColumns="repeat(3, minmax(0, 1fr))"
             sx={{ mx: "right", p: 1, mt: 1 }}
           >
-            <Box align="center">OrderId:</Box>
+            <Box align="right">OrderId:{uuidv4()}</Box>
             <Button
               variant="contained"
               color="primary"
