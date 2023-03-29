@@ -1,329 +1,504 @@
-// import React, { useState } from "react";
-import React, { useRef, useState, useEffect } from "react";
-//import { v4 as uuid } from "uuid";
-
-// import { Calendar } from 'react-big-calendar';
-//import moment from "moment";
-// import 'react-big-calendar/lib/css/react-big-calendar.css';
-// import DatePicker from 'react-datepicker';
-
-import { mockDataTeam } from "../../data/mockData";
+import React, { useState, useEffect } from "react";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
+  Box,
   Button,
   TextField,
+  MenuItem,
+  Grid,
+  Select,
+  Stack,
 } from "@mui/material";
-// import { makeStyles } from "@material-ui/core/styles";
-// import { DatePicker } from "@material-ui/pickers";
+// import { tokens } from "../../theme";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import Header from "../../components/Header";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import AddIcon from "@mui/icons-material/Add";
+import Typography from "@mui/material/Typography";
+import Save from "@mui/icons-material/Save";
+import Cancel from "@mui/icons-material/Cancel";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { loadCustomers } from "./../../redux/action";
 
-const VendorTable = () => {
-  const [selectId, setSelectedId] = useState(null);
-  const [selectedDate, setSelectedDate] = useState(null);
-
-  const [selectedVendor, setSelectedVendor] = useState(null);
-  const [showOnlyOneRow, setShowOnlyOneRow] = useState(false);
-  const [advance, setAdvance] = useState(0);
-  // const [due, setDue] = useState(0);
-  const [inputDue, setInputDue] = useState(0);
+const SalesOrder = () => {
+  const isNonMobile = useMediaQuery("(min-width: 600px)");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [Customer, setCustomer] = useState("");
+  const [total, setTotal] = useState(0);
+  // const [grandTotalA, setGrandTotalA] = useState(0);
+  // const [grandTotalB, setGrandTotalB] = useState(0);
+  const [totalB, setTotalB] = useState(0);
+  const [discountA, setDiscountA] = useState(0);
+  const [discountB, setDiscountB] = useState(0);
+  const [stitchingCost, setStitchingCost] = useState(0);
+  const [grandTotal, setGrandTotal] = useState(0);
+  const [
+    fabricDescription,
+    // eslint-disable-next-line
+    setfabricDescription,
+  ] = useState();
+  const [due, setDue] = useState(0);
   const [inputAdvance, setInputAdvance] = useState(0);
-  const [selectedFabric, setSelectedFabric] = useState(null);
-  const [price, setPrice] = useState(null);
-  const [quantity, setQuantity] = useState(null);
-  const [total, setTotal] = useState(null);
-  const [discount, setDiscount] = useState(null);
-  const [grandTotal, setGrandTotal] = useState(null);
-  const [outfitType, setOutfitType] = useState(null);
-  const [stitchingCost, setStitchingCost] = useState(null);
-  const [discountB, setDiscountB] = useState(null);
-  const [grandTotalB, setGrandTotalB] = useState(null);
-  const [totalab, setTotalAB] = useState(null);
+  const [inputDue, setInputDue] = useState(0);
+  const [quantity, setQuantity] = useState("");
+  const [price, setPrice] = useState("");
+
   const [rows, setRows] = useState([]);
-  const [date, setDate] = useState("");
-  const dateInputRef = useRef(null);
-  const handleAddRowManually = () => {
-    setRows([...rows, {}]);
+  //const tableRef = useRef(null);
+
+  useEffect(() => {
+    //dispatch(loadSuppliers());
+    dispatch(loadCustomers());
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const { customers } = useSelector((state) => state.data);
+  const handleAdvChange = (e) => {
+    const due = grandTotal - e.target.value;
+    setInputAdvance(e.target.value);
+    setInputDue(due);
   };
-  const handleSubmit = (event) => {
-    event.preventDefault();
+
+  const calculateTotal = (rowId) => {
+    const qty = document.getElementById(`qty${rowId}`).value;
+    const price = parseFloat(document.getElementById(`price${rowId}`).value);
+    const total = qty * price;
+    document.getElementById(`total${rowId}`).innerText = total.toFixed(2);
+  };
+
+  const grandTotalA = (e, rowId) => {
+    const total = parseFloat(
+      document.getElementById(`total${rowId}`).innerText
+    );
+    const discountA = parseFloat(e.target.value);
+    const grandTotalA = total - (total * discountA) / 100;
+    document.getElementById(`grandTotalA${rowId}`).innerText =
+      grandTotalA.toFixed(2);
+  };
+
+  const grandTotalB = (rowId) => {
+    const discountB = parseFloat(
+      document.getElementById(`discountB${rowId}`).value
+    );
+    const stitchingCost = parseFloat(
+      document.getElementById(`stitchingCost${rowId}`).value
+    );
+    const grandTotalB = stitchingCost - (stitchingCost * discountB) / 100;
+    document.getElementById(`grandTotalB${rowId}`).innerText =
+      grandTotalB.toFixed(2);
+  };
+
+  const grandTotalAB = (rowId) => {
+    const grandTotalA = parseFloat(
+      document.getElementById(`grandTotalA${rowId}`).value
+    );
+    const grandTotalB = parseFloat(
+      document.getElementById(`grandTotalB${rowId}`).value
+    );
+    const grandTotalAB = grandTotalA + grandTotalB;
+    document.getElementById(`grandTotalAB${rowId}`).innerText =
+      grandTotalAB.toFixed(2);
+  };
+
+  const handleFabricChange = (event) => {
+    console.log(event.target.value);
+  };
+
+  const handleSubmit = (values) => {
+    //dispatch(addPurchaseOrders(values));
+    console.log(values);
+    navigate("/dashboard");
+  };
+
+  const handleCustomerChange = (e) => {
+    const customer = e.target.value;
+    // console.log(vendorName);
+    setCustomer(customer);
+
+    const setfabricDescription = (event) => {
+      console.log(event.target.value);
+    };
+  };
+
+  const handleInputChange = (event) => {
+    const target = event.target;
+    const name = target.name;
+    const value = target.value;
+
+    // update the corresponding state property
+    switch (name) {
+      case "selectedVendor":
+        setCustomer(value);
+        break;
+      case "rows":
+        setRows(value);
+        break;
+      case "total":
+        setTotal(value);
+        break;
+      case "totalB":
+        setTotalB(value);
+        break;
+      case "discountA":
+        setDiscountA(value);
+        break;
+      case "discountB":
+        setDiscountB(value);
+        break;
+      case "stitchingCost":
+        setStitchingCost(value);
+        break;
+      case "grandTotal":
+        setGrandTotal(value);
+        break;
+      case "due":
+        setDue(value);
+        break;
+      case "inputAdvance":
+        setInputAdvance(value);
+        break;
+      case "inputDue":
+        setInputDue(value);
+        break;
+      case "quantity":
+        setQuantity(value);
+        break;
+      case "price":
+        setPrice(value);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const addRow = () => {
     const newRow = {
       id: rows.length + 1,
-      // id: id.id,
-      fabricCode: selectedFabric.id,
-      fabricDescription: selectedFabric.desc,
-      price: price,
-      quantity: quantity,
-      total: total,
-      discount: discount,
-      grandTotalA: grandTotal,
-      stitchingCost: stitchingCost,
-      discountB: discountB,
-      grandTotalB: grandTotalB,
-      totalAB: totalab,
-      outfitType: outfitType,
-      date: selectedDate,
+      desc: "",
+      qty: "",
+      price: "",
+      total: "0",
     };
     setRows([...rows, newRow]);
   };
 
-  // const handleAddRow = () => {
-  //   const newRow = {
-  //     id: selectedVendor.fabrics.length + 1,
-  //     fabric: null,
-  //     price: 0,
-  //     quantity: 0,
-  //     discount: 0,
-  //     stitchingCost: 0,
-  //     discountB: 0,
-  //     outfitType: "",
-  //     date: new Date(),
-  //   };
-  //   setSelectedVendor({
-  //     ...selectedVendor,
-  //     fabrics: [...selectedVendor.fabrics, newRow],
-  //   });
-  // };
-  // const newDue =  grandTotal - parseFloat(inputAdvance);
-  // setDue(newDue.toFixed(2));
-  // setInputDue(newDue.toFixed(2));
-  const handleChange = (e) => {
-    setDate(e.target.value);
-  };
-
-  const handleVendorChange = (event) => {
-    setSelectedVendor(event.target.value);
-    setSelectedFabric(null);
-  };
-
-  const handleFabricChange = (event) => {
-    setSelectedFabric(event.target.value);
-  };
-
-  const handlePriceChange = (event) => {
-    setPrice(event.target.value);
-  };
-
-  const handleQuantityChange = (event) => {
-    setQuantity(event.target.value);
-  };
-
-  const handleOutfitTypeChange = (event) => {
-    setOutfitType(event.target.value);
-  };
-
-  const handleStitchingCostChange = (event) => {
-    setStitchingCost(event.target.value);
-  };
-
-  const handleDiscountBChange = (event) => {
-    setDiscountB(event.target.value);
-  };
-  const hanleTotalABChange = (event) => {
-    setTotalAB(event.target.value);
-  };
-
-  useEffect(() => {
-    if (price !== null && quantity !== null) {
-      setTotal(price * quantity);
-    } else {
-      setTotal(null);
-    }
-  }, [price, quantity]);
-
-  useEffect(() => {
-    if (total !== null && discount !== null) {
-      setGrandTotal(total - discount);
-    } else {
-      setGrandTotal(null);
-    }
-  }, [total, discount]);
-
-  useEffect(() => {
-    if (stitchingCost !== null && discountB !== null) {
-      setGrandTotalB(stitchingCost - discountB);
-    } else {
-      setGrandTotalB(null);
-    }
-  }, [stitchingCost, discountB]);
-
-  useEffect(() => {
-    if (grandTotal !== null && grandTotalB !== null) {
-      setTotalAB(grandTotal + grandTotalB);
-    } else {
-      setTotalAB(null);
-    }
-  }, [grandTotal, grandTotalB]);
-
-  // setGrandTotal(totalab.toFixed(2));
-
-  // const newDue = totalab - parseFloat(inputAdvance);
-  // setDue(newDue.toFixed(2));
-  // setInputDue(newDue.toFixed(2));
-  useEffect(() => {
-    if (totalab !== null && inputDue !== null) {
-      setAdvance(totalab - inputDue);
-    } else {
-      setAdvance(null);
-    }
-  }, [totalab, inputDue]);
-
-  useEffect(() => {
-    if (totalab !== null && inputAdvance !== null) {
-      setInputDue(totalab - inputAdvance);
-    } else {
-      setInputDue(null);
-    }
-  }, [totalab, inputAdvance]);
-
   return (
-    <div>
-      <FormControl>
-        <InputLabel id="vendor-select-label">Select Customer</InputLabel>
-        <Select
-          labelId="vendor-select-label"
-          id="vendor-select"
-          value={selectedVendor}
-          onChange={handleVendorChange}
+    <Grid sx={{ flexGrow: 1 }} mx={4}>
+      <Header title="SALES ORDER" subtitle="List of Sales Orders Made" />
+      <form onSubmit={handleSubmit} autoComplete="off">
+        <Box
+          display="grid"
+          gap="30px"
+          gridTemplateColumns="repeat(3, minmax(0, 1fr))"
+          sx={{
+            "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+          }}
         >
-          {mockDataTeam.map((vendor) => (
-            <MenuItem key={vendor.id} value={vendor}>
-              {vendor.vendorname}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-      {selectedVendor && (
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Fabric Code</TableCell>
-                <TableCell>Fabric Description</TableCell>
-                <TableCell>Price</TableCell>
-                <TableCell>Quantity</TableCell>
-                <TableCell>Total</TableCell>
-                <TableCell>Discount</TableCell>
-                <TableCell>Grand TotalA</TableCell>
-                <TableCell>SwitchingCost</TableCell>
-                <TableCell>DiscountB</TableCell>
-                <TableCell>GrandTotalB</TableCell>
-                <TableCell>Total A + B</TableCell>
-                <TextField>OutfitType</TextField>
-                <TableCell>
-                  <input
-                    type="date"
-                    onChange={handleChange}
-                    ref={dateInputRef}
-                  />
-                  <p>TrailDate: {date}</p>
-                </TableCell>
-                {/* <TableCell>
-                <DatePicker
-              selected={selectedDate}
-              onChange={handleChange}
-              dateFormat="dd/MM/yyyy"
-            />
-                </TableCell> */}
-                <TableCell>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleAddRowManually}
+          <Box sx={{ width: 1 / 2 }}>
+            <Box sx={{ width: 1 / 4 }}></Box>
+            <Box sx={{ mx: "left", p: 1, mt: 1 }}>
+              <TextField
+                align="left"
+                id="outlined-select"
+                select
+                label="Customer"
+                variant="outlined"
+                onChange={handleCustomerChange}
+                value={Customer || ""}
+                defaultValue={"--SELECT A  CUSTOMER--"}
+                name="customerName"
+                //error={!!touched.supplierId && !!errors.supplierId}
+                //helperText={touched.supplierId && errors.supplierId}
+                sx={{
+                  align: "left",
+                  minWidth: 270,
+                  maxWidth: 470,
+                  pt: 1,
+                  "& .MuiNativeSelect-select": { pt: "8.5px" },
+                }}
+              >
+                {customers?.map((d, index) => (
+                  <MenuItem
+                    key={index}
+                    // value={JSON.stringify({
+                    //   id: d.id,
+                    //   name: d.vendorname,
+                    // })}
+                    value={d.firstName}
                   >
-                    Add Row Manually
-                  </Button>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {selectedVendor.fabrics.map((fabric) => (
-                <TableRow key={fabric.id}>
-                  <TableCell>
-                    <FormControl>
-                      <Select
-                        labelId={`fabric-select-label-${fabric.id}`}
-                        id={`fabric-select-${fabric.id}`}
-                        value={selectedFabric === fabric ? fabric : ""}
-                        onChange={handleFabricChange}
-                      >
-                        {selectedVendor.fabrics.map((option) => (
-                          <MenuItem key={option.id} value={option}>
-                            {option.id}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </TableCell>
-
-                  <TableCell>
-                    {selectedFabric === fabric && fabric.desc}
-                  </TableCell>
-                  <TableCell>
-                    <input type="number" onChange={handlePriceChange} />
-                  </TableCell>
-                  <TableCell>
-                    <input type="number" onChange={handleQuantityChange} />
-                  </TableCell>
-                  <TableCell>{total}</TableCell>
-                  <TableCell>
-                    <input
-                      type="number"
-                      onChange={(e) => setDiscount(e.target.value)}
-                    />
-                  </TableCell>
-                  <TableCell>{grandTotal}</TableCell>
-                  <TableCell>
-                    <input type="number" onChange={handleStitchingCostChange} />
-                  </TableCell>
-                  <TableCell>
-                    <input type="number" onChange={handleDiscountBChange} />
-                  </TableCell>
-                  <TableCell>{grandTotalB}</TableCell>
-                  <TableCell>{totalab}</TableCell>
-                  <TableCell>OutfitType</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          <span>Grand Total: {totalab}</span>
-          <br />
-          <TextField
-            label="Advance"
-            value={inputAdvance}
-            onChange={(e) => setInputAdvance(e.target.value)}
-          />
-          <br />
-          <TextField
-            label="Due"
-            value={inputDue}
-            onChange={(e) => setInputDue(e.target.value)}
-          />
-          <input type="date" onChange={handleChange} ref={dateInputRef} />
-          <p>Delivery Date: {date}</p>
-          <Button
-            variant="contained"
-            onClick={() => {
-              console.log("Saved");
-            }}
+                    {d.firstName + " " + d.lastName}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Box>
+          </Box>
+          <Box sx={{ width: 1 / 2 }}></Box>
+          <Box
+            align="right"
+            gridTemplateColumns="repeat(3, minmax(0, 1fr))"
+            sx={{ mx: "right", p: 1, mt: 1 }}
           >
-            Save
-          </Button>
-          <Button variant="contained" onClick={() => console.log("Cancelled")}>
-            Cancel
-          </Button>
-        </TableContainer>
-      )}
-    </div>
+            <Box align="center">OrderId:</Box>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<AddIcon />}
+              size="medium"
+              onClick={addRow}
+            >
+              Add Sales Orders
+            </Button>
+          </Box>
+        </Box>
+        <Box my={4}>
+          <TableContainer
+            component={Paper}
+            // sx={{ maxwidth: "2000", maxheight: "2000", overflow: "auto" }}
+          >
+            <Table sx={{ minWidth: 700 }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell align="left" colSpan={1}>
+                    SL NO
+                  </TableCell>
+                  <TableCell align="left" colSpan={1}>
+                    Fabric Code
+                  </TableCell>
+                  <TableCell align="center" colSpan={1}>
+                    Description
+                  </TableCell>
+                  <TableCell align="center" colSpan={1}>
+                    Quantity
+                  </TableCell>
+                  <TableCell align="center" colSpan={1}>
+                    Price
+                  </TableCell>
+                  <TableCell align="right" colSpan={1}>
+                    Total
+                  </TableCell>
+                  <TableCell align="center" colSpan={1}>
+                    Discount (A)
+                  </TableCell>
+                  <TableCell align="right" colSpan={1}>
+                    Grand Total (A)
+                  </TableCell>
+                  <TableCell align="center" colSpan={1}>
+                    Stitching Cost
+                  </TableCell>
+                  <TableCell align="center" colSpan={1}>
+                    Discount (B)
+                  </TableCell>
+                  <TableCell align="right" colSpan={1}>
+                    Grand Total (B)
+                  </TableCell>
+                  <TableCell align="right" colSpan={1}>
+                    Total (A+B)
+                  </TableCell>
+                  <TableCell align="right" colSpan={2}>
+                    Trial Date
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows?.map((row, index) => (
+                  <TableRow key={row.id}>
+                    <TableCell colSpan={1}>{index + 1}</TableCell>
+                    <TableCell colSpan={1}>
+                      <Select
+                        defaultValue={row.fabricCode}
+                        onChange={handleFabricChange}
+                      ></Select>
+                    </TableCell>
+                    <TableCell align="right" colSpan={1}>
+                      {fabricDescription}
+                    </TableCell>
+                    <TableCell align="right" colSpan={1}>
+                      <Grid container alignItems="center" justify="flex-end">
+                        <Grid item>
+                          <TextField
+                            label="Quantity"
+                            type="number"
+                            id={`qty${row.id}`}
+                            name="quantityPurchased"
+                            onChange={() => calculateTotal(row.id)}
+                          />
+                        </Grid>
+                      </Grid>
+                    </TableCell>
+                    <TableCell align="right" colSpan={1}>
+                      <Grid container alignItems="center" justify="flex-end">
+                        <Grid item>
+                          <TextField
+                            label="Price"
+                            type="number"
+                            id={`price${row.id}`}
+                            name="costPrice"
+                            onChange={() => calculateTotal(row.id)}
+                          />
+                        </Grid>
+                      </Grid>
+                    </TableCell>
+                    <TableCell align="right" colSpan={1}>
+                      <Typography
+                        id={`total${row.id}`}
+                        onChange={(e) => calculateTotal(e.target.value)}
+                      ></Typography>
+                    </TableCell>
+                    <TableCell align="right" colSpan={1}>
+                      <Grid container alignItems="center" justify="flex-end">
+                        <Grid item>
+                          <TextField
+                            label="Discount (A)"
+                            type="number"
+                            id={`discountA${row.id}`}
+                            onChange={(e) => grandTotalA(e, row.id)}
+                          />
+                        </Grid>
+                      </Grid>
+                    </TableCell>
+                    <TableCell align="right" colSpan={1}>
+                      <Typography id={`grandTotalA${row.id}`}></Typography>
+                    </TableCell>
+                    <TableCell align="right" colSpan={1}>
+                      <Grid container alignItems="center" justify="flex-end">
+                        <Grid item>
+                          <TextField
+                            label="Stitching Cost"
+                            type="number"
+                            id={`stitchingCost${row.id}`}
+                            onChange={() => grandTotalB(row.id)}
+                          />
+                        </Grid>
+                      </Grid>
+                    </TableCell>
+                    <TableCell align="right" colSpan={1}>
+                      <Grid container alignItems="center" justify="flex-end">
+                        <Grid item>
+                          <TextField
+                            label="DiscountB"
+                            type="number"
+                            id={`discountB${row.id}`}
+                            onChange={() => grandTotalB(row.id)}
+                          />
+                        </Grid>
+                      </Grid>
+                    </TableCell>
+                    <TableCell align="right" colSpan={1}>
+                      <Typography id={`grandTotalB${row.id}`}></Typography>
+                    </TableCell>
+                    <TableCell align="right" colSpan={1}>
+                      <Typography id={`grandTotalAB${row.id}`}></Typography>
+                    </TableCell>
+                    <TableCell align="right" colSpan={1}></TableCell>
+                    <TableCell align="center" colSpan={1}>
+                      <TextField
+                        align="right"
+                        label="Calendar"
+                        type="date"
+                        defaultValue={new Date()}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {/* <TableRow>
+                  <TableCell rowSpan={3} />
+                  <TableCell colSpan={12}>Grand Total</TableCell>
+                  <TableCell align="right" colSpan={2} name="totalCostPrice">
+                    {grandTotal}
+                  </TableCell>
+                </TableRow> */}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <Box>
+            <TableRow>
+              <TableCell rowSpan={2} sx={{ width: 1 / 2 }} />
+              <TableCell sx={{ width: 1 / 4 }} colSpan={4}>
+                Total
+              </TableCell>
+              <TableCell align="right" colSpan={2}>
+                {grandTotal}
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell sx={{ width: 1 / 4 }} colSpan={4}>
+                Advance
+              </TableCell>
+              <TableCell colSpan={4}>
+                <TextField
+                  label="Advance"
+                  value={inputAdvance}
+                  name="paymentdone"
+                  onChange={handleAdvChange}
+                  sx={{
+                    align: "right",
+                    minWidth: 270,
+                    maxWidth: 470,
+                    pt: 1,
+                    // "& .MuiNativeSelect-select": { pt: "8.5px" },
+                  }}
+                ></TextField>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell rowSpan={2} sx={{ width: 1 / 2 }} />
+              <TableCell sx={{ width: 1 / 4 }} colSpan={4}>
+                Total Due
+              </TableCell>
+              <TableCell align="right" colSpan={3}>
+                {inputDue}
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell sx={{ width: 1 / 4 }} colSpan={4}>
+                Delivery Date
+              </TableCell>
+              <TableCell colSpan={3} align="right">
+                <TextField
+                  label="Calendar"
+                  type="date"
+                  defaultValue={new Date()}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </TableCell>
+            </TableRow>
+          </Box>
+          <Box sx={{ width: 1 / 4 }} my={4}></Box>
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{ width: 1 / 2 }}
+            mx={1}
+            display="flex"
+            justifyContent="end"
+            mt="20px"
+          >
+            <Button
+              variant="contained"
+              startIcon={<Save />}
+              onClick={handleInputChange}
+            >
+              Save
+            </Button>
+            <Button variant="contained" endIcon={<Cancel />}>
+              Cancel
+            </Button>
+          </Stack>
+        </Box>
+      </form>
+    </Grid>
   );
 };
 
-export default VendorTable;
+export default SalesOrder;
