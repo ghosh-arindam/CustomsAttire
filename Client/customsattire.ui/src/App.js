@@ -18,6 +18,7 @@ import AddVendor from "./scenes/supplierlocal/AddSupplier";
 import PurchaseOrders from "./scenes/purchaseorders";
 import PurchaseMaster from "./scenes/purchaseorders/PurchaseMaster";
 import AddSalesOrders from "./scenes/salesorders/index";
+import SalesOrder from "./scenes/salesorders/salesorder";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
 
@@ -54,6 +55,7 @@ function App() {
               <Route path="/addfabric" element={<PurchaseMaster />} />
               <Route path="/purchaseorders" element={<PurchaseOrders />} />
               <Route path="/addsales" element={<AddSalesOrders />} />
+              <Route path="/salesorders" element={<SalesOrder />} />
             </Routes>
           </main>
         </div>
