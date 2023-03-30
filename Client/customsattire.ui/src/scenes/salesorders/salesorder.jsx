@@ -17,7 +17,7 @@ import Save from "@mui/icons-material/Save";
 import Cancel from "@mui/icons-material/Cancel";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { loadCustomers } from "./../../redux/action";
+import { addSalesOrders, loadCustomers } from "./../../redux/action";
 import ProductDropDown from "../../components/ProductDropDown";
 
 const SalesOrder = () => {
@@ -25,31 +25,47 @@ const SalesOrder = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [customerName, setcustomerName] = useState("");
-  const [total, setTotal] = useState(0);
-  // const [grandTotalA, setGrandTotalA] = useState(0);
-  // const [grandTotalB, setGrandTotalB] = useState(0);
+  /*eslint-disable-next-line */
+  const [qty, setQty] = useState(0);
+  const [deliveryDate, setDeliveryDate] = useState(new Date());
+  /*eslint-disable-next-line */
   const [totalB, setTotalB] = useState(0);
+  /*eslint-disable-next-line */
   const [discountA, setDiscountA] = useState(0);
+  /*eslint-disable-next-line */
   const [discountB, setDiscountB] = useState(0);
+  /*eslint-disable-next-line */
   const [stitchingCost, setStitchingCost] = useState(0);
   const [grandTotal, setGrandTotal] = useState(0);
-  const [
-    fabricDescription,
-    // eslint-disable-next-line
-    setfabricDescription,
-  ] = useState();
+  /*eslint-disable-next-line */
+  const [fabricDescription, setfabricDescription] = useState();
+  /*eslint-disable-next-line */
   const [due, setDue] = useState(0);
   const [inputAdvance, setInputAdvance] = useState(0);
   const [inputDue, setInputDue] = useState(0);
+  /*eslint-disable-next-line */
   const [quantity, setQuantity] = useState("");
+  /*eslint-disable-next-line */
   const [price, setPrice] = useState("");
-
+  /*eslint-disable-next-line */
+  const [total, setTotal] = useState(0);
+  /*eslint-disable-next-line */
+  const [pricePerMeter, setpricePerMeter] = useState({});
+  /*eslint-disable-next-line */
+  const [purchaseItemwiseCost, setpurchaseItemwiseCost] = useState({});
+  /*eslint-disable-next-line */
+  const [totalBillAmount, settotalBillAmount] = useState({});
+  /*eslint-disable-next-line */
+  const [advancePayment, setadvancePayment] = useState({});
+  /*eslint-disable-next-line */
+  const [duePayment, setduePayment] = useState({});
   const [rows, setRows] = useState([]);
   //const tableRef = useRef(null);
 
   useEffect(() => {
     //dispatch(loadSuppliers());
     dispatch(loadCustomers());
+    dispatch(addSalesOrders());
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const { customers } = useSelector((state) => state.data);
@@ -57,6 +73,10 @@ const SalesOrder = () => {
     const due = grandTotal - e.target.value;
     setInputAdvance(e.target.value);
     setInputDue(due);
+  };
+
+  const handleDateChange = (event) => {
+    setDeliveryDate(event.target.value);
   };
 
   const calculateTotal = (rowId) => {
@@ -87,7 +107,7 @@ const SalesOrder = () => {
     document.getElementById(`grandTotalB${rowId}`).innerText =
       grandTotalB.toFixed(2);
   };
-
+  /*eslint-disable-next-line */
   const grandTotalAB = (rowId) => {
     const grandTotalA = parseFloat(
       document.getElementById(`grandTotalA${rowId}`).value
@@ -115,7 +135,7 @@ const SalesOrder = () => {
     const customer = e.target.value;
     // console.log(vendorName);
     setcustomerName(customer);
-
+    /*eslint-disable-next-line */
     const setfabricDescription = (event) => {
       console.log(event.target.value);
     };
@@ -170,6 +190,30 @@ const SalesOrder = () => {
       default:
         break;
     }
+  };
+
+  const saveData = (event) => {
+    event.preventDefault();
+    const data = rows.map((row) => ({
+      pricePerMeter: pricePerMeter[row.id],
+      purchaseItemwiseCost: purchaseItemwiseCost[row.id],
+      totalBillAmount: totalBillAmount[row.id],
+      advancePayment: advancePayment[row.id],
+      duePayment: duePayment[row.id],
+      qty: qty[row.id],
+      price: price[row.id],
+      total: total[row.id],
+      fabricDiscount: discountA[row.id],
+      SwitchingDiscount: discountB[row.id],
+      stitchingCost: stitchingCost[row.id],
+      totalB: totalB[row.id],
+      grandTotalA: grandTotalA[row.id],
+      grandTotalB: grandTotalB[row.id],
+      totalAB: grandTotalAB[row.id],
+      deliveryDate: deliveryDate[row.id],
+    }));
+    localStorage.setItem("data", JSON.stringify(data));
+    console.log(data);
   };
 
   const addRow = () => {
@@ -259,7 +303,7 @@ const SalesOrder = () => {
             component={Paper}
             // sx={{ maxwidth: "2000", maxheight: "2000", overflow: "auto" }}
           >
-            <Table sx={{ minWidth: 700 }}>
+            <Table sx={{ minWidth: 900 }}>
               <TableHead>
                 <TableRow>
                   <TableCell align="left" colSpan={1}>
@@ -268,8 +312,11 @@ const SalesOrder = () => {
                   <TableCell align="left" colSpan={1}>
                     Fabric Code
                   </TableCell>
-                  <TableCell align="center" colSpan={1}>
+                  <TableCell align="left" colSpan={1}>
                     Description
+                  </TableCell>
+                  <TableCell align="center" colSpan={1}>
+                    Outfit Type
                   </TableCell>
                   <TableCell align="center" colSpan={1}>
                     Quantity
@@ -298,6 +345,7 @@ const SalesOrder = () => {
                   <TableCell align="right" colSpan={1}>
                     Total (A+B)
                   </TableCell>
+                  <TableCell align="right" colSpan={1} />
                   <TableCell align="right" colSpan={2}>
                     Trial Date
                   </TableCell>
@@ -321,11 +369,30 @@ const SalesOrder = () => {
                       <Grid container alignItems="center" justify="flex-end">
                         <Grid item>
                           <TextField
+                            label="Outfit Type"
+                            type="text"
+                            id={`clothType${row.id}`}
+                            name="clothType"
+                          />
+                        </Grid>
+                      </Grid>
+                    </TableCell>
+                    <TableCell align="right" colSpan={1}>
+                      <Grid container alignItems="center" justify="flex-end">
+                        <Grid item>
+                          <TextField
                             label="Quantity"
                             type="number"
                             id={`qty${row.id}`}
                             name="qty"
-                            onChange={() => calculateTotal(row.id)}
+                            onChange={(e) => {
+                              const { value } = e.target;
+                              setQty((prevQty) => ({
+                                ...prevQty,
+                                [row.id]: value,
+                              }));
+                              calculateTotal(row.id);
+                            }}
                           />
                         </Grid>
                       </Grid>
@@ -396,6 +463,7 @@ const SalesOrder = () => {
                       <Typography id={`grandTotalAB${row.id}`}></Typography>
                     </TableCell>
                     <TableCell align="right" colSpan={1}></TableCell>
+                    <TableCell align="right" colSpan={1}></TableCell>
                     <TableCell align="center" colSpan={1}>
                       <TextField
                         align="right"
@@ -409,16 +477,8 @@ const SalesOrder = () => {
                     </TableCell>
                   </TableRow>
                 ))}
-                {/* <TableRow>
-                  <TableCell rowSpan={3} />
-                  <TableCell colSpan={12}>Grand Total</TableCell>
-                  <TableCell align="right" colSpan={2} name="totalCostPrice">
-                    {grandTotal}
-                  </TableCell>
-                </TableRow> */}
               </TableBody>
             </Table>
-
             <Box>
               <TableRow>
                 <TableCell
@@ -426,10 +486,10 @@ const SalesOrder = () => {
                   style={{ borderBottom: "none" }}
                   sx={{ width: 1 / 2, "& td": { border: 0 } }}
                 />
-                <TableCell sx={{ width: 1 / 4 }} colSpan={4}>
+                <TableCell sx={{ width: 1 / 4 }} colSpan={6}>
                   Total
                 </TableCell>
-                <TableCell align="right" colSpan={2}>
+                <TableCell align="right" colSpan={4}>
                   {grandTotal}
                 </TableCell>
               </TableRow>
@@ -478,6 +538,8 @@ const SalesOrder = () => {
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    value={deliveryDate}
+                    onChange={handleDateChange}
                   />
                 </TableCell>
               </TableRow>
@@ -493,11 +555,7 @@ const SalesOrder = () => {
             justifyContent="end"
             mt="20px"
           >
-            <Button
-              variant="contained"
-              startIcon={<Save />}
-              onClick={handleInputChange}
-            >
+            <Button variant="contained" startIcon={<Save />} onClick={saveData}>
               Save
             </Button>
             <Button variant="contained" endIcon={<Cancel />}>
