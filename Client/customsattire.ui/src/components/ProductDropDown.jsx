@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { Box, TextField, MenuItem } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { loadProduct } from "../redux/action";
 
-const ProductDropDownComponent = () => {
+const ProductDropDownComponent = (props) => {
   const [fabricState, setFabricState] = useState();
   const { Products } = useSelector((state) => state.data);
   const dispatch = useDispatch();
@@ -14,6 +14,8 @@ const ProductDropDownComponent = () => {
   }, []);
   const handleSelectFabricChange = (event) => {
     console.log(event.target.value);
+    // Here, we invoke the callback with the new value
+    props.onChange(event.target.value);
     setFabricState(event.target.value);
   };
   return (
@@ -21,7 +23,7 @@ const ProductDropDownComponent = () => {
       <TextField
         id="outlined-select"
         select
-        label="Select Fabric"
+        label="Fabric Code"
         variant="outlined"
         style={{ width: 150 }}
         onChange={handleSelectFabricChange}
@@ -35,12 +37,9 @@ const ProductDropDownComponent = () => {
       >
         {Products?.map((d, index) => (
           <MenuItem
-            key={d.id}
-            value={JSON.stringify({
-              id: d.id,
-              name: d.fabricCode,
-              description: d.description,
-            })}
+            key={index}
+            value={d.description}
+            //value={props.d.description}
           >
             {d.fabricCode}
           </MenuItem>
@@ -51,4 +50,4 @@ const ProductDropDownComponent = () => {
   );
 };
 
-export default ProductDropDownComponent;
+export default memo(ProductDropDownComponent);
