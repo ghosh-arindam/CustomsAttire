@@ -1,15 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import {
-  Box,
-  Button,
-  TextField,
-  MenuItem,
-  Grid,
-  Select,
-  Stack,
-  FormControl,
-  InputLabel,
-} from "@mui/material";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { Box, Button, TextField, MenuItem, Grid, Stack } from "@mui/material";
 // import { tokens } from "../../theme";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
@@ -24,13 +14,10 @@ import AddIcon from "@mui/icons-material/Add";
 import Save from "@mui/icons-material/Save";
 import Cancel from "@mui/icons-material/Cancel";
 import { useDispatch, useSelector } from "react-redux";
-import { loadSuppliers } from "./../../redux/action";
-//import { addPurchaseOrders } from "./../../redux/action";
 import { loadProduct } from "./../../redux/action";
-//import ProductDropDownComponent from "../../components/ProductDropDown";
 import { useNavigate } from "react-router-dom";
-//import { mockDataProduct } from "../../data/mockData";
 //import { Formik } from "formik";
+import ProductDropDownComponent from "./../../components/ProductDropDown";
 
 const PurchaseOrders = () => {
   //const theme = useTheme();
@@ -38,21 +25,22 @@ const PurchaseOrders = () => {
   const isNonMobile = useMediaQuery("(min-width: 600px)");
   const navigate = useNavigate();
   const [selectedVendor, setSelectedVendor] = useState("");
-  //const [selectedFabricCode, setSelectedFabricCode] = useState("");
   const [total, setTotal] = useState(0);
   const [grandTotal, setGrandTotal] = useState(0);
-  const [fabricDescription, setfabricDescription] = useState();
-  //const [tableData, setTableData] = useState([]);
-  const [due, setDue] = useState(0);
+  const [
+    fabricDescription, // eslint-disable-next-line
+    setfabricDescription,
+  ] = useState();
+  const [
+    // eslint-disable-next-line
+    due,
+    setDue,
+  ] = useState(0);
   const [inputAdvance, setInputAdvance] = useState(0);
   const [inputDue, setInputDue] = useState(0);
-
-  // const [selectedFabric, setSelectedFabric] = useState("");
-  // const [fabricDesc, setfabricDesc] = useState();
-  // const [fabricState, setFabricState] = useState();
-  //const [fabricDesc, setFabricDesc] = useState("");
   const dispatch = useDispatch();
   const [rows, setRows] = useState([]);
+
   const { Products } = useSelector((state) => state.data);
   const tableRef = useRef(null);
 
@@ -128,9 +116,15 @@ const PurchaseOrders = () => {
   // });
   // };
 
-  const handleFabricChange = (event) => {
-    console.log(event.target.value);
-  };
+  // const handleSelectFabricChange = (newValue) => {
+  //   console.log("parentComponet" + newValue);
+  //   setfabricDescription(newValue);
+  // };
+
+  const handleSelectFabricChange = useCallback((newValue) => {
+    console.log("parentComponet" + newValue);
+    setfabricDescription(newValue);
+  }, []);
 
   const handleVendorChange = (e) => {
     const vendorName = e.target.value;
@@ -202,10 +196,10 @@ const PurchaseOrders = () => {
           </Box>
           <Box sx={{ width: 1 / 4 }}></Box>
           <Box sx={{ mx: "auto", p: 1, mt: 1 }}>
-            {/* <TextField
+            <TextField
               id="outlined-select"
               select
-              label="Select Vendor"
+              label="Vendor"
               variant="outlined"
               onChange={handleVendorChange}
               value={selectedVendor || ""}
@@ -221,44 +215,12 @@ const PurchaseOrders = () => {
                 "& .MuiNativeSelect-select": { pt: "8.5px" },
               }}
             >
-              {suppliers?.map((d, index) => (
-                <MenuItem
-                  key={index}
-                  value={JSON.stringify({
-                    id: d.id,
-                    name: d.vendorname,
-                  })}
-                >
+              {Products?.map((d, index) => (
+                <MenuItem key={index} value={d.vendorName}>
                   {d.vendorName}
                 </MenuItem>
               ))}
-            </TextField> */}
-
-            <FormControl>
-              <InputLabel id="vendorSelect-label">vendor</InputLabel>
-              <Select
-                labelId="vendorSelect-label"
-                id="vendorSelect"
-                value={selectedVendor}
-                sx={{
-                  align: "right",
-                  minWidth: 270,
-                  maxWidth: 470,
-                  pt: 1,
-                  "& .MuiNativeSelect-select": { pt: "8.5px" },
-                }}
-                onChange={handleVendorChange}
-              >
-                <MenuItem value="">Select a vendor</MenuItem>
-                {Array.from(
-                  new Set(Products?.map((item) => item.vendorName))
-                ).map((vendorName) => (
-                  <MenuItem key={vendorName} value={vendorName}>
-                    {vendorName}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            </TextField>
           </Box>
         </Box>
         <Box my={4}>
@@ -289,62 +251,10 @@ const PurchaseOrders = () => {
                   <TableRow key={row.id}>
                     {/* <TableCell>{row.fabricCode}</TableCell> */}
                     <TableCell>
-                      {/* <TextField
-                      id="outlined-select"
-                      select
-                      label="Select Fabric"
-                      variant="outlined"
-                      style={{ width: 150 }}
-                      onChange={(event) =>
-                        handleSelectFabricChange(index, event)
-                      }
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      value={fabricState || ""}
-                      defaultValue={""}
-                      name="fabricCode"
-                      sx={{ gridColumn: "span 4" }}
-                    >
-                      {Products?.map((d, index) => (
-                        <MenuItem key={d.id} value={d.description}>
-                          {d.fabricCode}
-                        </MenuItem>
-                      ))}
-                      :<div></div>
-                    </TextField> */}
-                      {/* <Select
-                        value={row.fabricCode}
-                        onChange={(e, index) => {
-                          row = e.target.value;
-                          console.log("row" + row);
-                          // const fabric = Products.find(
-                          //   (f) => f.description === e.target.value
-                          // );
-                          // console.log("fabric" + fabric);
-                          setfabricDescription(row);
-                        }}
-                      >
-                        <MenuItem value="">Select a fabric</MenuItem>
-                        {Products.map((fabric, index) => (
-                          <MenuItem key={fabric.id} value={fabric.description}>
-                            {fabric.fabricCode}
-                          </MenuItem>
-                        ))}
-                      </Select> */}
-                      <Select
-                        defaultValue={row.fabricCode}
-                        onChange={handleFabricChange}
-                      >
-                        {Array.from(
-                          new Set(Products.map((data) => data.fabricCode))
-                        ).map((fabricCode) => (
-                          <MenuItem key={fabricCode} value={fabricCode}>
-                            {fabricCode}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                      {/* <ProductDropDownComponent /> */}
+                      <ProductDropDownComponent
+                        value={fabricDescription}
+                        onChange={handleSelectFabricChange}
+                      />
                     </TableCell>
                     <TableCell>{fabricDescription}</TableCell>
                     <TableCell align="center">
