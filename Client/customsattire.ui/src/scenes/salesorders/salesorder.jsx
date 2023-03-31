@@ -36,6 +36,7 @@ const SalesOrder = () => {
   const [discountB, setDiscountB] = useState(0);
   /*eslint-disable-next-line */
   const [stitchingCost, setStitchingCost] = useState(0);
+  /*eslint-disable-next-line */
   const [grandTotal, setGrandTotal] = useState(0);
   /*eslint-disable-next-line */
   const [fabricDescription, setfabricDescription] = useState();
@@ -54,7 +55,7 @@ const SalesOrder = () => {
   /*eslint-disable-next-line */
   const [purchaseItemwiseCost, setpurchaseItemwiseCost] = useState({});
   /*eslint-disable-next-line */
-  const [totalBillAmount, settotalBillAmount] = useState({});
+  const [totalBillAmount, settotalBillAmount] = useState(0);
   /*eslint-disable-next-line */
   const [advancePayment, setadvancePayment] = useState({});
   /*eslint-disable-next-line */
@@ -65,7 +66,7 @@ const SalesOrder = () => {
   useEffect(() => {
     //dispatch(loadSuppliers());
     dispatch(loadCustomers());
-    dispatch(addSalesOrders());
+
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const { customers } = useSelector((state) => state.data);
@@ -80,7 +81,7 @@ const SalesOrder = () => {
   };
 
   const calculateTotal = (rowId) => {
-    const qty = document.getElementById(`qty${rowId}`).value;
+    const qty = parseFloat(document.getElementById(`qty${rowId}`).value);
     const price = parseFloat(document.getElementById(`price${rowId}`).value);
     const total = qty * price;
     document.getElementById(`total${rowId}`).innerText = total.toFixed(2);
@@ -94,6 +95,7 @@ const SalesOrder = () => {
     const grandTotalA = total - (total * discountA) / 100;
     document.getElementById(`grandTotalA${rowId}`).innerText =
       grandTotalA.toFixed(2);
+    grandTotalAB(rowId); // add this line
   };
 
   const grandTotalB = (rowId) => {
@@ -106,18 +108,22 @@ const SalesOrder = () => {
     const grandTotalB = stitchingCost - (stitchingCost * discountB) / 100;
     document.getElementById(`grandTotalB${rowId}`).innerText =
       grandTotalB.toFixed(2);
+    grandTotalAB(rowId); // add this line
   };
-  /*eslint-disable-next-line */
+
   const grandTotalAB = (rowId) => {
     const grandTotalA = parseFloat(
-      document.getElementById(`grandTotalA${rowId}`).value
+      document.getElementById(`grandTotalA${rowId}`).innerText
     );
     const grandTotalB = parseFloat(
-      document.getElementById(`grandTotalB${rowId}`).value
+      document.getElementById(`grandTotalB${rowId}`).innerText
     );
     const grandTotalAB = grandTotalA + grandTotalB;
     document.getElementById(`grandTotalAB${rowId}`).innerText =
       grandTotalAB.toFixed(2);
+    settotalBillAmount(
+      document.getElementById(`grandTotalAB${rowId}`).innerText
+    );
   };
 
   const handleSelectFabricChange = useCallback((newValue) => {
@@ -139,57 +145,6 @@ const SalesOrder = () => {
     const setfabricDescription = (event) => {
       console.log(event.target.value);
     };
-  };
-
-  const handleInputChange = (event) => {
-    const target = event.target;
-    const name = target.name;
-    const value = target.value;
-
-    // update the corresponding state property
-    switch (name) {
-      case "selectedCustomer":
-        setcustomerName(value);
-        break;
-      case "rows":
-        setRows(value);
-        break;
-      case "total":
-        setTotal(value);
-        break;
-      case "totalB":
-        setTotalB(value);
-        break;
-      case "discountA":
-        setDiscountA(value);
-        break;
-      case "discountB":
-        setDiscountB(value);
-        break;
-      case "stitchingCost":
-        setStitchingCost(value);
-        break;
-      case "grandTotal":
-        setGrandTotal(value);
-        break;
-      case "due":
-        setDue(value);
-        break;
-      case "inputAdvance":
-        setInputAdvance(value);
-        break;
-      case "inputDue":
-        setInputDue(value);
-        break;
-      case "quantity":
-        setQuantity(value);
-        break;
-      case "price":
-        setPrice(value);
-        break;
-      default:
-        break;
-    }
   };
 
   const saveData = (event) => {
@@ -214,6 +169,7 @@ const SalesOrder = () => {
     }));
     localStorage.setItem("data", JSON.stringify(data));
     console.log(data);
+    dispatch(addSalesOrders(data));
   };
 
   const addRow = () => {
@@ -490,7 +446,7 @@ const SalesOrder = () => {
                   Total
                 </TableCell>
                 <TableCell align="right" colSpan={4}>
-                  {grandTotal}
+                  {totalBillAmount}
                 </TableCell>
               </TableRow>
               <TableRow>
