@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace CustomsAttire.Core.Domain.Models
 {
@@ -80,7 +81,8 @@ namespace CustomsAttire.Core.Domain.Models
         /// <value>
         /// The property value for 'Address2'.
         /// </value>
-        public string Address2 { get; set; }
+       
+        public string Address2 { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the property value for 'AnniversaryDate'.
@@ -88,7 +90,7 @@ namespace CustomsAttire.Core.Domain.Models
         /// <value>
         /// The property value for 'AnniversaryDate'.
         /// </value>
-        public DateTime? AnniversaryDate { get; set; }
+        public DateTime? AnniversaryDate { get; set; } = DateTime.MinValue;
 
         #endregion
 
