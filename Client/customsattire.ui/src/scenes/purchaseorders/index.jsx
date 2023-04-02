@@ -76,53 +76,9 @@ const PurchaseOrders = () => {
     setDue(newDue.toFixed(2));
     setInputDue(newDue.toFixed(2));
   };
-  //console.log(suppliers);
-  //console.log(Products);
-
-  // const handleSelectFabricChange = (index, event) => {
-  //   const { name, value } = event.target;
-  //   console.log(event.target.value);
-  //   console.log(event.target.name);
-  //   // const fabricDescription = Products.find(
-  //   //   (u) => u.description === event.target.value
-  //   // );
-  //   const rowsInput = [...rows];
-  //   rowsInput[index][name] = value;
-  //   console.log(value);
-  //   setfabricDesc(event.target.value);
-  //   setFabricState(event.target.value);
-  // };
-  //const handleVendorChange = (event) => {
-  // const vendorName = event.target.value;
-  // console.log(vendorName);
-  // setSelectedVendor(event.target.value);
-  //setSelectedFabric("");
-  //setFabricDesc("");
-  // Filter the data to include only the selected vendor
-  // const filteredData = Products.filter(
-  //   (item) => item.vendorname === vendorName
-  // );
-  // console.log(filteredData);
-  // // Create an object that maps each fabric code to its description
-  // const fabricDescriptions = {};
-  // mockDataTeam.forEach((item) => {
-  //   fabricDescriptions[item.fabricCode] = item.description;
-  // });
-
-  // // Map over the filtered data to include the fabric descriptions
-  // const mappedData = filteredData.map((item) => {
-  //   const fabricDescription = fabricDescriptions[item.fabricCode];
-  //   return { ...item, fabricDescription };
-  // });
-  // };
-
-  // const handleSelectFabricChange = (newValue) => {
-  //   console.log("parentComponet" + newValue);
-  //   setfabricDescription(newValue);
-  // };
 
   const handleSelectFabricChange = useCallback((newValue) => {
-    console.log("parentComponet" + newValue);
+    // console.log("parentComponet" + newValue);
     setfabricDescription(newValue);
   }, []);
 
@@ -130,26 +86,6 @@ const PurchaseOrders = () => {
     const vendorName = e.target.value;
     // console.log(vendorName);
     setSelectedVendor(vendorName);
-
-    // Filter the data to include only the selected vendor
-    // const filteredData = mockDataTeam.filter(
-    //   (item) => item.vendorname === vendorName
-    // );
-    // console.log(filteredData);
-    // // Create an object that maps each fabric code to its description
-    // const fabricDescriptions = {};
-    // mockDataTeam.forEach((item) => {
-    //   fabricDescriptions[item.fabricCode] = item.description;
-    // });
-
-    // // Map over the filtered data to include the fabric descriptions
-    // const mappedData = filteredData.map((item) => {
-    //   const fabricDescription = fabricDescriptions[item.fabricCode];
-    //   console.log(fabricDescription);
-    //   return { ...item, fabricDescription };
-    // });
-
-    // setRows([...rows, mappedData]);
   };
 
   const handleSubmit = (values) => {
