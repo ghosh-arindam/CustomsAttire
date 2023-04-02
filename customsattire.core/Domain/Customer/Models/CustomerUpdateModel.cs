@@ -88,7 +88,29 @@ namespace CustomsAttire.Core.Domain.Models
         /// <value>
         /// The property value for 'AnniversaryDate'.
         /// </value>
-        public DateTime? AnniversaryDate { get; set; } = DateTime.MinValue;
+        public DateTime? anniversaryDate { get; set; } = DateTime.MinValue;
+
+        /// <summary>
+        /// Gets or sets the property value for 'AnniversaryDate'.
+        /// </summary>
+        /// <returns>
+        /// The property value for 'AnniversaryDate'.
+        /// </returns>
+        public DateTime? GetAnniversaryDate()
+        {
+            return anniversaryDate;
+        }
+
+        /// <summary>
+        /// Gets or sets the property value for 'AnniversaryDate'.
+        /// </summary>
+        /// <param name="value">
+        /// The property value for 'AnniversaryDate'.
+        /// </param>
+        public void SetAnniversaryDate(DateTime? value)
+        {
+            anniversaryDate = value;
+        }
 
         #endregion
 

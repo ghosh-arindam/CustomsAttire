@@ -1,4 +1,4 @@
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, TextField, MenuItem } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -13,10 +13,29 @@ const AddCustomer = () => {
   const dispatch = useDispatch();
 
   const handleFormSubmit = (values) => {
-    //console.log(values);
+    console.log(values);
     dispatch(addCustomers(values));
     navigate("/customer");
   };
+
+  const genders = [
+    {
+      value: "M",
+      label: "Male",
+    },
+    {
+      value: "F",
+      label: "Female",
+    },
+    {
+      value: "O",
+      label: "Others",
+    },
+    {
+      value: "",
+      label: "",
+    },
+  ];
 
   return (
     <Box m="20px">
@@ -24,7 +43,6 @@ const AddCustomer = () => {
         title="CREATE CUSTOMER"
         subtitle="Create a New Customer Profile"
       />
-
       <Formik
         onSubmit={handleFormSubmit}
         initialValues={initialValues}
@@ -129,18 +147,24 @@ const AddCustomer = () => {
                 helperText={touched.dob && errors.dob}
               />
               <TextField
-                fullWidth
+                id="outlined-select-gender"
+                select
                 variant="filled"
-                type="text"
-                label="Gender"
+                label="Select"
+                defaultValue=""
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.gender}
                 name="gender"
+                value={values.gender}
                 error={!!touched.gender && !!errors.gender}
                 helperText={touched.gender && errors.gender}
-                sx={{ gridColumn: "span 1" }}
-              />
+              >
+                {genders.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
               <TextField
                 id="date"
                 variant="filled"
@@ -192,8 +216,7 @@ const AddCustomer = () => {
   );
 };
 
-const phoneRegExp =
-  /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
+const phoneRegExp = /^[6-9]\d{9}$/gi;
 
 const checkoutSchema = yup.object().shape({
   title: yup.string().required("required"),
@@ -205,7 +228,7 @@ const checkoutSchema = yup.object().shape({
     .matches(phoneRegExp, "Phone number is not valid")
     .required("required"),
   address1: yup.string().required("required"),
-  address2: yup.string().required("required"),
+  address2: yup.string().optional(),
   gender: yup.string().required("Gender is required."),
   dob: yup.string().required("required"),
 });
