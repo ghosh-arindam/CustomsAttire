@@ -10,9 +10,36 @@ const SupplierAction = ({ params, rowId, setrowId }) => {
   const dispatch = useDispatch();
   const handleSubmit = async () => {
     setLoading(true);
-    const { id } = params.row;
+    const {
+      accountNumber,
+      vendorName,
+      phoneNumber,
+      address1,
+      address2,
+      city,
+      panNo,
+      gst,
+      preferredVendorStatus,
+      id,
+    } = params.row;
     console.log("handleSubmit:" + params.row);
-    const result = await dispatch(updateSupplier(params.row, id));
+    console.log("id:" + id);
+    const result = await dispatch(
+      updateSupplier(
+        {
+          accountNumber,
+          vendorName,
+          phoneNumber,
+          address1,
+          address2,
+          city,
+          panNo,
+          gst,
+          preferredVendorStatus,
+        },
+        id
+      )
+    );
     if (result) {
       setSuccess(true);
       setrowId(null);
