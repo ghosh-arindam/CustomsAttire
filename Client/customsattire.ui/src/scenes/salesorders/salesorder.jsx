@@ -66,7 +66,6 @@ const SalesOrder = () => {
   useEffect(() => {
     //dispatch(loadSuppliers());
     dispatch(loadCustomers());
-
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const { customers } = useSelector((state) => state.data);
@@ -219,14 +218,7 @@ const SalesOrder = () => {
                 }}
               >
                 {customers?.map((d, index) => (
-                  <MenuItem
-                    key={index}
-                    // value={JSON.stringify({
-                    //   id: d.id,
-                    //   name: d.vendorname,
-                    // })}
-                    value={d.firstName}
-                  >
+                  <MenuItem key={index} value={d.firstName}>
                     {d.firstName + " " + d.lastName}
                   </MenuItem>
                 ))}
