@@ -1,4 +1,4 @@
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, MenuItem, TextField } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -18,6 +18,16 @@ const AddSupplier = () => {
     navigate("/vendor");
   };
 
+  const preferredVendorStatus = [
+    {
+      value: false,
+      label: "Not Preferred",
+    },
+    {
+      value: true,
+      label: "Preferred",
+    },
+  ];
   return (
     <Box m="20px">
       <Header title="CREATE VENDOR" subtitle="Create a New Vendor Profile" />
@@ -150,14 +160,15 @@ const AddSupplier = () => {
                 sx={{ gridColumn: "span 2" }}
               />
               <TextField
-                fullWidth
+                id="outlined-select-preferredVendorStatus"
+                select
                 variant="filled"
-                type="text"
                 label="Vendor Status"
+                defaultValue="false"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.preferredVendorStatus}
                 name="preferredVendorStatus"
+                value={values.preferredVendorStatus}
                 error={
                   !!touched.preferredVendorStatus &&
                   !!errors.preferredVendorStatus
@@ -166,7 +177,13 @@ const AddSupplier = () => {
                   touched.preferredVendorStatus && errors.preferredVendorStatus
                 }
                 sx={{ gridColumn: "span 2" }}
-              />
+              >
+                {preferredVendorStatus.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
@@ -180,8 +197,7 @@ const AddSupplier = () => {
   );
 };
 
-const phoneRegExp =
-  /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
+const phoneRegExp = /^[6-9]\d{9}$/gi;
 const gstinRegExp =
   /^[0-9]{2}[A-Z]{3}[ABCFGHLJPTF]{1}[A-Z]{1}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
 const PanNoRegExp = /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/;
@@ -193,8 +209,32 @@ const checkoutSchema = yup.object().shape({
     .string()
     .matches(phoneRegExp, "Phone number is not valid")
     .required("required"),
-  address1: yup.string().required("required"),
-  address2: yup.string().required("required"),
+  address1: yup
+    .string()
+    .test(
+      "len",
+      "can be empty or with string at least 2 characters and not more than 50",
+      (val) => {
+        if (val === undefined) {
+          return true;
+        }
+        return val.length === 0 || (val.length >= 2 && val.length <= 50);
+      }
+    )
+    .required("required"),
+  address2: yup
+    .string()
+    .test(
+      "len",
+      "can be empty or with string at least 2 characters and not more than 50",
+      (val) => {
+        if (val === undefined) {
+          return true;
+        }
+        return val.length === 0 || (val.length >= 2 && val.length <= 50);
+      }
+    )
+    .optional(),
   panNo: yup
     .string()
     .matches(PanNoRegExp, "PAN number is not valid")
@@ -213,6 +253,7 @@ const initialValues = {
   address2: "",
   panNo: "",
   gst: "",
+  preferredVendorStatus: false,
 };
 
 export default AddSupplier;
