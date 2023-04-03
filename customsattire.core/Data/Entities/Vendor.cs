@@ -65,7 +65,7 @@ namespace CustomsAttire.Core.Data.Entities
         /// <value>
         /// The property value representing column 'Address2'.
         /// </value>
-        public string Address2 { get; set; }
+        public string Address2 { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the property value representing column 'City'.
@@ -81,7 +81,7 @@ namespace CustomsAttire.Core.Data.Entities
         /// <value>
         /// The property value representing column 'PreferredVendorStatus'.
         /// </value>
-        public bool? PreferredVendorStatus { get; set; }
+        public bool? PreferredVendorStatus { get; set; }=false;
 
         /// <summary>
         /// Gets or sets the property value representing column 'PANNo'.

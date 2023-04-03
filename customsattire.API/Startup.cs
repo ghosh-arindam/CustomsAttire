@@ -3,6 +3,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using Microsoft.Extensions.Configuration;
 
 namespace CustomsAttire.API
 {
@@ -43,6 +44,7 @@ namespace CustomsAttire.API
             //    c.IncludeXmlComments(xmlPath);
             //});
             services.AddSwaggerGen();
+            services.AddApplicationInsightsTelemetry(Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -7,6 +7,11 @@
       "type": "mssql",
       "connectionId": "ConnectionStrings:CustomsAttire",
       "dynamicId": null
+    },
+    "appInsights1": {
+      "type": "appInsights",
+      "connectionId": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+      "dynamicId": null
     }
   }
 }

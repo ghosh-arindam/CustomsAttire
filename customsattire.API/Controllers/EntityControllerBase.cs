@@ -96,7 +96,7 @@ namespace CustomsAttire.API.Controllers
             {
                 updateModel.CreatedBy = "Dummy";
             }
-
+            updateModel.Id= id;
             // validate model
             await UpdateValidator.ValidateAndThrowAsync(updateModel, cancellationToken: cancellationToken);
 

@@ -48,7 +48,7 @@ namespace CustomsAttire.Core.Domain.Models
         /// <value>
         /// The property value for 'Address2'.
         /// </value>
-        public string Address2 { get; set; }
+        public string Address2 { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the property value for 'City'.
@@ -64,7 +64,7 @@ namespace CustomsAttire.Core.Domain.Models
         /// <value>
         /// The property value for 'PreferredVendorStatus'.
         /// </value>
-        public bool? PreferredVendorStatus { get; set; }
+        public bool? PreferredVendorStatus { get; set; } = false;
 
         /// <summary>
         /// Gets or sets the property value for 'PANNo'.

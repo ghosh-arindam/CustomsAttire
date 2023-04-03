@@ -7,6 +7,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
+      "APPINSIGHTS_INSTRUMENTATIONKEY": "5f4c9c5b-ca70-47f0-bb71-e79ae4ce72e3",
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7191;http://localhost:5266",
       "nativeDebugging": true,

@@ -109,7 +109,15 @@ namespace CustomsAttire.Core.Domain.Models
         /// </param>
         public void SetAnniversaryDate(DateTime? value)
         {
-            anniversaryDate = value;
+            if(anniversaryDate == null )
+            {
+                anniversaryDate = DateTime.MinValue;
+            }
+            else 
+            { 
+                anniversaryDate = value; 
+            }
+            
         }
 
         #endregion

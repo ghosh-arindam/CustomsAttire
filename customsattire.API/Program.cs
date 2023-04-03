@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
+
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 // Add services to the container.
@@ -56,18 +57,21 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 // Register the Swagger generator
 builder.Services.AddSwaggerGen();
+builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]);
+
+
 
 var app = builder.Build();
 //startup.Configure(app, builder.Environment); // calling Configure method
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
-    // Enable middleware to serve generated Swagger as a JSON endpoint.
-    app.UseSwagger();
-    // Enable middleware to serve swagger-ui, specifying the Swagger JSON endpoint.
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "CustomsAttire API");
-    });
+// Enable middleware to serve generated Swagger as a JSON endpoint.
+app.UseSwagger();
+// Enable middleware to serve swagger-ui, specifying the Swagger JSON endpoint.
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "CustomsAttire API");
+});
 //}
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -77,7 +81,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 app.UseHttpsRedirection();
-app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().SetIsOriginAllowed(origin => true));
+app.UseCors(x => x.AllowAnyMethod().AllowAnyHeader().SetIsOriginAllowed(origin => true).AllowCredentials());
 app.UseAuthentication();
 app.UseRouting();
 app.UseAuthorization();
