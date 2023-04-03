@@ -10,18 +10,43 @@ const CustomerActions = ({ params, rowId, setrowId }) => {
   const [success, setSuccess] = useState(false);
   const dispatch = useDispatch();
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     setLoading(true);
-    const { id } = params.row;
-    console.log("handleSubmit:" + params.row);
-    const result = await dispatch(updateCustomers(params.row, id));
+    const {
+      title,
+      firstName,
+      lastName,
+      emailId,
+      phoneNo,
+      address1,
+      address2,
+      gender,
+      dob,
+      anniversarydate,
+      id,
+    } = params.row;
+    // console.log("handleSubmit:" + params.row);
+    // console.log("id:" + id);
+    const customerdata = {
+      title,
+      firstName,
+      lastName,
+      emailId,
+      phoneNo,
+      address1,
+      address2,
+      gender,
+      dob,
+      anniversarydate,
+    };
+    console.log("handleSubmit:" + customerdata);
+    const result = dispatch(updateCustomers(customerdata, id));
     if (result) {
       setSuccess(true);
       setrowId(null);
     }
     setLoading(false);
   };
-
   const handleDelete = async (e, id) => {
     if (window.confirm("Are you sure to delete the Customer?")) {
       e.stopPropagation();

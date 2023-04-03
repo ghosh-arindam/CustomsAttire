@@ -150,7 +150,7 @@ const AddCustomer = () => {
                 id="outlined-select-gender"
                 select
                 variant="filled"
-                label="Select"
+                label="Gender"
                 defaultValue=""
                 onBlur={handleBlur}
                 onChange={handleChange}
@@ -158,6 +158,7 @@ const AddCustomer = () => {
                 value={values.gender}
                 error={!!touched.gender && !!errors.gender}
                 helperText={touched.gender && errors.gender}
+                sx={{ gridColumn: "span 2" }}
               >
                 {genders.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
