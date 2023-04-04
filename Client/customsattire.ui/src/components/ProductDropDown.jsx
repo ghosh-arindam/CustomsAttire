@@ -25,7 +25,7 @@ const ProductDropDownComponent = (props) => {
         select
         label="Fabric Code"
         variant="outlined"
-        style={{ width: 150 }}
+        style={{ width: 300 }}
         onChange={handleSelectFabricChange}
         InputLabelProps={{
           shrink: true,
@@ -38,10 +38,13 @@ const ProductDropDownComponent = (props) => {
         {Products?.map((d, index) => (
           <MenuItem
             key={index}
-            value={d.description}
+            value={JSON.stringify({
+              name: d.fabricCode,
+              description: d.description,
+            })}
             //value={props.d.description}
           >
-            {d.fabricCode}
+            {d.fabricCode} - {d.description}
           </MenuItem>
         ))}
         :<div></div>
