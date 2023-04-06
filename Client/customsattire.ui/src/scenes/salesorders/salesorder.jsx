@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Box, Button, TextField, MenuItem, Grid, Stack } from "@mui/material";
+import { Box, Button, TextField, Grid, Stack } from "@mui/material";
 // import { tokens } from "../../theme";
 import { v4 as uuidv4 } from "uuid";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -19,12 +19,15 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addSalesOrders, loadCustomers } from "./../../redux/action";
 import ProductDropDown from "../../components/ProductDropDown";
+import { Autocomplete } from "@mui/material";
 
 const SalesOrder = () => {
   const isNonMobile = useMediaQuery("(min-width: 600px)");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [customerName, setcustomerName] = useState("");
+  /*eslint-disable-next-line */
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
   /*eslint-disable-next-line */
   const [qty, setQty] = useState(0);
   const [deliveryDate, setDeliveryDate] = useState(new Date());
@@ -136,8 +139,8 @@ const SalesOrder = () => {
     navigate("/dashboard");
   };
 
-  const handleCustomerChange = (e) => {
-    const customer = e.target.value;
+  const handleCustomerChange = (event, newValue) => {
+    const customer = newValue;
     // console.log(vendorName);
     setcustomerName(customer);
     /*eslint-disable-next-line */
@@ -197,32 +200,30 @@ const SalesOrder = () => {
           <Box sx={{ width: 1 / 2 }}>
             <Box sx={{ width: 1 / 4 }}></Box>
             <Box sx={{ mx: "left", p: 1, mt: 1 }}>
-              <TextField
-                align="left"
-                id="outlined-select"
-                select
-                label="Customer"
-                variant="outlined"
-                onChange={handleCustomerChange}
-                value={customerName || ""}
-                defaultValue={"--SELECT A  CUSTOMER--"}
-                name="customerName"
-                //error={!!touched.supplierId && !!errors.supplierId}
-                //helperText={touched.supplierId && errors.supplierId}
-                sx={{
-                  align: "left",
-                  minWidth: 270,
-                  maxWidth: 470,
-                  pt: 1,
-                  "& .MuiNativeSelect-select": { pt: "8.5px" },
+              <Autocomplete
+                id="customer-autocomplete"
+                options={customers || []}
+                getOptionLabel={(option) =>
+                  option.firstName + " " + option.lastName
+                }
+                value={customerName || null}
+                onChange={(event, newValue) => {
+                  handleCustomerChange(event, newValue);
                 }}
-              >
-                {customers?.map((d, index) => (
-                  <MenuItem key={index} value={d.firstName}>
-                    {d.firstName + " " + d.lastName}
-                  </MenuItem>
-                ))}
-              </TextField>
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Customer"
+                    variant="outlined"
+                    sx={{
+                      align: "left",
+                      minWidth: 270,
+                      maxWidth: 470,
+                      pt: 1,
+                    }}
+                  />
+                )}
+              />
             </Box>
           </Box>
           <Box sx={{ width: 1 / 2 }}></Box>
@@ -232,8 +233,8 @@ const SalesOrder = () => {
             sx={{ mx: "right", p: 1, mt: 1 }}
           >
             <Box align="right" name="billHeaderId" value="billHeaderId">
-              OrderId:
-              {uuidv4()}
+              OrderId: O/{new Date().toLocaleDateString()}/
+              {uuidv4().toUpperCase()}
             </Box>
             <Button
               variant="contained"
@@ -251,17 +252,17 @@ const SalesOrder = () => {
             component={Paper}
             // sx={{ maxwidth: "2000", maxheight: "2000", overflow: "auto" }}
           >
-            <Table sx={{ minWidth: 900 }}>
+            <Table sx={{ minWidth: 1400, overflow: "auto" }}>
               <TableHead>
                 <TableRow>
                   <TableCell align="left" colSpan={1}>
                     SL NO
                   </TableCell>
                   <TableCell align="left" colSpan={1}>
-                    Fabric Code
+                    Fabric Code and Description
                   </TableCell>
                   <TableCell align="left" colSpan={1}>
-                    Description
+                    {/* Description */}
                   </TableCell>
                   <TableCell align="center" colSpan={1}>
                     Outfit Type
@@ -276,7 +277,7 @@ const SalesOrder = () => {
                     Total
                   </TableCell>
                   <TableCell align="center" colSpan={1}>
-                    Discount (A)
+                    Discount% (A)
                   </TableCell>
                   <TableCell align="right" colSpan={1}>
                     Grand Total (A)
@@ -285,7 +286,7 @@ const SalesOrder = () => {
                     Stitching Cost
                   </TableCell>
                   <TableCell align="center" colSpan={1}>
-                    Discount (B)
+                    Discount% (B)
                   </TableCell>
                   <TableCell align="right" colSpan={1}>
                     Grand Total (B)
@@ -311,7 +312,7 @@ const SalesOrder = () => {
                       />
                     </TableCell>
                     <TableCell align="right" colSpan={1} name="fabricDesc">
-                      {fabricDescription}
+                      {/* {fabricDescription} */}
                     </TableCell>
                     <TableCell align="right" colSpan={1}>
                       <Grid container alignItems="center" justify="flex-end">

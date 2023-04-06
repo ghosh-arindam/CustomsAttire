@@ -18,7 +18,7 @@ import { loadProduct } from "./../../redux/action";
 import { useNavigate } from "react-router-dom";
 //import { Formik } from "formik";
 import ProductDropDownComponent from "./../../components/ProductDropDown";
-
+import { Autocomplete } from "@mui/material";
 const PurchaseOrders = () => {
   //const theme = useTheme();
   //const colors = tokens(theme.palette.mode);
@@ -27,19 +27,21 @@ const PurchaseOrders = () => {
   const [selectedVendor, setSelectedVendor] = useState("");
   const [total, setTotal] = useState(0);
   const [grandTotal, setGrandTotal] = useState(0);
-  const [
-    fabricDescription, // eslint-disable-next-line
-    setfabricDescription,
-  ] = useState();
-  const [
-    // eslint-disable-next-line
-    due,
-    setDue,
-  ] = useState(0);
+  const [quantityPurchased, setQuantityPurchased] = useState("");
+  const [fabricDescription, setfabricDescription] = useState();
+  // eslint-disable-next-line
+  const [due, setDue] = useState(0);
   const [inputAdvance, setInputAdvance] = useState(0);
+  // eslint-disable-next-line
+  const [searchValue, setSearchValue] = useState("");
+  // eslint-disable-next-line
+  const [selectedFabric, setSelectedFabric] = useState(null);
   const [inputDue, setInputDue] = useState(0);
   const dispatch = useDispatch();
   const [rows, setRows] = useState([]);
+  const [selectedFabrics, setSelectedFabrics] = useState([]); // state variable to store selected fabrics
+  // eslint-disable-next-line
+  const [fabrics, setFabrics] = useState([]);
 
   const { Products } = useSelector((state) => state.data);
   const tableRef = useRef(null);
@@ -59,10 +61,17 @@ const PurchaseOrders = () => {
   // console.log(Products);
   const calculateTotal = (rowId) => {
     const qty = document.getElementById(`qty${rowId}`).value;
+
     const price = parseFloat(document.getElementById(`price${rowId}`).value);
     const total = qty * price;
     document.getElementById(`total${rowId}`).innerText = total.toFixed(2);
-
+    setQuantityPurchased((prevSelectedQty) => [
+      ...prevSelectedQty,
+      {
+        quantityPurchased: document.getElementById(`qty${rowId}`).value,
+      },
+    ]);
+    console.log(quantityPurchased);
     let newGrandTotal = 0;
     rows.forEach((row) => {
       const qty = parseFloat(document.getElementById(`qty${row.id}`).value);
@@ -77,19 +86,59 @@ const PurchaseOrders = () => {
     setInputDue(newDue.toFixed(2));
   };
 
+  // const handleSelectFabricChange = useCallback((newValue) => {
+  //   console.log("parentComponet" + newValue);
+  //   setfabricDescription(newValue);
+  //   let newSplit = newValue.split(',')
+  //   console.log(newSplit)
+  //   let fabricCode = newSplit[0].split(':')
+  //   let fabricDescription = newSplit[1].split(':')
+  //   setSelectedFabric(fabricCode[1])
+  //   console.log(fabricDescription[1])
+  //   setfabricDescription(fabricDescription[1])
+
+  // }, []);
+
+  // const handleSelectFabricChange = useCallback((newValue) => {
+  //   console.log("parentComponet" + newValue);
+  //   setfabricDescription(newValue);
+  //   let newSplit = newValue.split(',');
+  //   console.log(newSplit);
+  //   let fabricCode = newSplit[0].split(':');
+  //   let fabricDescription = newSplit[1].split(':');
+  //   setSelectedFabrics(prevSelectedFabrics => [  ...prevSelectedFabrics.slice(),    {        code: fabricCode[1],
+  //     description: fabricDescription[1]
+  //   }
+  // ]
+  // );
+
+  // }, []);
   const handleSelectFabricChange = useCallback((newValue) => {
-    // console.log("parentComponet" + newValue);
-    setfabricDescription(newValue);
+    let newSplit = newValue.split(",");
+    let fabricCode = newSplit[0].split(":");
+    let fabricDescription = newSplit[1].split(":");
+    setfabricDescription(
+      JSON.stringify({ code: fabricCode[1], description: fabricDescription[1] })
+    );
+    setSelectedFabrics((prevSelectedFabrics) => [
+      ...prevSelectedFabrics,
+      {
+        code: fabricCode[1],
+        description: fabricDescription[1],
+      },
+    ]);
+    console.log(selectedFabrics);
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleVendorChange = (e) => {
-    const vendorName = e.target.value;
-    // console.log(vendorName);
-    setSelectedVendor(vendorName);
-  };
-
   const handleSubmit = (values) => {
-    //dispatch(addPurchaseOrders(values));
+    const data = {
+      fabricDescription,
+      selectedFabrics,
+      quantityPurchased,
+    };
+    const jsonData = JSON.stringify(data);
+    localStorage.setItem("purchaseOrder", jsonData);
     console.log(values);
     navigate("/dashboard");
   };
@@ -105,6 +154,52 @@ const PurchaseOrders = () => {
       total: "0",
     };
     setRows([...rows, newRow]);
+  };
+  const vendors = Products?.map((product) => product.vendorName) || [];
+
+  const filteredVendors = vendors
+    ?.filter((vendor, index) => vendors.indexOf(vendor) === index)
+    .map((vendor) => ({ name: vendor }));
+
+  // const vendors = Products?.map((product) => product.vendorName) || []
+
+  // const filteredVendors = vendors.filter((vendor, index) => vendors.indexOf(vendor) === index).map((vendor) => ({ name: vendor }));
+  function PurchaseOrders(props) {
+    console.log("props:", props);
+    const filteredOrders = props.orders.filter(
+      (order) => order.status === "pending"
+    );
+    console.log("filteredOrders:", filteredOrders);
+  }
+
+  const handleSave = () => {
+    // Create an array of new fabric objects based on the selected fabrics
+    const newFabrics = selectedFabrics.map((fabric) => {
+      return {
+        code: fabric.code,
+        description: fabric.description,
+      };
+    });
+
+    // Save the new fabrics to local storage
+    const currentFabrics = JSON.parse(localStorage.getItem("fabrics")) || [];
+    const updatedFabrics = [...currentFabrics, ...newFabrics];
+    localStorage.setItem("fabrics", JSON.stringify(updatedFabrics));
+
+    // Save the purchase order data to local storage
+    const data = {
+      setSelectedFabrics,
+      fabricDescription,
+    };
+    const jsonData = JSON.stringify(data);
+    console.log("selectedFabrics:", selectedFabrics);
+    localStorage.setItem("purchaseOrder", jsonData);
+  };
+
+  const handleSelectFabric = (fabric) => {
+    const newSelectedFabrics = [...selectedFabrics, fabric];
+    setSelectedFabrics(newSelectedFabrics);
+    console.log(newSelectedFabrics);
   };
 
   return (
@@ -132,31 +227,23 @@ const PurchaseOrders = () => {
           </Box>
           <Box sx={{ width: 1 / 4 }}></Box>
           <Box sx={{ mx: "auto", p: 1, mt: 1 }}>
-            <TextField
-              id="outlined-select"
-              select
-              label="Vendor"
-              variant="outlined"
-              onChange={handleVendorChange}
-              value={selectedVendor || ""}
-              defaultValue={"--SELECT A  VENDOR--"}
-              name="vendorname"
-              //error={!!touched.supplierId && !!errors.supplierId}
-              //helperText={touched.supplierId && errors.supplierId}
-              sx={{
-                align: "right",
-                minWidth: 270,
-                maxWidth: 470,
-                pt: 1,
-                "& .MuiNativeSelect-select": { pt: "8.5px" },
-              }}
-            >
-              {Products?.map((d, index) => (
-                <MenuItem key={index} value={d.vendorName}>
-                  {d.vendorName}
-                </MenuItem>
-              ))}
-            </TextField>
+            <Autocomplete
+              id="vendor"
+              options={filteredVendors}
+              getOptionLabel={(option) => option.name || ""}
+              value={selectedVendor}
+              sx={{ gridColumn: "span 4" }}
+              style={{ width: 300 }}
+              onChange={(event, value) => setSelectedVendor(value)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Search Vendor"
+                  variant="outlined"
+                  size="medium"
+                />
+              )}
+            />
           </Box>
         </Box>
         <Box my={4}>
@@ -172,6 +259,7 @@ const PurchaseOrders = () => {
                     Fabric Code
                   </TableCell>
                   <TableCell align="center">Details</TableCell>
+
                   <TableCell align="right">Price</TableCell>
                 </TableRow>
                 <TableRow>
@@ -185,14 +273,13 @@ const PurchaseOrders = () => {
               <TableBody>
                 {rows?.map((row, index) => (
                   <TableRow key={row.id}>
-                    {/* <TableCell>{row.fabricCode}</TableCell> */}
                     <TableCell>
                       <ProductDropDownComponent
                         value={fabricDescription}
                         onChange={handleSelectFabricChange}
                       />
                     </TableCell>
-                    <TableCell>{fabricDescription}</TableCell>
+                    <TableCell></TableCell>
                     <TableCell align="center">
                       <TextField
                         align="left"
@@ -263,7 +350,11 @@ const PurchaseOrders = () => {
             justifyContent="end"
             mt="20px"
           >
-            <Button variant="contained" startIcon={<Save />}>
+            <Button
+              variant="contained"
+              startIcon={<Save />}
+              onClick={handleSave}
+            >
               Save
             </Button>
             <Button variant="contained" endIcon={<Cancel />}>
