@@ -5,14 +5,17 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { deleteCustomer, updateCustomers } from "../../redux/action";
 
-const CustomerActions = ({ params, rowId, setrowId }) => {
+const CustomerActions = ({ params, selectedrowId, setselectedrowId }) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const dispatch = useDispatch();
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setLoading(true);
+    await delay(2000);
     const {
+      rowId,
       title,
       firstName,
       lastName,
@@ -28,6 +31,7 @@ const CustomerActions = ({ params, rowId, setrowId }) => {
     // console.log("handleSubmit:" + params.row);
     // console.log("id:" + id);
     const customerdata = {
+      rowId,
       title,
       firstName,
       lastName,
@@ -39,12 +43,13 @@ const CustomerActions = ({ params, rowId, setrowId }) => {
       dob,
       anniversarydate,
     };
-    console.log("handleSubmit:" + customerdata);
+    // console.log("handleSubmit:" + customerdata);
     const result = dispatch(updateCustomers(customerdata, id));
+
     if (result) {
-      setSuccess(true);
-      setrowId(null);
     }
+    setSuccess(true);
+    setselectedrowId(null);
     setLoading(false);
   };
   const handleDelete = async (e, id) => {
@@ -55,9 +60,11 @@ const CustomerActions = ({ params, rowId, setrowId }) => {
   };
 
   useEffect(() => {
-    if (rowId === params.id && success) setSuccess(false);
+    // console.log("selectedrowId" + selectedrowId);
+    // console.log("params.id" + params.id);
+    if (selectedrowId === params.id && success) setSuccess(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowId]);
+  }, [selectedrowId]);
   return (
     <Box
       sx={{
@@ -84,7 +91,7 @@ const CustomerActions = ({ params, rowId, setrowId }) => {
             width: 40,
             height: 40,
           }}
-          disabled={params.id !== rowId || loading}
+          disabled={params.id !== selectedrowId || loading}
           onClick={handleSubmit}
         >
           <Save />

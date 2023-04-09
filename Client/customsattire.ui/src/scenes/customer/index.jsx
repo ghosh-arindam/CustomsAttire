@@ -15,11 +15,19 @@ const Customer = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [pageSize, setPageSize] = useState(5);
-  const [rowId, setrowId] = useState([]);
+  const [selectedrowId, setselectedrowId] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { customers } = useSelector((state) => state.data);
 
+  const [sortModel, setSortModel] = useState([
+    {
+      field: "rowId",
+      sort: "desc",
+    },
+  ]);
+  console.log("customers.length" + customers.length);
+  if (customers.length === 0) dispatch(loadCustomers());
   useEffect(() => {
     dispatch(loadCustomers());
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -28,6 +36,7 @@ const Customer = () => {
   const rowDataCustomer = customers?.map((customer) => {
     return {
       id: customer?.id,
+      rowId: customer?.rowId,
       title: customer?.title,
       firstName: customer?.firstName,
       lastName: customer?.lastName,
@@ -44,11 +53,12 @@ const Customer = () => {
   const columns = useMemo(
     () => [
       { field: "id", headerName: "ID", flex: 0.5 },
+      { field: "rowId", headerName: "rowID", flex: 0.5, sort: "desc" },
       {
         field: "title",
         headerName: "Title",
         flex: 1,
-        type: "singleselect",
+        type: "string",
         valueoptions: ["Mr.", "Mrs.", "Honorable"],
         editable: true,
       },
@@ -85,6 +95,7 @@ const Customer = () => {
         headerAlign: "left",
         align: "left",
         editable: true,
+        valueFormatter: (params) => moment(params?.value).format("DD-MM-yyyy"),
         renderCell: (params) => moment(params.row.dob).format("DD-MM-yyyy"),
       },
       {
@@ -120,6 +131,7 @@ const Customer = () => {
         headerAlign: "left",
         align: "left",
         editable: true,
+        valueFormatter: (params) => moment(params?.value).format("DD-MM-yyyy"),
         renderCell: (params) =>
           moment(params.row.anniversaryDate).format("DD-MM-yyyy"),
       },
@@ -128,11 +140,11 @@ const Customer = () => {
         headerName: "Actions",
         type: "actions",
         renderCell: (params) => (
-          <CustomerActions {...{ params, rowId, setrowId }} />
+          <CustomerActions {...{ params, selectedrowId, setselectedrowId }} />
         ),
       },
     ],
-    [rowId]
+    [selectedrowId]
   );
   return (
     <Box m="20px">
@@ -181,6 +193,17 @@ const Customer = () => {
           checkboxSelection
           rows={rowDataCustomer ?? []}
           columns={columns}
+          sortModel={sortModel}
+          onSortModelChange={(model) => setSortModel(model)}
+          initialState={{
+            columns: {
+              columnVisibilityModel: {
+                // Hide columns rowId and id, the other columns will remain visible
+                rowId: false,
+                id: false,
+              },
+            },
+          }}
           getRowId={(rows) => rows.id}
           rowsPerPageOptions={[5, 10, 25]}
           pageSize={pageSize}
@@ -196,7 +219,7 @@ const Customer = () => {
             },
           }}
           components={{ Toolbar: GridToolbar }}
-          onCellEditCommit={(params) => setrowId(params.id)}
+          onCellEditCommit={(params) => setselectedrowId(params.id)}
         />
       </Box>
     </Box>

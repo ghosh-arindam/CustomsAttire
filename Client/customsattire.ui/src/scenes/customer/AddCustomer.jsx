@@ -13,7 +13,7 @@ const AddCustomer = () => {
   const dispatch = useDispatch();
 
   const handleFormSubmit = (values) => {
-    console.log(values);
+    //console.log(values);
     dispatch(addCustomers(values));
     navigate("/customer");
   };
