@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Box, Button, TextField, MenuItem, Grid, Stack } from "@mui/material";
+import { Box, Button, TextField, Grid, Stack } from "@mui/material";
 // import { tokens } from "../../theme";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 //import { Formik } from "formik";
 import ProductDropDownComponent from "./../../components/ProductDropDown";
 import { Autocomplete } from "@mui/material";
+import { addPurchaseOrders } from "./../../redux/action";
 const PurchaseOrders = () => {
   //const theme = useTheme();
   //const colors = tokens(theme.palette.mode);
@@ -27,11 +28,15 @@ const PurchaseOrders = () => {
   const [selectedVendor, setSelectedVendor] = useState("");
   const [total, setTotal] = useState(0);
   const [grandTotal, setGrandTotal] = useState(0);
+  // eslint-disable-next-line
   const [quantityPurchased, setQuantityPurchased] = useState("");
+  // eslint-disable-next-line
   const [fabricDescription, setfabricDescription] = useState();
   // eslint-disable-next-line
+  const [fabricCode, setfabricCode] = useState();
+  // eslint-disable-next-line
   const [due, setDue] = useState(0);
-  const [inputAdvance, setInputAdvance] = useState(0);
+  const [inputAdvance, setInputAdvance] = useState();
   // eslint-disable-next-line
   const [searchValue, setSearchValue] = useState("");
   // eslint-disable-next-line
@@ -39,13 +44,14 @@ const PurchaseOrders = () => {
   const [inputDue, setInputDue] = useState(0);
   const dispatch = useDispatch();
   const [rows, setRows] = useState([]);
-  const [selectedFabrics, setSelectedFabrics] = useState([]); // state variable to store selected fabrics
+  const [selectedFabrics, setSelectedFabrics] = useState(); // state variable to store selected fabrics
   // eslint-disable-next-line
   const [fabrics, setFabrics] = useState([]);
-
+  // eslint-disable-next-line
+  const [qty, setqty] = useState();
+  const [selectedDescription, setSelectedDescription] = useState();
   const { Products } = useSelector((state) => state.data);
   const tableRef = useRef(null);
-
   useEffect(() => {
     //dispatch(loadSuppliers());
     dispatch(loadProduct());
@@ -57,6 +63,13 @@ const PurchaseOrders = () => {
     setInputAdvance(e.target.value);
     setInputDue(due);
   };
+
+  useEffect(() => {
+    if (selectedFabrics?.length) {
+      // const fabricCode = selectedFabrics[selectedFabrics.length - 1].code;
+      setfabricCode(selectedFabrics);
+    }
+  }, [selectedFabrics]);
 
   // console.log(Products);
   const calculateTotal = (rowId) => {
@@ -71,7 +84,7 @@ const PurchaseOrders = () => {
         quantityPurchased: document.getElementById(`qty${rowId}`).value,
       },
     ]);
-    console.log(quantityPurchased);
+
     let newGrandTotal = 0;
     rows.forEach((row) => {
       const qty = parseFloat(document.getElementById(`qty${row.id}`).value);
@@ -86,61 +99,68 @@ const PurchaseOrders = () => {
     setInputDue(newDue.toFixed(2));
   };
 
-  // const handleSelectFabricChange = useCallback((newValue) => {
-  //   console.log("parentComponet" + newValue);
-  //   setfabricDescription(newValue);
-  //   let newSplit = newValue.split(',')
-  //   console.log(newSplit)
-  //   let fabricCode = newSplit[0].split(':')
-  //   let fabricDescription = newSplit[1].split(':')
-  //   setSelectedFabric(fabricCode[1])
-  //   console.log(fabricDescription[1])
-  //   setfabricDescription(fabricDescription[1])
+  const handleSelectFabricChange = useCallback(
+    (newValue, value) => {
+      const { fabricCode, description } = newValue;
 
-  // }, []);
+      console.log("newValue" + JSON.stringify(newValue));
+      console.log("value" + value);
 
-  // const handleSelectFabricChange = useCallback((newValue) => {
-  //   console.log("parentComponet" + newValue);
-  //   setfabricDescription(newValue);
-  //   let newSplit = newValue.split(',');
-  //   console.log(newSplit);
-  //   let fabricCode = newSplit[0].split(':');
-  //   let fabricDescription = newSplit[1].split(':');
-  //   setSelectedFabrics(prevSelectedFabrics => [  ...prevSelectedFabrics.slice(),    {        code: fabricCode[1],
-  //     description: fabricDescription[1]
-  //   }
-  // ]
-  // );
+      if (newValue !== undefined) {
+        // console.log("fabric Code")
+        // let newSplit = newValue.split(",");
+        // console.log("new Split", newSplit)
+        // let fabricCode = newSplit[1].split(":");
+        // console.log(fabricCode)
+        // let fabricDescription = newSplit[2].split(":");
+        // setfabricDescription(value.description);
+        let fabricCode = newValue.fabricCode;
+        let Description = newValue.description;
+        console.log(fabricCode);
+        console.log(Description);
+        // console.log('fabricCode'+fabricCode)
+        setSelectedFabrics(fabricCode);
+        setSelectedDescription(Description);
 
-  // }, []);
-  const handleSelectFabricChange = useCallback((newValue) => {
-    let newSplit = newValue.split(",");
-    let fabricCode = newSplit[0].split(":");
-    let fabricDescription = newSplit[1].split(":");
-    setfabricDescription(
-      JSON.stringify({ code: fabricCode[1], description: fabricDescription[1] })
-    );
-    setSelectedFabrics((prevSelectedFabrics) => [
-      ...prevSelectedFabrics,
-      {
-        code: fabricCode[1],
-        description: fabricDescription[1],
-      },
-    ]);
-    console.log(selectedFabrics);
+        // setfabricDescription(
+        //   JSON.stringify({ code: fabricCode[1], description: fabricDescription[1] })
+        // );
+        // setSelectedFabrics((prevSelectedFabrics) => [      ...prevSelectedFabrics,      {        code: fabricCode[1],
+        //     // description: fabricDescription[1],
+        //   },
+        // ]);
+        console.log("handleSelectFabricChange" + selectedFabrics);
+      }
+    },
     //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    []
+  );
 
   const handleSubmit = (values) => {
-    const data = {
-      fabricDescription,
-      selectedFabrics,
-      quantityPurchased,
-    };
-    const jsonData = JSON.stringify(data);
-    localStorage.setItem("purchaseOrder", jsonData);
+    //dispatch(addPurchaseOrders(values));
     console.log(values);
     navigate("/dashboard");
+  };
+
+  const saveData = () => {
+    const data = rows.map((row) => ({
+      vendorName: selectedVendor.name,
+      fabricCode: selectedFabrics,
+      description: selectedDescription,
+      quantityPurchased: parseFloat(
+        document.getElementById(`qty${row.id}`).value
+      ),
+      costPrice: parseFloat(document.getElementById(`price${row.id}`).value),
+      totalCostPrice: grandTotal,
+      paymentmode: "",
+      paymentdone: inputAdvance,
+      duepayment: inputDue,
+      purchasedate: new Date().toISOString().slice(0, 10),
+    }));
+    localStorage.setItem("purchaseOrdersData", JSON.stringify(data));
+    dispatch(addPurchaseOrders(data));
+    // console.log(fabricCode)
+    console.log(data);
   };
 
   const addRow = () => {
@@ -161,9 +181,6 @@ const PurchaseOrders = () => {
     ?.filter((vendor, index) => vendors.indexOf(vendor) === index)
     .map((vendor) => ({ name: vendor }));
 
-  // const vendors = Products?.map((product) => product.vendorName) || []
-
-  // const filteredVendors = vendors.filter((vendor, index) => vendors.indexOf(vendor) === index).map((vendor) => ({ name: vendor }));
   function PurchaseOrders(props) {
     console.log("props:", props);
     const filteredOrders = props.orders.filter(
@@ -171,36 +188,6 @@ const PurchaseOrders = () => {
     );
     console.log("filteredOrders:", filteredOrders);
   }
-
-  const handleSave = () => {
-    // Create an array of new fabric objects based on the selected fabrics
-    const newFabrics = selectedFabrics.map((fabric) => {
-      return {
-        code: fabric.code,
-        description: fabric.description,
-      };
-    });
-
-    // Save the new fabrics to local storage
-    const currentFabrics = JSON.parse(localStorage.getItem("fabrics")) || [];
-    const updatedFabrics = [...currentFabrics, ...newFabrics];
-    localStorage.setItem("fabrics", JSON.stringify(updatedFabrics));
-
-    // Save the purchase order data to local storage
-    const data = {
-      setSelectedFabrics,
-      fabricDescription,
-    };
-    const jsonData = JSON.stringify(data);
-    console.log("selectedFabrics:", selectedFabrics);
-    localStorage.setItem("purchaseOrder", jsonData);
-  };
-
-  const handleSelectFabric = (fabric) => {
-    const newSelectedFabrics = [...selectedFabrics, fabric];
-    setSelectedFabrics(newSelectedFabrics);
-    console.log(newSelectedFabrics);
-  };
 
   return (
     <Grid sx={{ flexGrow: 1 }} mx={4}>
@@ -264,7 +251,7 @@ const PurchaseOrders = () => {
                 </TableRow>
                 <TableRow>
                   <TableCell align="left">Fabric Code</TableCell>
-                  <TableCell align="center">Desc</TableCell>
+                  <TableCell align="center"></TableCell>
                   <TableCell align="center">Qty.</TableCell>
                   <TableCell align="center">Unit</TableCell>
                   <TableCell align="right">Sum</TableCell>
@@ -286,7 +273,7 @@ const PurchaseOrders = () => {
                         label="Quantity"
                         id={`qty${row.id}`}
                         name="quantityPurchased"
-                        onChange={() => calculateTotal(row.id)}
+                        onChange={(event) => calculateTotal(row.id)}
                       />
                     </TableCell>
                     <TableCell align="center">
@@ -334,13 +321,6 @@ const PurchaseOrders = () => {
             </Table>
           </TableContainer>
           <Box sx={{ width: 1 / 4 }} my={4}></Box>
-          {/* <Box
-            sx={{ width: 1 / 4 }}
-            mx={1}
-            display="auto"
-            justifyContent="end"
-            mt="20px"
-          > */}
           <Stack
             direction="row"
             spacing={2}
@@ -350,11 +330,7 @@ const PurchaseOrders = () => {
             justifyContent="end"
             mt="20px"
           >
-            <Button
-              variant="contained"
-              startIcon={<Save />}
-              onClick={handleSave}
-            >
+            <Button variant="contained" startIcon={<Save />} onClick={saveData}>
               Save
             </Button>
             <Button variant="contained" endIcon={<Cancel />}>
