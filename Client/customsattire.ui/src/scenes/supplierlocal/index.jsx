@@ -20,6 +20,14 @@ const SupplierLocal = () => {
   const dispatch = useDispatch();
   const { suppliers } = useSelector((state) => state.data);
 
+  const [sortModel, setSortModel] = useState([
+    {
+      field: "rowId",
+      sort: "desc",
+    },
+  ]);
+  console.log("suppliers.length" + suppliers.length);
+  if (suppliers.length === 0) dispatch(loadSuppliers());
   useEffect(() => {
     dispatch(loadSuppliers());
     //eslint-disable-next-line react-hooks/exhaustive-deps
@@ -28,6 +36,7 @@ const SupplierLocal = () => {
   const rowSupplierData = suppliers?.map((supplier) => {
     return {
       id: supplier?.id,
+      rowId: supplier?.rowId,
       accountNumber: supplier?.accountNumber,
       vendorName: supplier?.vendorName,
       phoneNumber: supplier?.phoneNumber,
@@ -43,6 +52,7 @@ const SupplierLocal = () => {
   const columns = useMemo(
     () => [
       { field: "id", headerName: "ID", flex: 0.5 },
+      { field: "rowId", headerName: "rowID", flex: 0.5, sort: "desc" },
       {
         field: "accountNumber",
         headerName: "Account Number",
@@ -161,6 +171,17 @@ const SupplierLocal = () => {
           getRowId={(rows) => rows.id}
           rowsPerPageOptions={[5, 10, 25]}
           pageSize={pageSize}
+          sortModel={sortModel}
+          onSortModelChange={(model) => setSortModel(model)}
+          initialState={{
+            columns: {
+              columnVisibilityModel: {
+                // Hide columns rowID and id, the other columns will remain visible
+                rowId: false,
+                id: false,
+              },
+            },
+          }}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
           getRowSpacing={(params) => ({
             top: params.isFirstVisible ? 0 : 5,

@@ -8,9 +8,13 @@ const SupplierAction = ({ params, rowId, setrowId }) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const dispatch = useDispatch();
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
   const handleSubmit = async () => {
     setLoading(true);
+    await delay(2000);
     const {
+      rowId,
       accountNumber,
       vendorName,
       phoneNumber,
@@ -22,28 +26,26 @@ const SupplierAction = ({ params, rowId, setrowId }) => {
       preferredVendorStatus,
       id,
     } = params.row;
-    console.log("handleSubmit:" + params.row);
+    console.log("handleSubmit:" + JSON.stringify(params.row));
     console.log("id:" + id);
-    const result = await dispatch(
-      updateSupplier(
-        {
-          accountNumber,
-          vendorName,
-          phoneNumber,
-          address1,
-          address2,
-          city,
-          panNo,
-          gst,
-          preferredVendorStatus,
-        },
-        id
-      )
-    );
+    const supplierData = {
+      rowId,
+      accountNumber,
+      vendorName,
+      phoneNumber,
+      address1,
+      address2,
+      city,
+      panNo,
+      gst,
+      preferredVendorStatus,
+    };
+
+    const result = dispatch(updateSupplier(supplierData, id));
     if (result) {
-      setSuccess(true);
-      setrowId(null);
     }
+    setSuccess(true);
+    setrowId(null);
     setLoading(false);
   };
 
@@ -55,6 +57,8 @@ const SupplierAction = ({ params, rowId, setrowId }) => {
   };
 
   useEffect(() => {
+    console.log("selectedrowId" + rowId);
+    console.log("params.id" + params.id);
     if (rowId === params.id && success) setSuccess(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowId]);
