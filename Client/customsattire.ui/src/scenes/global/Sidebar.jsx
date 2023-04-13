@@ -9,8 +9,8 @@ import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
-import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
-import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
+import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
+import CheckRoomIcon from "@mui/icons-material/Checkroom";
 import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
 import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutlined";
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
@@ -157,15 +157,15 @@ const Sidebar = () => {
             />
             <Item
               title="Sales Order"
-              to="/customer"
-              icon={<AttachMoneyOutlinedIcon />}
+              to="/salesorders"
+              icon={<PointOfSaleIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
-              title="FAQ Page"
-              to="/faq"
-              icon={<HelpOutlineOutlinedIcon />}
+              title="Add Fabric"
+              to="/addfabric"
+              icon={<CheckRoomIcon />}
               selected={selected}
               setSelected={setSelected}
             />
