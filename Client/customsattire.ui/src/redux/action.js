@@ -251,9 +251,9 @@ export const loadProduct = () => {
 };
 export const loadSalesOrders = () => {
   return async function (dispatch) {
-    // console.log(`${process.env.REACT_APP_BASE_API_URL}/Product`);
+    // console.log(`${process.env.REACT_APP_BASE_API_URL}/salesOrderItems`);
     await axios
-      .get(`${process.env.REACT_APP_BASE_API_URL}/SalesOrderItems`)
+      .get(`${process.env.REACT_APP_BASE_API_URL}/salesOrderItems`)
       .then((resp) => {
         //console.log("resp", resp);
         dispatch(getsalesOrders(resp.data));
