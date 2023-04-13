@@ -13,10 +13,8 @@ import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLogin } from "../../state";
-// import Dropzone from "react-dropzone";
-// import FlexBetween from "components/FlexBetween";
-const phoneRegExp =
-  /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
+
+const phoneRegExp = /^[6-9]\d{9}$/gi;
 
 const registerSchema = yup.object().shape({
   firstname: yup.string().required("required"),
@@ -89,6 +87,7 @@ const Form = () => {
   };
 
   const login = async (values, onSubmitProps) => {
+    //console.log("login" + JSON.stringify(values));
     const loggedInResponse = await fetch(
       `${process.env.REACT_APP_BASE_API_URL}/Account/Login/login`,
       {
@@ -97,7 +96,15 @@ const Form = () => {
         body: JSON.stringify(values),
       }
     );
+    if (!loggedInResponse.ok) {
+      throw new Error(
+        `${loggedInResponse.status} ${
+          loggedInResponse.statusText
+        }: ${await loggedInResponse.text()}`
+      );
+    }
     const loggedIn = await loggedInResponse.json();
+    console.log(loggedInResponse.json());
     onSubmitProps.resetForm();
     if (loggedIn) {
       dispatch(
