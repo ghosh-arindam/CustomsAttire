@@ -43,13 +43,13 @@ const CustomerActions = ({ params, selectedrowId, setselectedrowId }) => {
       dob,
       anniversarydate,
     };
-    // console.log("handleSubmit:" + customerdata);
+    //console.log("handleSubmit:" + customerdata);
     const result = dispatch(updateCustomers(customerdata, id));
-
+    //console.log("result:" + result);
     if (result) {
+      setSuccess(true);
+      setselectedrowId(null);
     }
-    setSuccess(true);
-    setselectedrowId(null);
     setLoading(false);
   };
   const handleDelete = async (e, id) => {
