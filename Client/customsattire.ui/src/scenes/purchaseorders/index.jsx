@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Box, Button, TextField, Grid, Stack } from "@mui/material";
-// import { tokens } from "../../theme";
+
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
 import Table from "@mui/material/Table";
@@ -16,25 +16,22 @@ import Cancel from "@mui/icons-material/Cancel";
 import { useDispatch, useSelector } from "react-redux";
 import { loadProduct } from "./../../redux/action";
 import { useNavigate } from "react-router-dom";
-//import { Formik } from "formik";
+
 import ProductDropDownComponent from "./../../components/ProductDropDown";
 import { Autocomplete } from "@mui/material";
 import { addPurchaseOrders } from "./../../redux/action";
+
 const PurchaseOrders = () => {
-  //const theme = useTheme();
-  //const colors = tokens(theme.palette.mode);
   const isNonMobile = useMediaQuery("(min-width: 600px)");
   const navigate = useNavigate();
-  const [selectedVendor, setSelectedVendor] = useState("");
   const [total, setTotal] = useState(0);
   const [grandTotal, setGrandTotal] = useState(0);
-  // eslint-disable-next-line
+  //eslint-disable-next-line
   const [quantityPurchased, setQuantityPurchased] = useState("");
-  // eslint-disable-next-line
   const [fabricDescription, setfabricDescription] = useState();
-  // eslint-disable-next-line
+  //eslint-disable-next-line
   const [fabricCode, setfabricCode] = useState();
-  // eslint-disable-next-line
+  //eslint-disable-next-line
   const [due, setDue] = useState(0);
   const [inputAdvance, setInputAdvance] = useState();
   // eslint-disable-next-line
@@ -52,11 +49,19 @@ const PurchaseOrders = () => {
   const [selectedDescription, setSelectedDescription] = useState();
   const { Products } = useSelector((state) => state.data);
   const tableRef = useRef(null);
-  useEffect(() => {
-    //dispatch(loadSuppliers());
-    dispatch(loadProduct());
+  const [vendorProducts, setVendorProducts] = useState([]);
+  const [selectedVendor, setSelectedVendor] = useState(null);
+  // eslint-disable-next-line
+  const [quantityValue, setQuantityValue] = useState(0);
+  // eslint-disable-next-line
+  const [outfitType, setOutfitType] = useState("");
+  useEffect(
+    () => {
+      dispatch(loadProduct());
+    },
     //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    []
+  );
 
   const handleAdvChange = (e) => {
     const due = grandTotal - e.target.value;
@@ -64,14 +69,16 @@ const PurchaseOrders = () => {
     setInputDue(due);
   };
 
+  const handleQuanChange = (e) => {
+    setQuantityValue(e.target.value);
+  };
+
   useEffect(() => {
     if (selectedFabrics?.length) {
-      // const fabricCode = selectedFabrics[selectedFabrics.length - 1].code;
       setfabricCode(selectedFabrics);
     }
   }, [selectedFabrics]);
 
-  // console.log(Products);
   const calculateTotal = (rowId) => {
     const qty = document.getElementById(`qty${rowId}`).value;
 
@@ -103,33 +110,14 @@ const PurchaseOrders = () => {
     (newValue, value) => {
       const { fabricCode, description } = newValue;
 
-      console.log("newValue" + JSON.stringify(newValue));
-      console.log("value" + value);
-
       if (newValue !== undefined) {
-        // console.log("fabric Code")
-        // let newSplit = newValue.split(",");
-        // console.log("new Split", newSplit)
-        // let fabricCode = newSplit[1].split(":");
-        // console.log(fabricCode)
-        // let fabricDescription = newSplit[2].split(":");
-        // setfabricDescription(value.description);
         let fabricCode = newValue.fabricCode;
         let Description = newValue.description;
-        console.log(fabricCode);
-        console.log(Description);
-        // console.log('fabricCode'+fabricCode)
+
         setSelectedFabrics(fabricCode);
         setSelectedDescription(Description);
 
-        // setfabricDescription(
-        //   JSON.stringify({ code: fabricCode[1], description: fabricDescription[1] })
-        // );
-        // setSelectedFabrics((prevSelectedFabrics) => [      ...prevSelectedFabrics,      {        code: fabricCode[1],
-        //     // description: fabricDescription[1],
-        //   },
-        // ]);
-        console.log("handleSelectFabricChange" + selectedFabrics);
+        // console.log("handleSelectFabricChange" + selectedFabrics);
       }
     },
     //eslint-disable-next-line react-hooks/exhaustive-deps
@@ -137,8 +125,6 @@ const PurchaseOrders = () => {
   );
 
   const handleSubmit = (values) => {
-    //dispatch(addPurchaseOrders(values));
-    console.log(values);
     navigate("/dashboard");
   };
 
@@ -157,10 +143,40 @@ const PurchaseOrders = () => {
       duepayment: inputDue,
       purchasedate: new Date().toISOString().slice(0, 10),
     }));
+
+    // Loop over each row and update the values
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      const dataForRow = data[i];
+      document.getElementById(`qty${row.id}`).value =
+        dataForRow.quantityPurchased;
+      document.getElementById(`price${row.id}`).value = dataForRow.costPrice;
+    }
     localStorage.setItem("purchaseOrdersData", JSON.stringify(data));
-    dispatch(addPurchaseOrders(data));
-    // console.log(fabricCode)
-    console.log(data);
+    data.forEach((oneData) => {
+      dispatch(addPurchaseOrders(oneData));
+    });
+  };
+
+  // Cancel Function//
+  const resetState = () => {
+    setSelectedVendor(null);
+    setTotal(0);
+    setGrandTotal(0);
+    setQuantityPurchased("");
+    setfabricDescription("");
+    setDue(0);
+    setInputAdvance(0);
+    setSearchValue("");
+    setSelectedFabric(null);
+    setInputDue(0);
+    setRows([]);
+    setSelectedFabrics([]);
+    dispatch(loadProduct());
+  };
+
+  const handleCancel = () => {
+    resetState();
   };
 
   const addRow = () => {
@@ -178,16 +194,53 @@ const PurchaseOrders = () => {
   const vendors = Products?.map((product) => product.vendorName) || [];
 
   const filteredVendors = vendors
-    ?.filter((vendor, index) => vendors.indexOf(vendor) === index)
+    ?.filter((vendor, index, array) => array.indexOf(vendor) === index)
     .map((vendor) => ({ name: vendor }));
-
+  //eslint-disable-next-line
   function PurchaseOrders(props) {
-    console.log("props:", props);
+    //eslint-disable-next-line
     const filteredOrders = props.orders.filter(
       (order) => order.status === "pending"
     );
-    console.log("filteredOrders:", filteredOrders);
   }
+  //eslint-disable-next-line
+  const handleVendorSelect = (event, value) => {
+    setSelectedVendor(value);
+  };
+
+  useEffect(
+    () => {
+      async function fetchVendorProducts() {
+        if (selectedVendor) {
+          const filteredData = Products?.filter(function (item) {
+            if (item.vendorName === selectedVendor.name) {
+              return true;
+            } else {
+              return false;
+            }
+          });
+
+          setVendorProducts(filteredData);
+        }
+      }
+      fetchVendorProducts();
+    },
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+    [selectedVendor]
+  );
+
+  //eslint-disable-next-line
+  const saveInfo = () => {
+    const requiredFields = [
+      ...document.querySelectorAll('input[name="quantityPurchased"]'),
+      ...document.querySelectorAll('input[name="costPrice"]'),
+      document.querySelector('input[name="paymentdone"]'),
+    ];
+    //eslint-disable-next-line
+    const areAllFieldsFilled = requiredFields.every(
+      (field) => field.value !== ""
+    );
+  };
 
   return (
     <Grid sx={{ flexGrow: 1 }} mx={4}>
@@ -208,6 +261,7 @@ const PurchaseOrders = () => {
               startIcon={<AddIcon />}
               size="medium"
               onClick={addRow}
+              disabled={!selectedVendor} // disable the button if no vendor is selected
             >
               Add Purchase Orders
             </Button>
@@ -217,11 +271,13 @@ const PurchaseOrders = () => {
             <Autocomplete
               id="vendor"
               options={filteredVendors}
-              getOptionLabel={(option) => option.name || ""}
+              getOptionLabel={(option) => option.name}
               value={selectedVendor}
               sx={{ gridColumn: "span 4" }}
               style={{ width: 300 }}
-              onChange={(event, value) => setSelectedVendor(value)}
+              onChange={(event, value) => {
+                setSelectedVendor(value);
+              }}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -262,18 +318,19 @@ const PurchaseOrders = () => {
                   <TableRow key={row.id}>
                     <TableCell>
                       <ProductDropDownComponent
+                        filteredProducts={vendorProducts}
                         value={fabricDescription}
                         onChange={handleSelectFabricChange}
                       />
                     </TableCell>
-                    <TableCell></TableCell>
                     <TableCell align="center">
                       <TextField
                         align="left"
                         label="Quantity"
                         id={`qty${row.id}`}
                         name="quantityPurchased"
-                        onChange={(event) => calculateTotal(row.id)}
+                        onChange={handleQuanChange}
+                        inputProps={{ type: "number", min: 0 }}
                       />
                     </TableCell>
                     <TableCell align="center">
@@ -282,6 +339,11 @@ const PurchaseOrders = () => {
                         id={`price${row.id}`}
                         name="costPrice"
                         onChange={() => calculateTotal(row.id)}
+                        inputProps={{
+                          type: "number",
+                          min: 0.01,
+                          step: 0.01,
+                        }}
                       />
                     </TableCell>
                     <TableCell
@@ -308,6 +370,11 @@ const PurchaseOrders = () => {
                       value={inputAdvance}
                       name="paymentdone"
                       onChange={handleAdvChange}
+                      inputProps={{
+                        type: "number",
+                        step: "0.01",
+                        min: 0,
+                      }}
                     />
                   </TableCell>
                 </TableRow>
@@ -333,7 +400,11 @@ const PurchaseOrders = () => {
             <Button variant="contained" startIcon={<Save />} onClick={saveData}>
               Save
             </Button>
-            <Button variant="contained" endIcon={<Cancel />}>
+            <Button
+              variant="contained"
+              endIcon={<Cancel />}
+              onClick={handleCancel}
+            >
               Cancel
             </Button>
           </Stack>
