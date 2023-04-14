@@ -8,7 +8,7 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
-import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
+// import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
 import CheckRoomIcon from "@mui/icons-material/Checkroom";
 import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
@@ -120,13 +120,7 @@ const Sidebar = () => {
             >
               Pages
             </Typography>
-            <Item
-              title="Profile"
-              to="/form"
-              icon={<PersonOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
+
             <Item
               title="Customer"
               to="/customer"
