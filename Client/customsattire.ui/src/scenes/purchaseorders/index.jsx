@@ -24,6 +24,7 @@ import { addPurchaseOrders } from "./../../redux/action";
 const PurchaseOrders = () => {
   const isNonMobile = useMediaQuery("(min-width: 600px)");
   const navigate = useNavigate();
+  // eslint-disable-next-line
   const [total, setTotal] = useState(0);
   const [grandTotal, setGrandTotal] = useState(0);
   //eslint-disable-next-line
@@ -108,6 +109,7 @@ const PurchaseOrders = () => {
 
   const handleSelectFabricChange = useCallback(
     (newValue, value) => {
+      // eslint-disable-next-line
       const { fabricCode, description } = newValue;
 
       if (newValue !== undefined) {
@@ -298,19 +300,23 @@ const PurchaseOrders = () => {
             >
               <TableHead>
                 <TableRow>
-                  <TableCell align="left" colSpan={3}>
+                  <TableCell align="left" colSpan={1}>
                     Fabric Code
                   </TableCell>
                   <TableCell align="center">Details</TableCell>
-
-                  <TableCell align="right">Price</TableCell>
+                  <TableCell align="right" colSpan={3}>
+                    Price
+                  </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell align="left">Fabric Code</TableCell>
-                  <TableCell align="center"></TableCell>
+                  <TableCell align="left" colSpan={1}>
+                    Fabric Code
+                  </TableCell>
                   <TableCell align="center">Qty.</TableCell>
                   <TableCell align="center">Unit</TableCell>
-                  <TableCell align="right">Sum</TableCell>
+                  <TableCell align="right" colSpan={3}>
+                    Sum
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -348,6 +354,7 @@ const PurchaseOrders = () => {
                     </TableCell>
                     <TableCell
                       align="right"
+                      colSpan={3}
                       id={`total${row.id}`}
                       onChange={(e) => setTotal(e.target.value)}
                     >
