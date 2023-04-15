@@ -6,10 +6,26 @@ namespace CustomsAttire.Core.Domain.Models
     /// <summary>
     /// View Model class
     /// </summary>
-    public partial class PurchaseOrdersUpdateModel
+    public partial class PurchaseOrdersItemsUpdateModel
         : EntityUpdateModel
     {
         #region Generated Properties
+        /// <summary>
+        /// Gets or sets the property value for 'RowId'.
+        /// </summary>
+        /// <value>
+        /// The property value for 'RowId'.
+        /// </value>
+        public long RowId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the property value for 'VendorName'.
+        /// </summary>
+        /// <value>
+        /// The property value for 'VendorName'.
+        /// </value>
+        public string VendorName { get; set; }
+
         /// <summary>
         /// Gets or sets the property value for 'FabricCode'.
         /// </summary>
@@ -19,12 +35,20 @@ namespace CustomsAttire.Core.Domain.Models
         public string FabricCode { get; set; }
 
         /// <summary>
+        /// Gets or sets the property value for 'FabricDescription'.
+        /// </summary>
+        /// <value>
+        /// The property value for 'FabricDescription'.
+        /// </value>
+        public string FabricDescription { get; set; }
+
+        /// <summary>
         /// Gets or sets the property value for 'QuantityPurchased'.
         /// </summary>
         /// <value>
         /// The property value for 'QuantityPurchased'.
         /// </value>
-        public long QuantityPurchased { get; set; }
+        public decimal QuantityPurchased { get; set; }
 
         /// <summary>
         /// Gets or sets the property value for 'CostPrice'.
@@ -43,36 +67,28 @@ namespace CustomsAttire.Core.Domain.Models
         public decimal TotalCostPrice { get; set; }
 
         /// <summary>
-        /// Gets or sets the property value for 'Paymentmode'.
+        /// Gets or sets the property value for 'AdvancePayment'.
         /// </summary>
         /// <value>
-        /// The property value for 'Paymentmode'.
+        /// The property value for 'AdvancePayment'.
         /// </value>
-        public string Paymentmode { get; set; }
+        public decimal? AdvancePayment { get; set; }
 
         /// <summary>
-        /// Gets or sets the property value for 'Paymentdone'.
+        /// Gets or sets the property value for 'DuePayment'.
         /// </summary>
         /// <value>
-        /// The property value for 'Paymentdone'.
+        /// The property value for 'DuePayment'.
         /// </value>
-        public decimal? Paymentdone { get; set; }
+        public decimal DuePayment { get; set; }
 
         /// <summary>
-        /// Gets or sets the property value for 'Duepayment'.
+        /// Gets or sets the property value for 'PurchaseDate'.
         /// </summary>
         /// <value>
-        /// The property value for 'Duepayment'.
+        /// The property value for 'PurchaseDate'.
         /// </value>
-        public decimal Duepayment { get; set; }
-
-        /// <summary>
-        /// Gets or sets the property value for 'Purchasedate'.
-        /// </summary>
-        /// <value>
-        /// The property value for 'Purchasedate'.
-        /// </value>
-        public DateTime? Purchasedate { get; set; }
+        public DateTime? PurchaseDate { get; set; }
 
         #endregion
 

@@ -29,6 +29,12 @@ namespace CustomsAttire.Core.Data.Mapping
                 .HasColumnName("Id")
                 .HasColumnType("uniqueidentifier");
 
+            builder.Property(t => t.RowId)
+                .IsRequired()
+                .HasColumnName("RowId")
+                .HasColumnType("bigint")
+                .ValueGeneratedOnAdd();
+
             builder.Property(t => t.BillStatusCodeMember)
                 .HasColumnName("Bill_status_code")
                 .HasColumnType("varchar(255)")
@@ -75,6 +81,8 @@ namespace CustomsAttire.Core.Data.Mapping
         {
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.BillStatusCode.Id" /></summary>
             public const string Id = "Id";
+            /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.BillStatusCode.RowId" /></summary>
+            public const string RowId = "RowId";
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.BillStatusCode.BillStatusCodeMember" /></summary>
             public const string BillStatusCodeMember = "Bill_status_code";
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.BillStatusCode.BillStatusDescription" /></summary>

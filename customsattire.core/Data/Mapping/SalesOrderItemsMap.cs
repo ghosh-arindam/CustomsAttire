@@ -29,17 +29,32 @@ namespace CustomsAttire.Core.Data.Mapping
                 .HasColumnName("Id")
                 .HasColumnType("uniqueidentifier");
 
+            builder.Property(t => t.RowId)
+                .IsRequired()
+                .HasColumnName("RowId")
+                .HasColumnType("bigint")
+                .ValueGeneratedOnAdd();
+
             builder.Property(t => t.BillHeaderId)
                 .IsRequired()
                 .HasColumnName("Bill_Header_Id")
                 .HasColumnType("varchar(255)")
                 .HasMaxLength(255);
 
+            builder.Property(t => t.CustomerName)
+                .HasColumnName("CustomerName")
+                .HasColumnType("nvarchar(50)")
+                .HasMaxLength(50);
+
             builder.Property(t => t.FabricCodeId)
                 .IsRequired()
                 .HasColumnName("FabricCodeId")
                 .HasColumnType("nvarchar(50)")
                 .HasMaxLength(50);
+
+            builder.Property(t => t.FabricDesc)
+                .HasColumnName("FabricDesc")
+                .HasColumnType("nvarchar(max)");
 
             builder.Property(t => t.ClothType)
                 .IsRequired()
@@ -158,10 +173,16 @@ namespace CustomsAttire.Core.Data.Mapping
         {
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.SalesOrderItems.Id" /></summary>
             public const string Id = "Id";
+            /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.SalesOrderItems.RowId" /></summary>
+            public const string RowId = "RowId";
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.SalesOrderItems.BillHeaderId" /></summary>
             public const string BillHeaderId = "Bill_Header_Id";
+            /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.SalesOrderItems.CustomerName" /></summary>
+            public const string CustomerName = "CustomerName";
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.SalesOrderItems.FabricCodeId" /></summary>
             public const string FabricCodeId = "FabricCodeId";
+            /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.SalesOrderItems.FabricDesc" /></summary>
+            public const string FabricDesc = "FabricDesc";
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.SalesOrderItems.ClothType" /></summary>
             public const string ClothType = "ClothType";
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.SalesOrderItems.Qty" /></summary>

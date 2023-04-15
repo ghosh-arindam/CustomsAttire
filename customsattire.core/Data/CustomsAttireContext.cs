@@ -44,14 +44,6 @@ namespace CustomsAttire.Core.Data
         public virtual DbSet<CustomsAttire.Core.Data.Entities.Customer> Customers { get; set; }
 
         /// <summary>
-        /// Gets or sets the <see cref="T:Microsoft.EntityFrameworkCore.DbSet`1" /> that can be used to query and save instances of <see cref="CustomsAttire.Core.Data.Entities.Employee"/>.
-        /// </summary>
-        /// <value>
-        /// The <see cref="T:Microsoft.EntityFrameworkCore.DbSet`1" /> that can be used to query and save instances of <see cref="CustomsAttire.Core.Data.Entities.Employee"/>.
-        /// </value>
-        public virtual DbSet<CustomsAttire.Core.Data.Entities.Employee> Employees { get; set; }
-
-        /// <summary>
         /// Gets or sets the <see cref="T:Microsoft.EntityFrameworkCore.DbSet`1" /> that can be used to query and save instances of <see cref="CustomsAttire.Core.Data.Entities.POSReport"/>.
         /// </summary>
         /// <value>
@@ -68,12 +60,12 @@ namespace CustomsAttire.Core.Data
         public virtual DbSet<CustomsAttire.Core.Data.Entities.Product> Products { get; set; }
 
         /// <summary>
-        /// Gets or sets the <see cref="T:Microsoft.EntityFrameworkCore.DbSet`1" /> that can be used to query and save instances of <see cref="CustomsAttire.Core.Data.Entities.PurchaseOrders"/>.
+        /// Gets or sets the <see cref="T:Microsoft.EntityFrameworkCore.DbSet`1" /> that can be used to query and save instances of <see cref="CustomsAttire.Core.Data.Entities.PurchaseOrdersItems"/>.
         /// </summary>
         /// <value>
-        /// The <see cref="T:Microsoft.EntityFrameworkCore.DbSet`1" /> that can be used to query and save instances of <see cref="CustomsAttire.Core.Data.Entities.PurchaseOrders"/>.
+        /// The <see cref="T:Microsoft.EntityFrameworkCore.DbSet`1" /> that can be used to query and save instances of <see cref="CustomsAttire.Core.Data.Entities.PurchaseOrdersItems"/>.
         /// </value>
-        public virtual DbSet<CustomsAttire.Core.Data.Entities.PurchaseOrders> PurchaseOrders { get; set; }
+        public virtual DbSet<CustomsAttire.Core.Data.Entities.PurchaseOrdersItems> PurchaseOrdersItems { get; set; }
 
         /// <summary>
         /// Gets or sets the <see cref="T:Microsoft.EntityFrameworkCore.DbSet`1" /> that can be used to query and save instances of <see cref="CustomsAttire.Core.Data.Entities.SalesOrderItems"/>.
@@ -111,10 +103,9 @@ namespace CustomsAttire.Core.Data
             modelBuilder.ApplyConfiguration(new CustomsAttire.Core.Data.Mapping.BillHeaderItemsMap());
             modelBuilder.ApplyConfiguration(new CustomsAttire.Core.Data.Mapping.BillStatusCodeMap());
             modelBuilder.ApplyConfiguration(new CustomsAttire.Core.Data.Mapping.CustomerMap());
-            modelBuilder.ApplyConfiguration(new CustomsAttire.Core.Data.Mapping.EmployeeMap());
             modelBuilder.ApplyConfiguration(new CustomsAttire.Core.Data.Mapping.POSReportMap());
             modelBuilder.ApplyConfiguration(new CustomsAttire.Core.Data.Mapping.ProductMap());
-            modelBuilder.ApplyConfiguration(new CustomsAttire.Core.Data.Mapping.PurchaseOrdersMap());
+            modelBuilder.ApplyConfiguration(new CustomsAttire.Core.Data.Mapping.PurchaseOrdersItemsMap());
             modelBuilder.ApplyConfiguration(new CustomsAttire.Core.Data.Mapping.SalesOrderItemsMap());
             modelBuilder.ApplyConfiguration(new CustomsAttire.Core.Data.Mapping.StitchingInvoiceMap());
             modelBuilder.ApplyConfiguration(new CustomsAttire.Core.Data.Mapping.VendorMap());

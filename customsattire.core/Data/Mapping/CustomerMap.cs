@@ -29,6 +29,12 @@ namespace CustomsAttire.Core.Data.Mapping
                 .HasColumnName("Id")
                 .HasColumnType("uniqueidentifier");
 
+            builder.Property(t => t.RowId)
+                .IsRequired()
+                .HasColumnName("RowId")
+                .HasColumnType("bigint")
+                .ValueGeneratedOnAdd();
+
             builder.Property(t => t.Title)
                 .HasColumnName("Title")
                 .HasColumnType("nvarchar(10)")
@@ -115,6 +121,8 @@ namespace CustomsAttire.Core.Data.Mapping
         {
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.Customer.Id" /></summary>
             public const string Id = "Id";
+            /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.Customer.RowId" /></summary>
+            public const string RowId = "RowId";
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.Customer.Title" /></summary>
             public const string Title = "Title";
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.Customer.FirstName" /></summary>

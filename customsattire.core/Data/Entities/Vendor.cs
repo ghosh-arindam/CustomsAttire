@@ -28,6 +28,14 @@ namespace CustomsAttire.Core.Data.Entities
         public Guid Id { get; set; }
 
         /// <summary>
+        /// Gets or sets the property value representing column 'RowId'.
+        /// </summary>
+        /// <value>
+        /// The property value representing column 'RowId'.
+        /// </value>
+        public long RowId { get; set; }
+
+        /// <summary>
         /// Gets or sets the property value representing column 'AccountNumber'.
         /// </summary>
         /// <value>
@@ -65,7 +73,7 @@ namespace CustomsAttire.Core.Data.Entities
         /// <value>
         /// The property value representing column 'Address2'.
         /// </value>
-        public string Address2 { get; set; } = string.Empty;
+        public string Address2 { get; set; }
 
         /// <summary>
         /// Gets or sets the property value representing column 'City'.
@@ -81,7 +89,7 @@ namespace CustomsAttire.Core.Data.Entities
         /// <value>
         /// The property value representing column 'PreferredVendorStatus'.
         /// </value>
-        public bool? PreferredVendorStatus { get; set; }=false;
+        public bool? PreferredVendorStatus { get; set; }
 
         /// <summary>
         /// Gets or sets the property value representing column 'PANNo'.

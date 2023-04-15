@@ -29,6 +29,12 @@ namespace CustomsAttire.Core.Data.Mapping
                 .HasColumnName("Id")
                 .HasColumnType("uniqueidentifier");
 
+            builder.Property(t => t.RowId)
+                .IsRequired()
+                .HasColumnName("RowId")
+                .HasColumnType("bigint")
+                .ValueGeneratedOnAdd();
+
             builder.Property(t => t.StitchingFlag)
                 .IsRequired()
                 .HasColumnName("Stitching_Flag")
@@ -94,6 +100,8 @@ namespace CustomsAttire.Core.Data.Mapping
         {
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.StitchingInvoice.Id" /></summary>
             public const string Id = "Id";
+            /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.StitchingInvoice.RowId" /></summary>
+            public const string RowId = "RowId";
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.StitchingInvoice.StitchingFlag" /></summary>
             public const string StitchingFlag = "Stitching_Flag";
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.StitchingInvoice.BillHeaderId" /></summary>

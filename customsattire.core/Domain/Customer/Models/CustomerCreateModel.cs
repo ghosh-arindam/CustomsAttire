@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace CustomsAttire.Core.Domain.Models
 {
@@ -11,6 +10,14 @@ namespace CustomsAttire.Core.Domain.Models
         : EntityCreateModel
     {
         #region Generated Properties
+        /// <summary>
+        /// Gets or sets the property value for 'RowId'.
+        /// </summary>
+        /// <value>
+        /// The property value for 'RowId'.
+        /// </value>
+        public long RowId { get; set; }
+
         /// <summary>
         /// Gets or sets the property value for 'Title'.
         /// </summary>
@@ -73,7 +80,7 @@ namespace CustomsAttire.Core.Domain.Models
         /// <value>
         /// The property value for 'Address1'.
         /// </value>
-        public string Address1 { get; set; }
+        public string Address1 { get; set; } 
 
         /// <summary>
         /// Gets or sets the property value for 'Address2'.
@@ -81,9 +88,8 @@ namespace CustomsAttire.Core.Domain.Models
         /// <value>
         /// The property value for 'Address2'.
         /// </value>
-       
         public string Address2 { get; set; } = string.Empty;
-      
+
         /// <summary>
         /// Gets or sets the property value for 'AnniversaryDate'.
         /// </summary>

@@ -11,6 +11,22 @@ namespace CustomsAttire.Core.Domain.Models
     {
         #region Generated Properties
         /// <summary>
+        /// Gets or sets the property value for 'RowId'.
+        /// </summary>
+        /// <value>
+        /// The property value for 'RowId'.
+        /// </value>
+        public long RowId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the property value for 'ReportDate'.
+        /// </summary>
+        /// <value>
+        /// The property value for 'ReportDate'.
+        /// </value>
+        public DateTime? ReportDate { get; set; }
+
+        /// <summary>
         /// Gets or sets the property value for 'OpeningCashInHand'.
         /// </summary>
         /// <value>
@@ -35,12 +51,20 @@ namespace CustomsAttire.Core.Domain.Models
         public string ExpenseDescription { get; set; }
 
         /// <summary>
-        /// Gets or sets the property value for 'ExpenseAmt'.
+        /// Gets or sets the property value for 'ExpenseAmount'.
         /// </summary>
         /// <value>
-        /// The property value for 'ExpenseAmt'.
+        /// The property value for 'ExpenseAmount'.
         /// </value>
-        public decimal ExpenseAmt { get; set; }
+        public decimal ExpenseAmount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the property value for 'TotalExpenseAmt'.
+        /// </summary>
+        /// <value>
+        /// The property value for 'TotalExpenseAmt'.
+        /// </value>
+        public decimal? TotalExpenseAmt { get; set; }
 
         /// <summary>
         /// Gets or sets the property value for 'CashDepositInBank'.

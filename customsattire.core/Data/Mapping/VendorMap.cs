@@ -30,6 +30,12 @@ namespace CustomsAttire.Core.Data.Mapping
                 .HasColumnType("uniqueidentifier")
                 .HasDefaultValueSql("(newsequentialid())");
 
+            builder.Property(t => t.RowId)
+                .IsRequired()
+                .HasColumnName("RowId")
+                .HasColumnType("bigint")
+                .ValueGeneratedOnAdd();
+
             builder.Property(t => t.AccountNumber)
                 .HasColumnName("AccountNumber")
                 .HasColumnType("varchar(50)")
@@ -114,6 +120,8 @@ namespace CustomsAttire.Core.Data.Mapping
         {
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.Vendor.Id" /></summary>
             public const string Id = "Id";
+            /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.Vendor.RowId" /></summary>
+            public const string RowId = "RowId";
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.Vendor.AccountNumber" /></summary>
             public const string AccountNumber = "AccountNumber";
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.Vendor.VendorName" /></summary>

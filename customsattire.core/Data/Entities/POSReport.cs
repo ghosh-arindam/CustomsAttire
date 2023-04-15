@@ -28,6 +28,22 @@ namespace CustomsAttire.Core.Data.Entities
         public Guid Id { get; set; }
 
         /// <summary>
+        /// Gets or sets the property value representing column 'RowId'.
+        /// </summary>
+        /// <value>
+        /// The property value representing column 'RowId'.
+        /// </value>
+        public long RowId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the property value representing column 'ReportDate'.
+        /// </summary>
+        /// <value>
+        /// The property value representing column 'ReportDate'.
+        /// </value>
+        public DateTime? ReportDate { get; set; }
+
+        /// <summary>
         /// Gets or sets the property value representing column 'Opening_Cash_in_Hand'.
         /// </summary>
         /// <value>
@@ -36,28 +52,36 @@ namespace CustomsAttire.Core.Data.Entities
         public decimal OpeningCashInHand { get; set; }
 
         /// <summary>
-        /// Gets or sets the property value representing column 'Expense_Type'.
+        /// Gets or sets the property value representing column 'ExpenseType'.
         /// </summary>
         /// <value>
-        /// The property value representing column 'Expense_Type'.
+        /// The property value representing column 'ExpenseType'.
         /// </value>
         public string ExpenseType { get; set; }
 
         /// <summary>
-        /// Gets or sets the property value representing column 'Expense_Description'.
+        /// Gets or sets the property value representing column 'ExpenseDescription'.
         /// </summary>
         /// <value>
-        /// The property value representing column 'Expense_Description'.
+        /// The property value representing column 'ExpenseDescription'.
         /// </value>
         public string ExpenseDescription { get; set; }
 
         /// <summary>
-        /// Gets or sets the property value representing column 'Expense_Amt'.
+        /// Gets or sets the property value representing column 'ExpenseAmount'.
         /// </summary>
         /// <value>
-        /// The property value representing column 'Expense_Amt'.
+        /// The property value representing column 'ExpenseAmount'.
         /// </value>
-        public decimal ExpenseAmt { get; set; }
+        public decimal ExpenseAmount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the property value representing column 'TotalExpenseAmt'.
+        /// </summary>
+        /// <value>
+        /// The property value representing column 'TotalExpenseAmt'.
+        /// </value>
+        public decimal? TotalExpenseAmt { get; set; }
 
         /// <summary>
         /// Gets or sets the property value representing column 'Cash_Deposit_in_Bank'.

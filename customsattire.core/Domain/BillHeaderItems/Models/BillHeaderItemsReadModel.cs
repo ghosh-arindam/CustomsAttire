@@ -11,6 +11,14 @@ namespace CustomsAttire.Core.Domain.Models
     {
         #region Generated Properties
         /// <summary>
+        /// Gets or sets the property value for 'RowId'.
+        /// </summary>
+        /// <value>
+        /// The property value for 'RowId'.
+        /// </value>
+        public long RowId { get; set; }
+
+        /// <summary>
         /// Gets or sets the property value for 'BillHeaderId'.
         /// </summary>
         /// <value>

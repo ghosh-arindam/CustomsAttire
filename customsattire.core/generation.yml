@@ -3,7 +3,8 @@ project:
   directory: .\
 database:
   provider: SqlServer
-  connectionString: Data Source=(local);Initial Catalog=CustomsAttire;Integrated Security=True;MultipleActiveResultSets=True
+  #connectionString: Data Source=(local);Initial Catalog=CustomsAttire;Integrated Security=True;MultipleActiveResultSets=True
+  connectionString: "Server=tcp:customsattireadmin.database.windows.net,1433;Initial Catalog=CustomsAttire;Persist Security Info=False;User ID=customsattireadmin;Password=Cust@matt1r3;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
   tables:
    - Product
    - Customer

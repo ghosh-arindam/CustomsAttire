@@ -4,15 +4,15 @@ using System.Collections.Generic;
 namespace CustomsAttire.Core.Data.Entities
 {
     /// <summary>
-    /// Entity class representing data for table 'PurchaseOrders'.
+    /// Entity class representing data for table 'PurchaseOrdersItems'.
     /// </summary>
-    public partial class PurchaseOrders
+    public partial class PurchaseOrdersItems
         : Definitions.IHaveIdentifier
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PurchaseOrders"/> class.
+        /// Initializes a new instance of the <see cref="PurchaseOrdersItems"/> class.
         /// </summary>
-        public PurchaseOrders()
+        public PurchaseOrdersItems()
         {
             #region Generated Constructor
             #endregion
@@ -28,6 +28,22 @@ namespace CustomsAttire.Core.Data.Entities
         public Guid Id { get; set; }
 
         /// <summary>
+        /// Gets or sets the property value representing column 'RowId'.
+        /// </summary>
+        /// <value>
+        /// The property value representing column 'RowId'.
+        /// </value>
+        public long RowId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the property value representing column 'VendorName'.
+        /// </summary>
+        /// <value>
+        /// The property value representing column 'VendorName'.
+        /// </value>
+        public string VendorName { get; set; }
+
+        /// <summary>
         /// Gets or sets the property value representing column 'fabricCode'.
         /// </summary>
         /// <value>
@@ -36,12 +52,20 @@ namespace CustomsAttire.Core.Data.Entities
         public string FabricCode { get; set; }
 
         /// <summary>
+        /// Gets or sets the property value representing column 'fabricDescription'.
+        /// </summary>
+        /// <value>
+        /// The property value representing column 'fabricDescription'.
+        /// </value>
+        public string FabricDescription { get; set; }
+
+        /// <summary>
         /// Gets or sets the property value representing column 'quantityPurchased'.
         /// </summary>
         /// <value>
         /// The property value representing column 'quantityPurchased'.
         /// </value>
-        public long QuantityPurchased { get; set; }
+        public decimal QuantityPurchased { get; set; }
 
         /// <summary>
         /// Gets or sets the property value representing column 'costPrice'.
@@ -60,36 +84,28 @@ namespace CustomsAttire.Core.Data.Entities
         public decimal TotalCostPrice { get; set; }
 
         /// <summary>
-        /// Gets or sets the property value representing column 'paymentmode'.
+        /// Gets or sets the property value representing column 'advancePayment'.
         /// </summary>
         /// <value>
-        /// The property value representing column 'paymentmode'.
+        /// The property value representing column 'advancePayment'.
         /// </value>
-        public string Paymentmode { get; set; }
+        public decimal? AdvancePayment { get; set; }
 
         /// <summary>
-        /// Gets or sets the property value representing column 'paymentdone'.
+        /// Gets or sets the property value representing column 'duePayment'.
         /// </summary>
         /// <value>
-        /// The property value representing column 'paymentdone'.
+        /// The property value representing column 'duePayment'.
         /// </value>
-        public decimal? Paymentdone { get; set; }
+        public decimal DuePayment { get; set; }
 
         /// <summary>
-        /// Gets or sets the property value representing column 'duepayment'.
+        /// Gets or sets the property value representing column 'purchaseDate'.
         /// </summary>
         /// <value>
-        /// The property value representing column 'duepayment'.
+        /// The property value representing column 'purchaseDate'.
         /// </value>
-        public decimal Duepayment { get; set; }
-
-        /// <summary>
-        /// Gets or sets the property value representing column 'purchasedate'.
-        /// </summary>
-        /// <value>
-        /// The property value representing column 'purchasedate'.
-        /// </value>
-        public DateTime? Purchasedate { get; set; }
+        public DateTime? PurchaseDate { get; set; }
 
         /// <summary>
         /// Gets or sets the property value representing column 'CreatedDate'.

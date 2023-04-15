@@ -21,7 +21,7 @@ namespace CustomsAttire.Core.Data.Mapping
             builder.ToTable("POSReport", "Production");
 
             // key
-            builder.HasKey(t => t.Id);
+            builder.HasNoKey();
 
             // properties
             builder.Property(t => t.Id)
@@ -30,6 +30,16 @@ namespace CustomsAttire.Core.Data.Mapping
                 .HasColumnType("uniqueidentifier")
                 .HasDefaultValueSql("(newsequentialid())");
 
+            builder.Property(t => t.RowId)
+                .IsRequired()
+                .HasColumnName("RowId")
+                .HasColumnType("bigint")
+                .ValueGeneratedOnAdd();
+
+            builder.Property(t => t.ReportDate)
+                .HasColumnName("ReportDate")
+                .HasColumnType("date");
+
             builder.Property(t => t.OpeningCashInHand)
                 .IsRequired()
                 .HasColumnName("Opening_Cash_in_Hand")
@@ -37,19 +47,23 @@ namespace CustomsAttire.Core.Data.Mapping
 
             builder.Property(t => t.ExpenseType)
                 .IsRequired()
-                .HasColumnName("Expense_Type")
+                .HasColumnName("ExpenseType")
                 .HasColumnType("varchar(255)")
                 .HasMaxLength(255);
 
             builder.Property(t => t.ExpenseDescription)
                 .IsRequired()
-                .HasColumnName("Expense_Description")
+                .HasColumnName("ExpenseDescription")
                 .HasColumnType("varchar(255)")
                 .HasMaxLength(255);
 
-            builder.Property(t => t.ExpenseAmt)
+            builder.Property(t => t.ExpenseAmount)
                 .IsRequired()
-                .HasColumnName("Expense_Amt")
+                .HasColumnName("ExpenseAmount")
+                .HasColumnType("decimal(10,2)");
+
+            builder.Property(t => t.TotalExpenseAmt)
+                .HasColumnName("TotalExpenseAmt")
                 .HasColumnType("decimal(10,2)");
 
             builder.Property(t => t.CashDepositInBank)
@@ -65,7 +79,7 @@ namespace CustomsAttire.Core.Data.Mapping
             builder.Property(t => t.ClosingCashBalance)
                 .IsRequired()
                 .HasColumnName("Closing_Cash_Balance")
-                .HasColumnType("decimal(22,2)")
+                .HasColumnType("decimal(21,2)")
                 .ValueGeneratedOnAddOrUpdate();
 
             builder.Property(t => t.CreatedDate)
@@ -107,14 +121,20 @@ namespace CustomsAttire.Core.Data.Mapping
         {
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.POSReport.Id" /></summary>
             public const string Id = "Id";
+            /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.POSReport.RowId" /></summary>
+            public const string RowId = "RowId";
+            /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.POSReport.ReportDate" /></summary>
+            public const string ReportDate = "ReportDate";
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.POSReport.OpeningCashInHand" /></summary>
             public const string OpeningCashInHand = "Opening_Cash_in_Hand";
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.POSReport.ExpenseType" /></summary>
-            public const string ExpenseType = "Expense_Type";
+            public const string ExpenseType = "ExpenseType";
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.POSReport.ExpenseDescription" /></summary>
-            public const string ExpenseDescription = "Expense_Description";
-            /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.POSReport.ExpenseAmt" /></summary>
-            public const string ExpenseAmt = "Expense_Amt";
+            public const string ExpenseDescription = "ExpenseDescription";
+            /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.POSReport.ExpenseAmount" /></summary>
+            public const string ExpenseAmount = "ExpenseAmount";
+            /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.POSReport.TotalExpenseAmt" /></summary>
+            public const string TotalExpenseAmt = "TotalExpenseAmt";
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.POSReport.CashDepositInBank" /></summary>
             public const string CashDepositInBank = "Cash_Deposit_in_Bank";
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.POSReport.MoneyReceivedFromCustomer" /></summary>

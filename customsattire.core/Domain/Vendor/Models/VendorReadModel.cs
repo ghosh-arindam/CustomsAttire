@@ -11,6 +11,14 @@ namespace CustomsAttire.Core.Domain.Models
     {
         #region Generated Properties
         /// <summary>
+        /// Gets or sets the property value for 'RowId'.
+        /// </summary>
+        /// <value>
+        /// The property value for 'RowId'.
+        /// </value>
+        public long RowId { get; set; }
+
+        /// <summary>
         /// Gets or sets the property value for 'AccountNumber'.
         /// </summary>
         /// <value>
@@ -48,7 +56,7 @@ namespace CustomsAttire.Core.Domain.Models
         /// <value>
         /// The property value for 'Address2'.
         /// </value>
-        public string Address2 { get; set; } = string.Empty;
+        public string Address2 { get; set; }
 
         /// <summary>
         /// Gets or sets the property value for 'City'.
@@ -64,7 +72,7 @@ namespace CustomsAttire.Core.Domain.Models
         /// <value>
         /// The property value for 'PreferredVendorStatus'.
         /// </value>
-        public bool? PreferredVendorStatus { get; set; } = false;
+        public bool? PreferredVendorStatus { get; set; }
 
         /// <summary>
         /// Gets or sets the property value for 'PANNo'.

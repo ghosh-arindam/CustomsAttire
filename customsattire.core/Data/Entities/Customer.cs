@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace CustomsAttire.Core.Data.Entities
 {
@@ -27,6 +26,14 @@ namespace CustomsAttire.Core.Data.Entities
         /// The property value representing column 'Id'.
         /// </value>
         public Guid Id { get; set; }
+
+        /// <summary>
+        /// Gets or sets the property value representing column 'RowId'.
+        /// </summary>
+        /// <value>
+        /// The property value representing column 'RowId'.
+        /// </value>
+        public long RowId { get; set; }
 
         /// <summary>
         /// Gets or sets the property value representing column 'Title'.
@@ -98,7 +105,7 @@ namespace CustomsAttire.Core.Data.Entities
         /// <value>
         /// The property value representing column 'Address2'.
         /// </value>
-        public string Address2 { get; set; } = null!;
+        public string Address2 { get; set; }
 
         /// <summary>
         /// Gets or sets the property value representing column 'AnniversaryDate'.
@@ -106,7 +113,7 @@ namespace CustomsAttire.Core.Data.Entities
         /// <value>
         /// The property value representing column 'AnniversaryDate'.
         /// </value>
-        public DateTime? AnniversaryDate { get; set; } = null!;
+        public DateTime? AnniversaryDate { get; set; } = DateTime.Now;
 
         /// <summary>
         /// Gets or sets the property value representing column 'CreatedBy'.
