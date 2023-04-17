@@ -26,7 +26,7 @@ const SupplierAction = ({ params, rowId, setrowId }) => {
       preferredVendorStatus,
       id,
     } = params.row;
-    console.log("handleSubmit:" + JSON.stringify(params.row));
+    //console.log("handleSubmit:" + JSON.stringify(params.row));
     console.log("id:" + id);
     const supplierData = {
       rowId,
@@ -43,9 +43,10 @@ const SupplierAction = ({ params, rowId, setrowId }) => {
 
     const result = dispatch(updateSupplier(supplierData, id));
     if (result) {
+      setSuccess(true);
+      setrowId(null);
     }
-    setSuccess(true);
-    setrowId(null);
+
     setLoading(false);
   };
 
@@ -57,8 +58,8 @@ const SupplierAction = ({ params, rowId, setrowId }) => {
   };
 
   useEffect(() => {
-    console.log("selectedrowId" + rowId);
-    console.log("params.id" + params.id);
+    //console.log("selectedrowId" + rowId);
+    //console.log("params.id" + params.id);
     if (rowId === params.id && success) setSuccess(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowId]);

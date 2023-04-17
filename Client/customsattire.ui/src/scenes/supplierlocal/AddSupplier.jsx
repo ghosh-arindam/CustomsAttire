@@ -200,7 +200,8 @@ const AddSupplier = () => {
 const phoneRegExp = /^[6-9]\d{9}$/gi;
 // const gstinRegExp =
 //   /^[0-9]{2}[A-Z]{3}[ABCFGHLJPTF]{1}[A-Z]{1}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
-const gstinRegExp = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+//const gstinRegExp = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+const gstinRegExp = /^[\w]{15}$/;
 const PanNoRegExp = /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/;
 const checkoutSchema = yup.object().shape({
   accountNumber: yup.string().required("required"),

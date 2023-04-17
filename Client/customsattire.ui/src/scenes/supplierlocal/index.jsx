@@ -26,13 +26,12 @@ const SupplierLocal = () => {
       sort: "desc",
     },
   ]);
-  console.log("suppliers.length" + suppliers.length);
-  if (suppliers.length === 0) dispatch(loadSuppliers());
+  // dispatch(loadSuppliers());
   useEffect(() => {
     dispatch(loadSuppliers());
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+  // console.log(suppliers);
   const rowSupplierData = suppliers?.map((supplier) => {
     return {
       id: supplier?.id,
