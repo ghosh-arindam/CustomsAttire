@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Box, Button, TextField, Grid, Stack } from "@mui/material";
-// import { tokens } from "../../theme";
-import { v4 as uuidv4 } from "uuid";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
 import Table from "@mui/material/Table";
@@ -17,87 +15,160 @@ import Save from "@mui/icons-material/Save";
 import Cancel from "@mui/icons-material/Cancel";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addSalesOrders, loadCustomers } from "./../../redux/action";
-import ProductDropDown from "../../components/ProductDropDown";
+import {
+  addSalesOrders,
+  loadCustomers,
+  loadSalesOrders,
+} from "./../../redux/action";
 import { Autocomplete } from "@mui/material";
+import ProductDropDowns from "../../components/ProductDropDowns";
 
 const SalesOrder = () => {
   const isNonMobile = useMediaQuery("(min-width: 600px)");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [customerName, setcustomerName] = useState("");
-  /*eslint-disable-next-line */
-  const [selectedCustomer, setSelectedCustomer] = useState(null);
-  /*eslint-disable-next-line */
-  const [qty, setQty] = useState(0);
-  const [deliveryDate, setDeliveryDate] = useState(new Date());
-  /*eslint-disable-next-line */
-  const [totalB, setTotalB] = useState(0);
-  /*eslint-disable-next-line */
-  const [discountA, setDiscountA] = useState(0);
-  /*eslint-disable-next-line */
-  const [discountB, setDiscountB] = useState(0);
-  /*eslint-disable-next-line */
-  const [stitchingCost, setStitchingCost] = useState(0);
-  /*eslint-disable-next-line */
-  const [grandTotal, setGrandTotal] = useState(0);
-  /*eslint-disable-next-line */
+  const [setSelectedCustomer] = useState(null);
+  const [setQty] = useState(0);
+  const [setTotalB] = useState();
+  const [setDiscountA] = useState(0);
+  const [setDiscountB] = useState(0);
+  const [setStitchingCost] = useState(0);
+  const [setGrandTotal] = useState();
   const [fabricDescription, setfabricDescription] = useState();
-  /*eslint-disable-next-line */
-  const [due, setDue] = useState(0);
-  const [inputAdvance, setInputAdvance] = useState(0);
+  const [setDue] = useState(0);
   const [inputDue, setInputDue] = useState(0);
-  /*eslint-disable-next-line */
-  const [quantity, setQuantity] = useState("");
-  /*eslint-disable-next-line */
-  const [price, setPrice] = useState("");
-  /*eslint-disable-next-line */
-  const [total, setTotal] = useState(0);
-  /*eslint-disable-next-line */
-  const [pricePerMeter, setpricePerMeter] = useState({});
-  /*eslint-disable-next-line */
-  const [purchaseItemwiseCost, setpurchaseItemwiseCost] = useState({});
-  /*eslint-disable-next-line */
+  const [setQuantity] = useState("");
+  const [setPrice] = useState("");
+  const [total, setTotal] = useState("");
+  const [setpricePerMeter] = useState({});
+  const [setpurchaseItemwiseCost] = useState({});
   const [totalBillAmount, settotalBillAmount] = useState(0);
-  /*eslint-disable-next-line */
-  const [advancePayment, setadvancePayment] = useState({});
-  /*eslint-disable-next-line */
-  const [duePayment, setduePayment] = useState({});
+  const [setadvancePayment] = useState({});
+  const [setduePayment] = useState({});
   const [rows, setRows] = useState([]);
-  //const tableRef = useRef(null);
+  const [selectedFabrics, setSelectedFabrics] = useState(); // state variable to store selected fabrics
+  const [selectedDescription, setSelectedDescription] = useState();
+
+  const [trialDate, setTrialDate] = useState(new Date());
+  const [deliveryDate, setDeliveryDate] = useState("");
+  const [inputAdvance, setInputAdvance] = useState("");
+  const [orderId, setOrderId] = useState("");
+  const [saveButtonUsed, setSaveButtonUsed] = useState(true);
+  const [cancelValue, setCancelValue] = useState("true");
+
+  const handleSelectFabricChange = useCallback(
+    (newValue, value) => {
+      if (newValue !== undefined) {
+        let fabricCode = newValue.fabricCode;
+        let Description = newValue.description;
+        setSelectedFabrics(fabricCode);
+        setSelectedDescription(Description);
+      }
+    },
+    [selectedFabrics]
+  );
+
+  const handleTrialDateChange = (event) => {
+    const selectedDate = new Date(event.target.value);
+    setTrialDate(selectedDate);
+    setDeliveryDate("");
+  };
+
+  const handleDeliveryDateChange = (event) => {
+    const selectedDate = new Date(event.target.value);
+    const formattedDate = selectedDate.toISOString().slice(0, 10);
+    setDeliveryDate(formattedDate);
+  };
+
+  // Modify the format of the date to yyyy-MM-dd
+  const formattedTrialDate =
+    trialDate instanceof Date ? trialDate.toISOString().slice(0, 10) : null;
+
+  // Get the day after the trial date
+  const minDeliveryDate = formattedTrialDate
+    ? new Date(trialDate.getTime() + 24 * 60 * 60 * 1000)
+        .toISOString()
+        .slice(0, 10)
+    : null;
 
   useEffect(() => {
-    //dispatch(loadSuppliers());
+    dispatch(loadSalesOrders());
     dispatch(loadCustomers());
     //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [cancelValue, saveButtonUsed]);
   const { customers } = useSelector((state) => state.data);
-  const handleAdvChange = (e) => {
-    const due = grandTotal - e.target.value;
-    setInputAdvance(e.target.value);
+  const { salesorders } = useSelector((state) => state.data);
+
+  useEffect(() => {
+    const due = totalBillAmount - inputAdvance;
     setInputDue(due);
+  }, [totalBillAmount, inputAdvance]);
+  useEffect(() => {
+    // console.log(salesorders);
+    dispatch(loadSalesOrders());
+    let lastorderId = "";
+    // console.log(salesorders + "hello");
+    if (salesorders.length === 0) lastorderId = 1;
+    else {
+      for (let i = 0; i < salesorders.length; i++) {
+        console.log("salesorders.length" + salesorders.length);
+        const orderId = salesorders[i].billHeaderId.split("/").pop();
+        // console.log("orderId" + orderId);
+        // console.log("lastorerId" + lastorderId);
+        if (orderId > lastorderId) {
+          lastorderId = orderId;
+        }
+        lastorderId = parseInt(lastorderId);
+        lastorderId = lastorderId;
+        // console.log("lastorerId" + lastorderId);
+      }
+    }
+    const orderId = generateOrderId(lastorderId + 1);
+    console.log("generateOrderId" + orderId);
+    setOrderId(orderId);
+    // console.log(orderId);
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [salesorders, cancelValue, saveButtonUsed]);
+
+  const handleAdvChange = (event) => {
+    setInputAdvance(event.target.value);
   };
 
-  const handleDateChange = (event) => {
-    setDeliveryDate(event.target.value);
-  };
+  useEffect(() => {
+    const due = totalBillAmount - inputAdvance;
+    setInputDue(due);
+  }, [totalBillAmount, inputAdvance]);
+
+  function getTheLastSalesDetails(details) {
+    const lastSaleDetail = details[0];
+    const orderId = lastSaleDetail.billHeaderId;
+    const parts = orderId.split("/");
+    const lastOrderNumber = parseInt(parts[parts.length - 1]);
+    const newOrderNumber = lastOrderNumber + 1;
+    return newOrderNumber;
+  }
 
   const calculateTotal = (rowId) => {
     const qty = parseFloat(document.getElementById(`qty${rowId}`).value);
     const price = parseFloat(document.getElementById(`price${rowId}`).value);
     const total = qty * price;
     document.getElementById(`total${rowId}`).innerText = total.toFixed(2);
+    grandTotalAB(rowId);
   };
 
   const grandTotalA = (e, rowId) => {
     const total = parseFloat(
       document.getElementById(`total${rowId}`).innerText
     );
-    const discountA = parseFloat(e.target.value);
-    const grandTotalA = total - (total * discountA) / 100;
+    const discountA = parseFloat(Math.round(e.target.value * 100) / 100);
+    console.log("discountA:", discountA); // add this line
+    const grandTotalA =
+      Math.round((total - (total * discountA) / 100) * 100) / 100;
     document.getElementById(`grandTotalA${rowId}`).innerText =
       grandTotalA.toFixed(2);
-    grandTotalAB(rowId); // add this line
+    grandTotalAB(rowId);
+    settotalBillAmount(total.toFixed(2));
   };
 
   const grandTotalB = (rowId) => {
@@ -108,70 +179,37 @@ const SalesOrder = () => {
       document.getElementById(`stitchingCost${rowId}`).value
     );
     const grandTotalB = stitchingCost - (stitchingCost * discountB) / 100;
-    document.getElementById(`grandTotalB${rowId}`).innerText =
-      grandTotalB.toFixed(2);
+    document.getElementById(`grandTotalB${rowId}`).innerText = Math.round(
+      (grandTotalB * 100) / 100
+    ).toFixed(2); // round off to 2 decimal places after rounding off to the nearest integer
     grandTotalAB(rowId); // add this line
   };
 
-  const grandTotalAB = (rowId) => {
-    const grandTotalA = parseFloat(
-      document.getElementById(`grandTotalA${rowId}`).innerText
-    );
-    const grandTotalB = parseFloat(
-      document.getElementById(`grandTotalB${rowId}`).innerText
-    );
-    const grandTotalAB = grandTotalA + grandTotalB;
-    document.getElementById(`grandTotalAB${rowId}`).innerText =
-      grandTotalAB.toFixed(2);
-    settotalBillAmount(
-      document.getElementById(`grandTotalAB${rowId}`).innerText
-    );
+  const grandTotalAB = () => {
+    let total = 0;
+    rows.forEach((row) => {
+      const grandTotalA = parseFloat(
+        document.getElementById(`grandTotalA${row.id}`).innerText
+      );
+      const grandTotalB = parseFloat(
+        document.getElementById(`grandTotalB${row.id}`).innerText
+      );
+      const grandTotalAB = grandTotalA + grandTotalB;
+      total += grandTotalAB;
+      document.getElementById(`grandTotalAB${row.id}`).innerText =
+        grandTotalAB.toFixed(2);
+    });
+    settotalBillAmount(total.toFixed(2));
   };
 
-  const handleSelectFabricChange = useCallback((newValue) => {
-    console.log("parentComponet" + newValue);
-    setfabricDescription(newValue);
-  }, []);
-
   const handleSubmit = (values) => {
-    //dispatch(addPurchaseOrders(values));
-    console.log(values);
     navigate("/dashboard");
+    handleCancel();
   };
 
   const handleCustomerChange = (event, newValue) => {
     const customer = newValue;
-    // console.log(vendorName);
     setcustomerName(customer);
-    /*eslint-disable-next-line */
-    const setfabricDescription = (event) => {
-      console.log(event.target.value);
-    };
-  };
-
-  const saveData = (event) => {
-    event.preventDefault();
-    const data = rows.map((row) => ({
-      pricePerMeter: pricePerMeter[row.id],
-      purchaseItemwiseCost: purchaseItemwiseCost[row.id],
-      totalBillAmount: totalBillAmount[row.id],
-      advancePayment: advancePayment[row.id],
-      duePayment: duePayment[row.id],
-      qty: qty[row.id],
-      price: price[row.id],
-      total: total[row.id],
-      fabricDiscount: discountA[row.id],
-      SwitchingDiscount: discountB[row.id],
-      stitchingCost: stitchingCost[row.id],
-      totalB: totalB[row.id],
-      grandTotalA: grandTotalA[row.id],
-      grandTotalB: grandTotalB[row.id],
-      totalAB: grandTotalAB[row.id],
-      deliveryDate: deliveryDate[row.id],
-    }));
-    localStorage.setItem("data", JSON.stringify(data));
-    console.log(data);
-    dispatch(addSalesOrders(data));
   };
 
   const addRow = () => {
@@ -180,9 +218,114 @@ const SalesOrder = () => {
       desc: "",
       qty: "",
       price: "",
-      total: "0",
+      total: "",
     };
     setRows([...rows, newRow]);
+
+    // Calculate grandTotalAB for all rows
+    rows.forEach((row) => {
+      grandTotalAB(row.id);
+    });
+  };
+
+  const handleCancel = () => {
+    setcustomerName(null);
+    setRows([initialRowState]);
+    setInputAdvance("0");
+    setInputDue("0");
+    settotalBillAmount("");
+    setTrialDate("");
+    setDeliveryDate("");
+    navigate("/salesorders");
+  };
+
+  const initialRowState = {
+    id: orderId,
+    fabricCode: "",
+    fabricDesc: "",
+    clothType: "",
+    qty: 0,
+    pricePerMeter: 0,
+    discountA: 0,
+    discountB: 0,
+    formattedTrialDate: "",
+    inputAdvance: "",
+    inputDue: 0,
+    totalBillAmount: 0,
+    deliveryDate: "",
+  };
+  function generateOrderId(lastNumberFromDatabase) {
+    // Get today's date in the format DDMMYYYY
+    const today = new Date()
+      .toLocaleDateString("en-GB")
+      .split("/")
+      .reverse()
+      .join("");
+
+    const nextNumber = lastNumberFromDatabase;
+
+    const formattedNextNumber = "0000" + nextNumber;
+
+    return `O/${today}/${formattedNextNumber}`;
+  }
+
+  const saveData = () => {
+    setCancelValue(!cancelValue);
+    setcustomerName(null);
+    setRows([initialRowState]);
+    setInputAdvance("0");
+    setInputDue("0");
+    settotalBillAmount("");
+    setDeliveryDate("");
+    setSaveButtonUsed(!saveButtonUsed);
+    const data = rows.map((row) => ({
+      billHeaderId: orderId,
+      customerName: customerName
+        ? `${customerName.firstName} ${customerName.lastName}`
+        : "",
+      fabricCodeId: selectedFabrics,
+      fabricDesc: selectedDescription,
+      clothType: document.getElementById(`clothType${row.id}`).value.toString(),
+      qty: parseFloat(document.getElementById(`qty${row.id}`).value),
+      pricePerMeter: parseFloat(
+        document.getElementById(`price${row.id}`).value
+      ),
+      fabricDiscount: parseFloat(
+        document.getElementById(`discountA${row.id}`).value
+      ),
+      totalPricePerMeter: parseFloat(
+        document.getElementById(`grandTotalA${row.id}`).textContent
+      ),
+      stitchingFlag: true, // or false, depending on your needs
+      totalItemwiseCost: parseFloat(
+        document.getElementById(`total${row.id}`).textContent
+      ),
+
+      stitchingCost: parseFloat(
+        document.getElementById(`stitchingCost${row.id}`).value
+      ),
+      stitchingDiscount: parseFloat(
+        document.getElementById(`discountB${row.id}`).value
+      ),
+      purchasedItemReturnCost: "0",
+      schemeFlag: "0",
+      loyaltySchemeId: "0",
+      redeemAmount: "0",
+      advancePayment: parseFloat(inputAdvance),
+      duePayment: inputDue,
+      totalBillAmount: totalBillAmount,
+
+      totalStitichingCost: parseFloat(
+        document.getElementById(`grandTotalB${row.id}`).textContent
+      ),
+      //trialDate:
+      //deliveryDate
+    }));
+
+    data.forEach((oneData) => {
+      dispatch(addSalesOrders(oneData));
+    });
+    navigate("/salesorders");
   };
 
   return (
@@ -207,9 +350,12 @@ const SalesOrder = () => {
                   option.firstName + " " + option.lastName
                 }
                 value={customerName || null}
-                onChange={(event, newValue) => {
-                  handleCustomerChange(event, newValue);
-                }}
+                onChange={(event, newValue) =>
+                  handleCustomerChange(event, newValue)
+                }
+                isOptionEqualToValue={(option, value) =>
+                  option.name === value.name
+                }
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -233,8 +379,7 @@ const SalesOrder = () => {
             sx={{ mx: "right", p: 1, mt: 1 }}
           >
             <Box align="right" name="billHeaderId" value="billHeaderId">
-              OrderId: O/{new Date().toLocaleDateString()}/
-              {uuidv4().toUpperCase()}
+              OrderId: {orderId}
             </Box>
             <Button
               variant="contained"
@@ -242,17 +387,15 @@ const SalesOrder = () => {
               startIcon={<AddIcon />}
               size="medium"
               onClick={addRow}
+              disabled={!customerName}
             >
               Add Sales Orders
             </Button>
           </Box>
         </Box>
         <Box my={4}>
-          <TableContainer
-            component={Paper}
-            // sx={{ maxwidth: "2000", maxheight: "2000", overflow: "auto" }}
-          >
-            <Table sx={{ minWidth: 1400, overflow: "auto" }}>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 1200 }}>
               <TableHead>
                 <TableRow>
                   <TableCell align="left" colSpan={1}>
@@ -277,7 +420,7 @@ const SalesOrder = () => {
                     Total
                   </TableCell>
                   <TableCell align="center" colSpan={1}>
-                    Discount% (A)
+                    Discount%(A)
                   </TableCell>
                   <TableCell align="right" colSpan={1}>
                     Grand Total (A)
@@ -286,7 +429,7 @@ const SalesOrder = () => {
                     Stitching Cost
                   </TableCell>
                   <TableCell align="center" colSpan={1}>
-                    Discount% (B)
+                    Discount%(B)
                   </TableCell>
                   <TableCell align="right" colSpan={1}>
                     Grand Total (B)
@@ -305,7 +448,7 @@ const SalesOrder = () => {
                   <TableRow key={row.id}>
                     <TableCell colSpan={1}>{index + 1}</TableCell>
                     <TableCell colSpan={1}>
-                      <ProductDropDown
+                      <ProductDropDowns
                         id={`fabricCode${row.id}`}
                         value={fabricDescription}
                         onChange={handleSelectFabricChange}
@@ -320,6 +463,7 @@ const SalesOrder = () => {
                           <TextField
                             label="Outfit Type"
                             type="text"
+                            style={{ width: 100 }}
                             id={`clothType${row.id}`}
                             name="clothType"
                           />
@@ -334,6 +478,7 @@ const SalesOrder = () => {
                             type="number"
                             id={`qty${row.id}`}
                             name="qty"
+                            style={{ width: 80 }}
                             onChange={(e) => {
                               const { value } = e.target;
                               setQty((prevQty) => ({
@@ -352,6 +497,7 @@ const SalesOrder = () => {
                           <TextField
                             label="Price"
                             type="number"
+                            style={{ width: 70 }}
                             id={`price${row.id}`}
                             name="pricePerMeter"
                             onChange={() => calculateTotal(row.id)}
@@ -371,6 +517,7 @@ const SalesOrder = () => {
                           <TextField
                             label="Discount (A)"
                             type="number"
+                            style={{ width: 100 }}
                             name="fabricDiscount"
                             id={`discountA${row.id}`}
                             onChange={(e) => grandTotalA(e, row.id)}
@@ -387,6 +534,7 @@ const SalesOrder = () => {
                           <TextField
                             label="Stitching Cost"
                             type="number"
+                            style={{ width: 105 }}
                             id={`stitchingCost${row.id}`}
                             onChange={() => grandTotalB(row.id)}
                           />
@@ -399,6 +547,7 @@ const SalesOrder = () => {
                           <TextField
                             label="Discount(B)"
                             type="number"
+                            style={{ width: 105 }}
                             id={`discountB${row.id}`}
                             onChange={() => grandTotalB(row.id)}
                           />
@@ -415,13 +564,13 @@ const SalesOrder = () => {
                     <TableCell align="right" colSpan={1}></TableCell>
                     <TableCell align="center" colSpan={1}>
                       <TextField
-                        align="right"
-                        label="Calendar"
+                        label="Trial Date"
                         type="date"
-                        defaultValue={new Date()}
+                        defaultValue={formattedTrialDate}
                         InputLabelProps={{
                           shrink: true,
                         }}
+                        onChange={handleTrialDateChange}
                       />
                     </TableCell>
                   </TableRow>
@@ -438,10 +587,15 @@ const SalesOrder = () => {
                 <TableCell sx={{ width: 1 / 4 }} colSpan={6}>
                   Total
                 </TableCell>
-                <TableCell align="right" colSpan={4}>
+                <TableCell
+                  align="right"
+                  colSpan={4}
+                  onChange={(e) => setTotal(e.target.value)}
+                >
                   {totalBillAmount}
                 </TableCell>
               </TableRow>
+
               <TableRow>
                 <TableCell sx={{ width: 1 / 4 }} colSpan={4}>
                   Advance
@@ -457,7 +611,6 @@ const SalesOrder = () => {
                       minWidth: 270,
                       maxWidth: 470,
                       pt: 1,
-                      // "& .MuiNativeSelect-select": { pt: "8.5px" },
                     }}
                   ></TextField>
                 </TableCell>
@@ -472,7 +625,7 @@ const SalesOrder = () => {
                   Total Due
                 </TableCell>
                 <TableCell align="right" colSpan={3}>
-                  {inputDue}
+                  {inputDue || 0}
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -481,14 +634,17 @@ const SalesOrder = () => {
                 </TableCell>
                 <TableCell colSpan={3} align="right">
                   <TextField
-                    label="Calendar"
+                    label="Delivery Date"
                     type="date"
-                    defaultValue={new Date()}
+                    defaultValue=""
+                    value={deliveryDate}
+                    onChange={handleDeliveryDateChange}
                     InputLabelProps={{
                       shrink: true,
                     }}
-                    value={deliveryDate}
-                    onChange={handleDateChange}
+                    inputProps={{
+                      min: minDeliveryDate,
+                    }}
                   />
                 </TableCell>
               </TableRow>
@@ -507,7 +663,11 @@ const SalesOrder = () => {
             <Button variant="contained" startIcon={<Save />} onClick={saveData}>
               Save
             </Button>
-            <Button variant="contained" endIcon={<Cancel />}>
+            <Button
+              variant="contained"
+              endIcon={<Cancel />}
+              onClick={handleCancel}
+            >
               Cancel
             </Button>
           </Stack>
