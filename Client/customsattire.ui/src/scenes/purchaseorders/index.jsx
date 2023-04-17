@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Box, Button, TextField, Grid, Stack } from "@mui/material";
-
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
 import Table from "@mui/material/Table";
@@ -16,7 +15,6 @@ import Cancel from "@mui/icons-material/Cancel";
 import { useDispatch, useSelector } from "react-redux";
 import { loadProduct } from "./../../redux/action";
 import { useNavigate } from "react-router-dom";
-
 import ProductDropDownComponent from "./../../components/ProductDropDown";
 import { Autocomplete } from "@mui/material";
 import { addPurchaseOrders } from "./../../redux/action";
@@ -82,7 +80,6 @@ const PurchaseOrders = () => {
 
   const calculateTotal = (rowId) => {
     const qty = document.getElementById(`qty${rowId}`).value;
-
     const price = parseFloat(document.getElementById(`price${rowId}`).value);
     const total = qty * price;
     document.getElementById(`total${rowId}`).innerText = total.toFixed(2);
@@ -108,18 +105,21 @@ const PurchaseOrders = () => {
   };
 
   const handleSelectFabricChange = useCallback(
-    (newValue, value) => {
+    (newValue) => {
       // eslint-disable-next-line
       const { fabricCode, description } = newValue;
 
       if (newValue !== undefined) {
+        console.log(
+          "if block handleSelectFabricChange" + JSON.stringify(newValue)
+        );
         let fabricCode = newValue.fabricCode;
         let Description = newValue.description;
 
         setSelectedFabrics(fabricCode);
         setSelectedDescription(Description);
 
-        // console.log("handleSelectFabricChange" + selectedFabrics);
+        console.log("handleSelectFabricChange" + selectedFabrics);
       }
     },
     //eslint-disable-next-line react-hooks/exhaustive-deps
@@ -134,16 +134,15 @@ const PurchaseOrders = () => {
     const data = rows.map((row) => ({
       vendorName: selectedVendor.name,
       fabricCode: selectedFabrics,
-      description: selectedDescription,
+      fabricDescription: selectedDescription,
       quantityPurchased: parseFloat(
         document.getElementById(`qty${row.id}`).value
       ),
       costPrice: parseFloat(document.getElementById(`price${row.id}`).value),
-      totalCostPrice: grandTotal,
-      paymentmode: "",
-      paymentdone: inputAdvance,
-      duepayment: inputDue,
-      purchasedate: new Date().toISOString().slice(0, 10),
+      totalCostPrice: parseFloat(grandTotal),
+      advancePayment: parseFloat(inputAdvance),
+      duePayment: parseFloat(inputDue),
+      purchaseDate: new Date().toISOString().slice(0, 10),
     }));
 
     // Loop over each row and update the values
@@ -154,10 +153,13 @@ const PurchaseOrders = () => {
         dataForRow.quantityPurchased;
       document.getElementById(`price${row.id}`).value = dataForRow.costPrice;
     }
-    localStorage.setItem("purchaseOrdersData", JSON.stringify(data));
+
+    // localStorage.setItem("purchaseOrdersData", JSON.stringify(data));
     data.forEach((oneData) => {
-      dispatch(addPurchaseOrders(oneData));
+      console.log(JSON.stringify(oneData));
+      // dispatch(addPurchaseOrders(oneData));
     });
+    handleCancel();
   };
 
   // Cancel Function//
@@ -174,7 +176,8 @@ const PurchaseOrders = () => {
     setInputDue(0);
     setRows([]);
     setSelectedFabrics([]);
-    dispatch(loadProduct());
+    // dispatch(loadProduct());
+    navigate("/purchasemaster");
   };
 
   const handleCancel = () => {
@@ -198,47 +201,42 @@ const PurchaseOrders = () => {
   const filteredVendors = vendors
     ?.filter((vendor, index, array) => array.indexOf(vendor) === index)
     .map((vendor) => ({ name: vendor }));
-  //eslint-disable-next-line
+
   function PurchaseOrders(props) {
-    //eslint-disable-next-line
     const filteredOrders = props.orders.filter(
       (order) => order.status === "pending"
     );
   }
-  //eslint-disable-next-line
+
   const handleVendorSelect = (event, value) => {
     setSelectedVendor(value);
   };
 
-  useEffect(
-    () => {
-      async function fetchVendorProducts() {
-        if (selectedVendor) {
-          const filteredData = Products?.filter(function (item) {
-            if (item.vendorName === selectedVendor.name) {
-              return true;
-            } else {
-              return false;
-            }
-          });
+  useEffect(() => {
+    async function fetchVendorProducts() {
+      if (selectedVendor) {
+        const filteredData = Products?.filter(function (item) {
+          if (item.vendorName === selectedVendor.name) {
+            return true;
+          } else {
+            return false;
+          }
+        });
 
-          setVendorProducts(filteredData);
-        }
+        setVendorProducts(filteredData);
+        console.log("filtered product", filteredData);
       }
-      fetchVendorProducts();
-    },
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-    [selectedVendor]
-  );
+    }
+    fetchVendorProducts();
+  }, [selectedVendor]);
 
-  //eslint-disable-next-line
   const saveInfo = () => {
     const requiredFields = [
       ...document.querySelectorAll('input[name="quantityPurchased"]'),
       ...document.querySelectorAll('input[name="costPrice"]'),
       document.querySelector('input[name="paymentdone"]'),
     ];
-    //eslint-disable-next-line
+
     const areAllFieldsFilled = requiredFields.every(
       (field) => field.value !== ""
     );
@@ -246,7 +244,10 @@ const PurchaseOrders = () => {
 
   return (
     <Grid sx={{ flexGrow: 1 }} mx={4}>
-      <Header title="PURCHASE ORDERS" subtitle="List of Purchase Orders Made" />
+      <Header
+        title="PURCHASE ORDERS"
+        subtitle="List of New Purchase Orders Made"
+      />
       <form onSubmit={handleSubmit} autoComplete="off">
         <Box
           display="grid"
@@ -256,7 +257,7 @@ const PurchaseOrders = () => {
             "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
           }}
         >
-          <Box sx={{ width: 1 / 2 }}>
+          <Box sx={{ width: 3 / 4 }}>
             <Button
               variant="contained"
               color="primary"

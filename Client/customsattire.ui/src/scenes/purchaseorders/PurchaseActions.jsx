@@ -3,7 +3,7 @@ import { Box, CircularProgress, Fab } from "@mui/material";
 import { green, blue } from "@mui/material/colors";
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-// import { deletePurchase } from "../../redux/action";
+import { deletePurchase } from "../../redux/action";
 
 const PurchaseActions = ({ params, rowId, setrowId }) => {
   const [loading, setLoading] = useState(false);
@@ -16,7 +16,7 @@ const PurchaseActions = ({ params, rowId, setrowId }) => {
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure to delete the Purchase?")) {
-      // dispatch(deletePurchase(id));
+      dispatch(deletePurchase(id));
     }
   };
 

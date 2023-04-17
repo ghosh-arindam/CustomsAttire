@@ -1,134 +1,164 @@
-import { Box, Button, TextField, Grid, MenuItem } from "@mui/material";
-import { Formik } from "formik";
-import * as yup from "yup";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import { Box, Button, useTheme } from "@mui/material";
+import { DataGrid, gridClasses, GridToolbar } from "@mui/x-data-grid";
+import AddIcon from "@mui/icons-material/Add";
+import { grey } from "@mui/material/colors";
+import { tokens } from "../../theme";
 import Header from "../../components/Header";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addProduct, loadSuppliers } from "./../../redux/action";
-import { useEffect } from "react";
+import { loadPurchaseOrders } from "../../redux/action";
 
 const PurchaseMaster = () => {
-  const isNonMobile = useMediaQuery("(min-width: 600px)");
-  // const theme = useTheme();
-  // const colors = tokens(theme.palette.mode);
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+  const [pageSize, setPageSize] = useState(5);
+  const [selectedrowId, setselectedrowId] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { suppliers } = useSelector((state) => state.data);
+  const { purchaseorders } = useSelector((state) => state.data);
+  console.log(purchaseorders);
+  const [sortModel, setSortModel] = useState([
+    {
+      field: "rowId",
+      sort: "desc",
+    },
+  ]);
 
   useEffect(() => {
-    dispatch(loadSuppliers());
-    //eslint-disable-next-line react-hooks/exhaustive-deps
+    dispatch(loadPurchaseOrders());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleFormSubmit = (values) => {
-    //console.log(values);
-    dispatch(addProduct(values));
-    navigate("/purchaseOrders");
-  };
-
-  const fabricSchema = yup.object().shape({
-    fabricCode: yup.string().required("required"),
-    description: yup.string().required("required"),
-    vendorName: yup.string().required("required"),
+  const rowDataPurchaseOrders = purchaseorders?.map((purchaseorder) => {
+    return {
+      id: purchaseorder?.id,
+      rowId: purchaseorder?.rowId,
+      vendorName: purchaseorder?.vendorName,
+      purchaseDate: purchaseorder?.purchaseDate,
+      advancePayment: purchaseorder?.advancePayment,
+      totalCostPrice: purchaseorder?.totalCostPrice,
+      duePayment: purchaseorder?.duePayment,
+    };
   });
-  const initialValues = {
-    fabricCode: "",
-    description: "",
-    vendorName: "",
-  };
-  return (
-    <Grid sx={{ flexGrow: 1 }} mx={4}>
-      <Header title="CREATE FABRIC" subtitle="Create a New Fabric" />
-      <Formik
-        onSubmit={handleFormSubmit}
-        initialValues={initialValues}
-        validationSchema={fabricSchema}
-      >
-        {({
-          values,
-          errors,
-          touched,
-          handleBlur,
-          handleChange,
-          handleSubmit,
-        }) => (
-          <form onSubmit={handleSubmit} autoComplete="off">
-            <Box
-              display="grid"
-              gap="30px"
-              gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-              sx={{
-                "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
-              }}
-            >
-              <TextField
-                id="outlined-select"
-                select
-                label="Select Vendor"
-                variant="outlined"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.vendorName || ""}
-                defaultValue={"--SELECT A  VENDOR--"}
-                name="vendorName"
-                error={!!touched.vendorName && !!errors.vendorName}
-                helperText={touched.vendorName && errors.vendorName}
-                sx={{
-                  align: "left",
-                  minWidth: 970,
-                  maxWidth: 1270,
-                  mx: "auto",
-                  // p: 1,
-                  pt: 1,
-                  "& .MuiNativeSelect-select": { pt: "8.5px" },
-                }}
-              >
-                {suppliers?.map((d, index) => (
-                  <MenuItem key={index} value={d.vendorName}>
-                    {d.vendorName}
-                  </MenuItem>
-                ))}
-              </TextField>
 
-              <TextField
-                fullWidth
-                variant="outlined"
-                type="text"
-                label="Fabric Code"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.fabricCode}
-                name="fabricCode"
-                error={!!touched.fabricCode && !!errors.fabricCode}
-                helperText={touched.fabricCode && errors.fabricCode}
-                sx={{ gridColumn: "span 4" }}
-              />
-              <TextField
-                id="outlined-textarea"
-                variant="outlined"
-                type="text"
-                label="Fabric Description"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.description}
-                name="description"
-                error={!!touched.description && !!errors.description}
-                helperText={touched.description && errors.description}
-                sx={{ gridColumn: "span 4" }}
-                multiline
-              />
-            </Box>
-            <Box display="flex" justifyContent="end" mt="20px">
-              <Button type="submit" color="secondary" variant="contained">
-                Create New Fabric
-              </Button>
-            </Box>
-          </form>
-        )}
-      </Formik>
-    </Grid>
+  const columns = useMemo(
+    () => [
+      { field: "id", headerName: "ID", flex: 0.5 },
+      { field: "rowId", headerName: "rowID", flex: 0.5, sort: "desc" },
+      {
+        field: "SLNo",
+        headerName: "SL. NO",
+        flex: 0.5,
+        filterable: false,
+        renderCell: (index) => index.api.getRowIndex(index.row.id) + 1,
+      },
+      {
+        field: "vendorName",
+        headerName: "Vendor Name",
+        flex: 1,
+        cellClassName: "name-column--cell",
+      },
+      {
+        field: "purchaseDate",
+        headerName: "Date",
+        flex: 1,
+      },
+      {
+        field: "totalCostPrice",
+        headerName: "Total",
+        flex: 1,
+      },
+      {
+        field: "advancePayment",
+        headerName: "Advance",
+        flex: 1,
+      },
+      {
+        field: "duePayment",
+        headerName: "Due",
+        flex: 1,
+      },
+    ],
+    []
+  );
+
+  return (
+    <Box m="20px">
+      <Header title="Purchase Orders" subtitle="List of Purchase Orders" />
+      <Button
+        variant="outlined"
+        color="primary"
+        startIcon={<AddIcon />}
+        onClick={() => navigate("/purchaseorders")}
+      >
+        New Purchase
+      </Button>
+      <Box
+        m="40px 0 0 0"
+        height="75vh"
+        sx={{
+          "& .MuiDataGrid-root": {
+            border: "none",
+          },
+          "& .MuiDataGrid-cell": {
+            borderBottom: "none",
+          },
+          "& .name-column--cell": {
+            color: colors.greenAccent[300],
+          },
+          "& .MuiDataGrid-columnHeaders": {
+            backgroundColor: colors.blueAccent[700],
+            borderBottom: "none",
+          },
+          "& .MuiDataGrid-virtualScroller": {
+            backgroundColor: colors.primary[400],
+          },
+          "& .MuiDataGrid-footerContainer": {
+            borderTop: "none",
+            backgroundColor: colors.blueAccent[700],
+          },
+          "& .MuiCheckbox-root": {
+            color: `${colors.greenAccent[200]} !important`,
+          },
+          "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
+            color: `${colors.grey[100]} !important`,
+          },
+        }}
+      >
+        <DataGrid
+          rows={rowDataPurchaseOrders ?? []}
+          columns={columns}
+          sortModel={sortModel}
+          onSortModelChange={(model) => setSortModel(model)}
+          initialState={{
+            columns: {
+              columnVisibilityModel: {
+                // Hide columns rowId and id, the other columns will remain visible
+                rowId: false,
+                id: false,
+              },
+            },
+          }}
+          getRowId={(rows) => rows.id}
+          rowsPerPageOptions={[5, 10, 25]}
+          pageSize={pageSize}
+          onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+          getRowSpacing={(params) => ({
+            top: params.isFirstVisible ? 0 : 5,
+            bottom: params.isLastVisible ? 0 : 5,
+          })}
+          sx={{
+            [`& .${gridClasses.row}`]: {
+              bgcolor: (theme) =>
+                theme.palette.mode === "light" ? grey[200] : grey[900],
+            },
+          }}
+          components={{ Toolbar: GridToolbar }}
+        />
+      </Box>
+    </Box>
   );
 };
 
