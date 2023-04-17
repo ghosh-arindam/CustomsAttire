@@ -144,7 +144,7 @@ const Sidebar = () => {
             </Typography>
             <Item
               title="Purchase Order"
-              to="/purchaseorders"
+              to="/purchasemaster"
               icon={<RequestQuoteIcon />}
               selected={selected}
               setSelected={setSelected}
