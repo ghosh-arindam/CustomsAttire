@@ -113,7 +113,7 @@ namespace CustomsAttire.Core.Data.Entities
         /// <value>
         /// The property value representing column 'AnniversaryDate'.
         /// </value>
-        public DateTime? AnniversaryDate { get; set; } = DateTime.Now;
+        public DateTime? AnniversaryDate { get; set; }
 
         /// <summary>
         /// Gets or sets the property value representing column 'CreatedBy'.

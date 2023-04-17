@@ -156,6 +156,14 @@ namespace CustomsAttire.Core.Data.Entities
         public decimal? PurchasedItemReturnCost { get; set; }
 
         /// <summary>
+        /// Gets or sets the property value representing column 'TrialDate'.
+        /// </summary>
+        /// <value>
+        /// The property value representing column 'TrialDate'.
+        /// </value>
+        public DateTime? TrialDate { get; set; }
+
+        /// <summary>
         /// Gets or sets the property value representing column 'Scheme_Flag'.
         /// </summary>
         /// <value>
@@ -202,6 +210,14 @@ namespace CustomsAttire.Core.Data.Entities
         /// The property value representing column 'Due_Payment'.
         /// </value>
         public decimal? DuePayment { get; set; }
+
+        /// <summary>
+        /// Gets or sets the property value representing column 'DeliveryDate'.
+        /// </summary>
+        /// <value>
+        /// The property value representing column 'DeliveryDate'.
+        /// </value>
+        public DateTime? DeliveryDate { get; set; }
 
         /// <summary>
         /// Gets or sets the property value representing column 'CreatedBy'.

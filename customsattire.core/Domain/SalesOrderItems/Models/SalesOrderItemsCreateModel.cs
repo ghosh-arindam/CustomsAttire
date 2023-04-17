@@ -139,6 +139,14 @@ namespace CustomsAttire.Core.Domain.Models
         public decimal? PurchasedItemReturnCost { get; set; }
 
         /// <summary>
+        /// Gets or sets the property value for 'TrialDate'.
+        /// </summary>
+        /// <value>
+        /// The property value for 'TrialDate'.
+        /// </value>
+        public DateTime? TrialDate { get; set; }
+
+        /// <summary>
         /// Gets or sets the property value for 'SchemeFlag'.
         /// </summary>
         /// <value>
@@ -185,6 +193,14 @@ namespace CustomsAttire.Core.Domain.Models
         /// The property value for 'DuePayment'.
         /// </value>
         public decimal? DuePayment { get; set; }
+
+        /// <summary>
+        /// Gets or sets the property value for 'DeliveryDate'.
+        /// </summary>
+        /// <value>
+        /// The property value for 'DeliveryDate'.
+        /// </value>
+        public DateTime? DeliveryDate { get; set; }
 
         #endregion
 

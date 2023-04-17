@@ -111,6 +111,10 @@ namespace CustomsAttire.Core.Data.Mapping
                 .HasColumnName("PurchasedItemReturnCost")
                 .HasColumnType("decimal(10,2)");
 
+            builder.Property(t => t.TrialDate)
+                .HasColumnName("TrialDate")
+                .HasColumnType("date");
+
             builder.Property(t => t.SchemeFlag)
                 .HasColumnName("Scheme_Flag")
                 .HasColumnType("decimal(10,2)");
@@ -135,6 +139,10 @@ namespace CustomsAttire.Core.Data.Mapping
             builder.Property(t => t.DuePayment)
                 .HasColumnName("Due_Payment")
                 .HasColumnType("decimal(10,2)");
+
+            builder.Property(t => t.DeliveryDate)
+                .HasColumnName("DeliveryDate")
+                .HasColumnType("date");
 
             builder.Property(t => t.CreatedBy)
                 .HasColumnName("CreatedBy")
@@ -205,6 +213,8 @@ namespace CustomsAttire.Core.Data.Mapping
             public const string TotalItemwiseCost = "Total_ItemwiseCost";
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.SalesOrderItems.PurchasedItemReturnCost" /></summary>
             public const string PurchasedItemReturnCost = "PurchasedItemReturnCost";
+            /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.SalesOrderItems.TrialDate" /></summary>
+            public const string TrialDate = "TrialDate";
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.SalesOrderItems.SchemeFlag" /></summary>
             public const string SchemeFlag = "Scheme_Flag";
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.SalesOrderItems.LoyaltySchemeId" /></summary>
@@ -217,6 +227,8 @@ namespace CustomsAttire.Core.Data.Mapping
             public const string AdvancePayment = "Advance_Payment";
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.SalesOrderItems.DuePayment" /></summary>
             public const string DuePayment = "Due_Payment";
+            /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.SalesOrderItems.DeliveryDate" /></summary>
+            public const string DeliveryDate = "DeliveryDate";
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.SalesOrderItems.CreatedBy" /></summary>
             public const string CreatedBy = "CreatedBy";
             /// <summary>Column Name constant for property <see cref="CustomsAttire.Core.Data.Entities.SalesOrderItems.CreatedDate" /></summary>
