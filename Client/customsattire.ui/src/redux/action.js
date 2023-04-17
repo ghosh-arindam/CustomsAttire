@@ -96,7 +96,7 @@ export const addCustomers = (customer) => {
       .then((resp) => {
         //console.log("resp", resp);
         dispatch(addCustomer(resp.data));
-        //dispatch(getcustomers());
+        dispatch(getcustomers());
       })
       .catch((error) => console.log(error));
   };
@@ -149,29 +149,33 @@ export const addSuppliers = (supplier) => {
       .then((resp) => {
         // console.log("resp", resp);
         dispatch(addSupplier(resp.data));
+        dispatch(getSuppliers());
       })
       .catch((error) => console.log(error));
   };
 };
 export const updateSupplier = (supplier, id) => {
   return async function (dispatch) {
-    // console.log(`${process.env.REACT_APP_BASE_API_URL}/customer`);
-    // console.log("updateCustomers --->" + customer.row);
-    // console.log("updateSuppliers" + id);
-    await axios
-      .put(`${process.env.REACT_APP_BASE_API_URL}/vendor/${id}`, supplier)
-      .then((resp) => {
-        console.log("resp", resp);
-        dispatch(updateSupplier(resp.data));
-      })
-      .catch((error) => console.log(error));
+    //console.log(`${process.env.REACT_APP_BASE_API_URL}/vendor`);
+    //console.log("updateSuppliers --->" + JSON.stringify(supplier));
+    //console.log("updateSuppliersid" + id);
+    if (id === undefined) {
+    } else {
+      await axios
+        .put(`${process.env.REACT_APP_BASE_API_URL}/vendor/${id}`, supplier)
+        .then((resp) => {
+          // console.log("resp", resp);
+          dispatch(updateSupplier(resp.data));
+        })
+        .catch((error) => console.log(error));
+    }
   };
 };
 export const loadPurchaseOrders = () => {
   return async function (dispatch) {
     // console.log(`${process.env.REACT_APP_BASE_API_URL}/PurchaseOrders`);
     await axios
-      .get(`${process.env.REACT_APP_BASE_API_URL}/PurchaseOrders`)
+      .get(`${process.env.REACT_APP_BASE_API_URL}/PurchaseOrdersItems`)
       .then((resp) => {
         //console.log("resp", resp);
         dispatch(getpurchaseOrders(resp.data));
@@ -182,7 +186,7 @@ export const loadPurchaseOrders = () => {
 export const deletePurchaseOrders = (id) => {
   return async function (dispatch) {
     await axios
-      .delete(`${process.env.REACT_APP_BASE_API_URL}/PurchaseOrders/${id}`)
+      .delete(`${process.env.REACT_APP_BASE_API_URL}/PurchaseOrdersItems/${id}`)
       .then((resp) => {
         //console.log("resp", resp);
         dispatch(deletedpurchaseOrders(resp.data));
@@ -197,7 +201,7 @@ export const addPurchaseOrders = (purchaseOrder) => {
     //console.log("addPurchaseOrders--->" + purchaseOrder);
     await axios
       .post(
-        `${process.env.REACT_APP_BASE_API_URL}/PurchaseOrders`,
+        `${process.env.REACT_APP_BASE_API_URL}/PurchaseOrdersItems`,
         purchaseOrder
       )
       .then((resp) => {
@@ -214,7 +218,7 @@ export const updatePurchaseOrders = (purchaseOrder, id) => {
     //console.log("updatePurchaseOrders" + id);
     await axios
       .put(
-        `${process.env.REACT_APP_BASE_API_URL}/PurchaseOrders/${id}`,
+        `${process.env.REACT_APP_BASE_API_URL}/PurchaseOrdersItems/${id}`,
         purchaseOrder
       )
       .then((resp) => {
