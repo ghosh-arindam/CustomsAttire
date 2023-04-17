@@ -26,8 +26,7 @@ const Customer = () => {
       sort: "desc",
     },
   ]);
-  console.log("customers.length" + customers.length);
-  if (customers.length === 0) dispatch(loadCustomers());
+
   useEffect(() => {
     dispatch(loadCustomers());
     // eslint-disable-next-line react-hooks/exhaustive-deps
