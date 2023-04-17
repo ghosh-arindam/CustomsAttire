@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { Autocomplete } from "@mui/material";
 import { TextField } from "@mui/material";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { loadProduct } from "../redux/action";
 
 const ProductDropDownComponent = (props) => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const { Products } = useSelector((state) => state.data);
   const dispatch = useDispatch();
 
   useEffect(
@@ -29,15 +30,15 @@ const ProductDropDownComponent = (props) => {
     setSearchTerm(event.target.value);
   };
 
-  // const filteredProducts = Products?.filter(product =>
-  //   product.fabricCode.toLowerCase().includes(searchTerm.toLowerCase())
-  // );
+  const filteredProducts = Products?.filter((product) =>
+    product.fabricCode.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <Autocomplete
       value={selectedProduct}
       onChange={handleProductChange}
-      options={props.filteredProducts || []}
+      options={filteredProducts || []}
       getOptionLabel={(option) =>
         option.fabricCode + " - " + option.description
       }
@@ -46,7 +47,7 @@ const ProductDropDownComponent = (props) => {
           {...params}
           label="Fabric Code"
           variant="outlined"
-          style={{ width: 300 }}
+          style={{ width: 135 }}
           onInput={handleSearchInputChange}
         />
       )}
