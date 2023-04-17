@@ -17,8 +17,9 @@ import Invoices from "./scenes/invoices";
 import AddVendor from "./scenes/supplierlocal/AddSupplier";
 import PurchaseOrders from "./scenes/purchaseorders";
 import PurchaseMaster from "./scenes/purchaseorders/PurchaseMaster";
-import AddSalesOrders from "./scenes/salesorders/index";
-import SalesOrder from "./scenes/salesorders/salesorder";
+import AddFabric from "./scenes/Product/AddFabric";
+import AddSalesOrders from "./scenes/salesorders/salesorder";
+import SalesOrder from "./scenes/salesorders/index";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
 
@@ -51,8 +52,8 @@ function App() {
               <Route path="/line" element={<Line />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/posreport" element={<Invoices />} />
-              {/* <Route path="/purchaseorders" element={<Purchase />} /> */}
-              <Route path="/addfabric" element={<PurchaseMaster />} />
+              <Route path="/addfabric" element={<AddFabric />} />
+              <Route path="/purchasemaster" element={<PurchaseMaster />} />
               <Route path="/purchaseorders" element={<PurchaseOrders />} />
               <Route path="/addsales" element={<AddSalesOrders />} />
               <Route path="/salesorders" element={<SalesOrder />} />
