@@ -21,7 +21,7 @@ namespace CustomsAttire.Core.Data.Mapping
             builder.ToTable("POSReport", "Production");
 
             // key
-            builder.HasNoKey();
+            builder.HasKey(t => t.Id);
 
             // properties
             builder.Property(t => t.Id)
